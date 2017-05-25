@@ -90,7 +90,10 @@ class Controller extends Config
 
 
     public function checkAddress(){
-        return $_GET["url"];
+        if ($_GET==null)
+            return null;
+        else
+            return $_GET["url"];
     }
     /**
      * Method load title page
@@ -149,7 +152,7 @@ class Controller extends Config
     }
 
     /**
-     * Method opens form
+     * Method open form
      * @param $action string - link to another page
      * */
     public function startForm($action = null)

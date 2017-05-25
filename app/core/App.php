@@ -4,7 +4,7 @@
 class App
 {
     protected $controller = 'home';
-    protected $method = 'error';
+    protected $method = 'index';
     protected $params = [];
 
     public function __construct()
@@ -23,11 +23,9 @@ class App
                 unset($url[1]);
             } else {
                 $this->controller = "home";
+                $this->method = 'error';
                 $this->controller = new $this->controller;
             }
-        } else {
-            $this->controller = "home";
-            $this->controller = new $this->controller;
         }
         $this->params = $url ? array_values($url) : [];
         call_user_func_array([$this->controller, $this->method], $this->params);
