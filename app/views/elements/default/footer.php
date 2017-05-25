@@ -1,3 +1,5 @@
 <footer>
-    JS na NaN%
+    <div>
+        JS na NaN%
+    </div>
 </footer>

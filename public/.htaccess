@@ -1,7 +1,7 @@
 Options -MultiViews
 RewriteEngine ON
 
-RewriteBase /Projekt/public
+RewriteBase /PTW/public
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f

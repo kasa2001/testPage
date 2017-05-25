@@ -145,10 +145,16 @@ class Controller extends Config
      * */
     public function baseLink()
     {
-        $address = explode("/", $_SERVER["REQUEST_URI"]);
-        $data = "/";
-        for ($i = 1; $i < (count($address) - 2); $i++) $data .= $address[$i] . "/";
-        return $data;
+        if ($_GET!= null ){
+            if (count(explode("/",$_GET["url"]))>=2){
+                $address = explode("/",$_SERVER["REQUEST_URI"]);
+                $data = "/";
+                for ($i = 1; $i < (count($address) - 2); $i++) $data .= $address[$i] . "/";
+                return $data;
+            }
+            else return $this->config["system"]["default-directory"]."/public/";
+        }else
+            return $this->config["system"]["default-directory"]."/public/";
     }
 
     /**
