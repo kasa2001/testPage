@@ -152,9 +152,9 @@ class Controller extends Config
                 for ($i = 1; $i < (count($address) - 2); $i++) $data .= $address[$i] . "/";
                 return $data;
             }
-            else return $this->config["system"]["default-directory"]."/public/";
+            else return "/".$this->config["system"]["default-directory"]."/public/";
         }else
-            return $this->config["system"]["default-directory"]."/public/";
+            return "/".$this->config["system"]["default-directory"]."/public/";
     }
 
     /**

@@ -27,22 +27,30 @@ class User extends Controller
 
     public function add()
     {
-        $this->view('user/add');
+        $js= null;
+        $css = "main user";
+        $this->view('user/add',null,$css,$js);
     }
 
 
     public function delete()
     {
-        $this->view('user/delete');
+        $js= null;
+        $css = "main user";
+        $this->view('user/delete',null,$css,$js);
     }
 
     public function modify()
     {
-        $this->view('user/modify');
+        $js= null;
+        $css = "main user";
+        $this->view('user/modify',null,$css,$js);
     }
 
     public function select()
     {
-        $this->view('user/select');
+        $js= null;
+        $css = "main user";
+        $this->view('user/select',null,$css,$js);
     }
 }

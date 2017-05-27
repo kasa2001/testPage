@@ -1,4 +1,4 @@
 <header>
-    <?=$this->buildLink("Logowanie","user/login");?>
-    <?=$this->buildLink("Rejestracja","user/registry");?>
+    <?=$this->buildLink("Login","user/login");?>
+    <?=$this->buildLink("Registry","user/registry");?>
 </header>
