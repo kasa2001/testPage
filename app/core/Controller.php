@@ -191,4 +191,9 @@ class Controller extends Config
         echo ">" . $text . "</button>";
     }
 
+    public function getJSON($file)
+    {
+        require_once "../app/views/API/".$file.".php";
+    }
+
 }

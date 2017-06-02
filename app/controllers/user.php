@@ -20,7 +20,7 @@ class User extends Controller
     {
         if ($_POST != null)
             $user = $this->loadModel('User');
-        $js = null;
+        $js = "ajax";
         $css = "main user";
         $this->view('user/registry', null, $css, $js);
     }
@@ -42,7 +42,7 @@ class User extends Controller
 
     public function modify()
     {
-        $js= null;
+        $js= "ajax";
         $css = "main user";
         $this->view('user/modify',null,$css,$js);
     }
