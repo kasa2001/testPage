@@ -363,4 +363,24 @@ class Database extends Config
         }else
             Security::addLog("sql");
     }
+
+
+    public function addColumns($columns, $type, $isNull, $primaryKey, $autoIncrement)
+    {
+        $query="";
+        for ($i=0; $i<count($columns); $i++){
+            $query .=  " ". $columns[$i] . " " . $type[$i] . " " . $isNull[$i];
+            if ($primaryKey==$i)
+                $query .= " primary key";
+            if ($autoIncrement[$i]==1)
+                $query .=" auto_increment";
+            if ($i < (count($columns)-1)) $query .= ",";
+        }
+        return $query;
+    }
+
+    public function createTable($table, $columns, $type, $isNull, $primaryKey, $autoIncrement)
+    {
+        return $query="create table `". $table . "` (" . $this->addColumns($columns, $type, $isNull, $primaryKey,$autoIncrement) . ");";
+    }
 }

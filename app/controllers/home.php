@@ -18,8 +18,4 @@ class Home extends Controller
     {
         $this->view("home/error", NULL);
     }
-    public function sendSelect(){
-        $user =  $this->loadModel('User');
-        $this->view('home/sendSelect');
-    }
 }

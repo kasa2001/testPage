@@ -89,12 +89,14 @@ class Controller extends Config
     }
 
 
-    public function checkAddress(){
-        if ($_GET==null)
+    public function checkAddress()
+    {
+        if ($_GET == null)
             return null;
         else
             return $_GET["url"];
     }
+
     /**
      * Method load title page
      * */
@@ -145,16 +147,15 @@ class Controller extends Config
      * */
     public function baseLink()
     {
-        if ($_GET!= null ){
-            if (count(explode("/",$_GET["url"]))>=2){
-                $address = explode("/",$_SERVER["REQUEST_URI"]);
+        if ($_GET != null) {
+            if (count(explode("/", $_GET["url"])) >= 2) {
+                $address = explode("/", $_SERVER["REQUEST_URI"]);
                 $data = "/";
                 for ($i = 1; $i < (count($address) - 2); $i++) $data .= $address[$i] . "/";
                 return $data;
-            }
-            else return "/".$this->config["system"]["default-directory"]."/public/";
-        }else
-            return "/".$this->config["system"]["default-directory"]."/public/";
+            } else return "/" . $this->config["system"]["default-directory"] . "/public/";
+        } else
+            return "/" . $this->config["system"]["default-directory"] . "/public/";
     }
 
     /**
@@ -193,7 +194,14 @@ class Controller extends Config
 
     public function getJSON($file)
     {
-        require_once "../app/views/API/".$file.".php";
+        require_once "../app/views/API/" . $file . ".php";
     }
 
+    public function redirect($where=null)
+    {
+        if ($where==null)
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+        else
+            header("Location: " . $this->baseLink() . $where);
+    }
 }

@@ -19,7 +19,12 @@ class Session
      * */
     public function writeToSession($data)
     {
-        $_SESSION = $data;
+        foreach ($data as $key=>$datum){
+            if (!isset($_SESSION[$key])){
+                $_SESSION=$datum;
+            }else if ($_SESSION[$key]!=$datum)
+                $_SESSION=$datum;
+        }
     }
 
     /**
@@ -38,5 +43,6 @@ class Session
     public function destroySession()
     {
         unset($_SESSION);
+        session_destroy();
     }
 }

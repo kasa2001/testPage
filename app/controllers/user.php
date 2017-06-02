@@ -51,6 +51,7 @@ class User extends Controller
     {
         $user=$this->loadModel("TestData");
         $this->session->writeToSession($user->columns());
+        echo $user->createTable("tabela", ["id", "zmienna"], ["int", "varchar(100)"], ["not null", "null"], 0, [1,0]);
         $js = "ajax";
         $css = "main user";
         $this->view('user/select',null,$css,$js);
