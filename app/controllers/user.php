@@ -27,7 +27,7 @@ class User extends Controller
 
     public function add()
     {
-        $js= null;
+        $js= "ajax";
         $css = "main user";
         $this->view('user/add',null,$css,$js);
     }
@@ -35,7 +35,7 @@ class User extends Controller
 
     public function delete()
     {
-        $js= null;
+        $js= "ajax";
         $css = "main user";
         $this->view('user/delete',null,$css,$js);
     }
@@ -49,7 +49,9 @@ class User extends Controller
 
     public function select()
     {
-        $js= null;
+        $user=$this->loadModel("TestData");
+        $this->session->writeToSession($user->columns());
+        $js = "ajax";
         $css = "main user";
         $this->view('user/select',null,$css,$js);
     }

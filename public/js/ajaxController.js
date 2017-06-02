@@ -9,7 +9,7 @@ $(document).ready(function () {
         alert(window.location.href);
         $("button").on("click",function () {
             alert("działczy");
-            $.post("/PTW/public/API/sendSelect", function(id){
+            $.post("/PTW/public/api/sendSelect", function(id){
                 alert("Czy ajax wlazł sobie?");
                 alert(id);
             });

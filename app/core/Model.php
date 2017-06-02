@@ -6,15 +6,9 @@ class Model extends Database
     protected $table;
     protected $columns = [];
 
-    public function __construct($table, $columns = [], $data = [])
+    public function __construct()
     {
         parent::__construct();
-        $this->data = $data;
-        $this->columns = $columns;
-        $this->table = $table;
-        $this->query = $this->createQuery($this->table, "SeLeCt", array_merge($this->columns, $this->data), "a");
-        $this->data = $this->request();
-        $this->getResultRequest();
     }
 
     /**
