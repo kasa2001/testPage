@@ -2,6 +2,10 @@
 
 class User extends Controller
 {
+
+    private $js = null;
+    private $css = "main user";
+
     public function index()
     {
 
@@ -9,51 +13,39 @@ class User extends Controller
 
     public function login()
     {
-        if ($_POST != null)
-            $user = $this->loadModel('User');
-        $css = "main user";
-        $js = "main";
-        $this->view('user/login', NULL, $css, $js);
+        $this->view('user/login', NULL, $this->css, $this->js);
     }
 
     public function registry()
     {
-        if ($_POST != null)
-            $user = $this->loadModel('User');
-        $js = "ajax";
-        $css = "main user";
-        $this->view('user/registry', null, $css, $js);
+        $this->view('user/registry', null, $this->css, $this->js);
     }
 
     public function add()
     {
-        $js= "ajax";
-        $css = "main user";
-        $this->view('user/add',null,$css,$js);
+        $user = $this->loadModel('TestData');
+        $this->js = "ajax";
+        $this->view('user/add', $user, $this->css, $this->js);
     }
 
 
     public function delete()
     {
-        $js= "ajax";
-        $css = "main user";
-        $this->view('user/delete',null,$css,$js);
+        $user = $this->loadModel('TestData');
+        $this->js = "ajax";
+        $this->view('user/add', $user, $this->css, $this->js);
     }
 
     public function modify()
     {
-        $js= "ajax";
-        $css = "main user";
-        $this->view('user/modify',null,$css,$js);
+        $user = $this->loadModel('TestData');
+        $this->js = "ajax";
+        $this->view('user/add', $user, $this->css, $this->js);
     }
 
     public function select()
     {
-        $user=$this->loadModel("TestData");
-        $this->session->writeToSession($user->columns());
-        echo $user->createTable("tabela", ["id", "zmienna"], ["int", "varchar(100)"], ["not null", "null"], 0, [1,0]);
-        $js = "ajax";
-        $css = "main user";
-        $this->view('user/select',null,$css,$js);
+        $user = $this->loadModel("TestData");
+        $this->view('user/add', $user, $this->css, $this->js);
     }
 }

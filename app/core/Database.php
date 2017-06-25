@@ -40,8 +40,6 @@ class Database extends Config
      * */
     protected $data;
 
-    protected $session;
-
     protected $result;
 
     /**
@@ -55,6 +53,7 @@ class Database extends Config
         $this->password = $this->config['database']['password'];
         $this->base = $this->config['database']['database'];
         $this->connect = new mysqli($this->server, $this->login, $this->password, $this->base);
+        $this->connect->set_charset("utf8");
     }
 
     /**
@@ -344,43 +343,38 @@ class Database extends Config
 
     /**
      * Method which send query to database and get result query
-     * @return object return score of query
+     * @param $query string
      * */
-    public function request()
+    public function request($query)
     {
-        return $this->connect->query($this->query);
+        if ($query === null)
+            $this->data = $this->connect->query($this->query);
+        else
+            $this->data = $this->connect->query($query);
     }
 
     /**
      * Method get data with object mysqli_result to session
      * */
-    public function getResultRequest()
+    public function saveData()
     {
         if ($this->data->num_rows == 1) {
-            $this->session = new Session();
-            $this->result = $this->data->fetch_assoc();
-            $this->session->writeToSession($this->result);
-        }else
+            while ($this->result = $this->data->fetch_assoc()) {
+                print_r($this->result);
+                $this->session = new Session();
+                $this->session->writeToSession($this->result);
+            }
+        } else
             Security::addLog("sql");
     }
 
-
-    public function addColumns($columns, $type, $isNull, $primaryKey, $autoIncrement)
+    /**
+     * Method get data from result query and load to page
+     */
+    public function getDataToPage()
     {
-        $query="";
-        for ($i=0; $i<count($columns); $i++){
-            $query .=  " ". $columns[$i] . " " . $type[$i] . " " . $isNull[$i];
-            if ($primaryKey==$i)
-                $query .= " primary key";
-            if ($autoIncrement[$i]==1)
-                $query .=" auto_increment";
-            if ($i < (count($columns)-1)) $query .= ",";
+        while ($this->result = $this->data->fetch_assoc()) {
+
         }
-        return $query;
-    }
-
-    public function createTable($table, $columns, $type, $isNull, $primaryKey, $autoIncrement)
-    {
-        return $query="create table `". $table . "` (" . $this->addColumns($columns, $type, $isNull, $primaryKey,$autoIncrement) . ");";
     }
 }

@@ -192,7 +192,7 @@ class Controller extends Config
         echo ">" . $text . "</button>";
     }
 
-    public function getJSON($file)
+    public function getJSON($file, $model)
     {
         require_once "../app/views/API/" . $file . ".php";
     }
@@ -203,5 +203,14 @@ class Controller extends Config
             header("Location: " . $_SERVER['HTTP_REFERER']);
         else
             header("Location: " . $this->baseLink() . $where);
+    }
+
+    public function checkIsJS(){
+        if(!isset($_SERVER['HTTP_X_REQUESTED_WITH'])){
+            if (!isset($_SERVER['HTTP_REFERER']))
+                $this->redirect("home/index");
+            else
+                $this->redirect();
+        }
     }
 }

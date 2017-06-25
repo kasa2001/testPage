@@ -1,7 +1,5 @@
 <?php
-if(!isset($_SERVER['HTTP_X_REQUESTED_WITH'])){
-    if (!isset($_SERVER['HTTP_REFERER']))
-        $this->redirect("home/index");
-    else
-        $this->redirect();
-}
+$query = $model->createQuery($model->table(),"insert",array_merge($model->insertData(), [$_POST["text"],date("y-m-d")]));
+$model->request($query);
+print_r($model->insertData());
+echo $query;

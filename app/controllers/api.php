@@ -14,23 +14,24 @@ class API extends Controller
 
     }
 
-    public function sendSelect()
-    {
-        $this->getJSON("sendSelect");
-    }
-
     public function sendInsert()
     {
-        $this->getJSON("sendInsert");
+        $this->checkIsJS();
+        $user = $this->loadModel("TestData");
+        $this->getJSON("sendInsert", $user);
     }
 
     public function sendDelete()
     {
-        $this->getJSON("sendDelete");
+        $this->checkIsJS();
+        $user = $this->loadModel("TestData");
+        $this->getJSON("sendDelete", $user);
     }
 
     public function sendModify()
     {
-        $this->getJSON("sendModify");
+        $this->checkIsJS();
+        $user = $this->loadModel("TestData");
+        $this->getJSON("sendModify", $user);
     }
 }

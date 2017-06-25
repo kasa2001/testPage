@@ -1,7 +1,14 @@
 <section>
     <article>
-        <button>
-            Dodaj dane
-        </button>
+        <div>
+        </div>
+        <?=$this->startForm(); ?>
+        <label for="text">
+            <input type="text" id="text">
+        </label>
+        <?=
+        $this->endForm();
+        $this->button("Dodaj dane");
+        ?>
     </article>
 </section>

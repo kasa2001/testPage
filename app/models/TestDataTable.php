@@ -19,4 +19,10 @@ class TestDataTable extends Model
         $columns[3] = 'update_at';
         return $columns;
     }
+    public function insertData()
+    {
+        $columns[0] = "data";
+        $columns[1] = "create_at";
+        return $columns;
+    }
 }
