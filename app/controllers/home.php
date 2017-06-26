@@ -7,19 +7,14 @@ class Home extends Controller
 {
     public function index($name = '')
     {
-        $user=null;
-        if ($_POST!=null){
+        $user = null;
+        if (isset($_POST)) {
             Security::slashSQLForm($_POST);
             Security::analyzeXSS($_POST);
             $user = $this->loadModel('User');
-            if ($this->checkPreviewWebSite() === "http://localhost/PTW/public/user/login"){
-                $query = $user->createQuery($user->table(),"SELECT",array_merge($user->login(), $this->indexedData($_POST)) ,"a");
-                $user->request($query);
-                $user->saveData();
-            }else{
-                $query = $user->createQuery($user->table(),"INSERT",array_merge($user->registration(), $this->indexedData($_POST)) ,"a");
-                $user->request($query);
-            }
+            $query = $user->createQuery($user->table(), "SELECT", array_merge($user->login(), $this->indexedData($_POST)), "a");
+            $user->request($query);
+            $user->saveData();
         }
         $css = "main home";
         $js = null;

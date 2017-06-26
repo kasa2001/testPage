@@ -39,4 +39,9 @@ class UserTable extends Model
         $columns[2] = 'PASSWORD';
         return $columns;
     }
+
+    public function checkRegistry()
+    {
+        return 'Nick';
+    }
 }
