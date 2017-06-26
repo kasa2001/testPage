@@ -382,6 +382,10 @@ class Database extends Config
         return $this->data->num_rows == 0;
     }
 
+    /**
+     * Method return one record from query result
+     * @return array
+     * */
     public function echoResult()
     {
         return $this->data->fetch_assoc();

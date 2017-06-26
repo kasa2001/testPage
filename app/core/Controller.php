@@ -248,6 +248,11 @@ class Controller extends Config
         }
     }
 
+    /**
+     * Method return  not associative array
+     * @param $array array
+     * @return array
+     * */
     public function indexedData($array)
     {
         $i=0;
@@ -259,6 +264,10 @@ class Controller extends Config
         return $data;
     }
 
+    /**
+     * Method return data about preview page
+     * @return string
+     * */
     public function checkPreviewWebSite()
     {
         if (isset($_SERVER['HTTP_REFERER'])) return $_SERVER['HTTP_REFERER'];
