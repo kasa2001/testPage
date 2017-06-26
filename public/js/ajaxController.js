@@ -5,7 +5,7 @@ $(document).ready(function () {
     });
     if (zmienna[zmienna.length - 1] === "modify" && zmienna[zmienna.length - 2] === "user") {
         $("button").on("click",function () {
-            $.post("/PTW/public/api/sendModify", function(data){
+            $.post("/PTW/public/api/sendModify", function(data, status){
                 alert("Prawdopodobnie udało się");
             });
         });
@@ -17,8 +17,10 @@ $(document).ready(function () {
         });
     } else if (zmienna[zmienna.length - 1] === "delete" && zmienna[zmienna.length - 2] === "user") {
         $("button").on("click",function () {
-            $.post("/PTW/public/api/sendDelete", function (data, status) {
-                alert(status);
+            $(this).parent().parent().remove();
+            $.post("/PTW/public/api/sendDelete", {id: $(this).data("id")},function (data, status) {
+
+                alert(status+"! Data deleted from database");
             });
         });
     }

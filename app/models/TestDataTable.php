@@ -25,4 +25,8 @@ class TestDataTable extends Model
         $columns[1] = "create_at";
         return $columns;
     }
+    public function deleteData()
+    {
+        return "id";
+    }
 }
