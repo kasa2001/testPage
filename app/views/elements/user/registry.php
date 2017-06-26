@@ -1,6 +1,6 @@
 <section>
     <article>
-        <?= $this->startForm(""); ?>
+        <?= $this->startForm("home/index"); ?>
         <input name="nick" type="text" placeholder="nick" required>
         <input name="mail" type="email" placeholder="email" required>
         <input name="password" type="password" placeholder="password" required>

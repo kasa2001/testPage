@@ -22,6 +22,7 @@ class User extends Controller
 
     public function registry()
     {
+        $this->js="form";
         if (Session::getDataWithSession("Id")!==null){
             $this->redirect("home/index");
         }else{

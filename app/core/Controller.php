@@ -208,7 +208,7 @@ class Controller extends Config
     public function redirect($where = null)
     {
         if ($where == null)
-            header("Location: " . $_SERVER['HTTP_REFERER']);
+            header("Location: " . $this->checkPreviewWebSite());
         else
             header("Location: " . $this->baseLink() . $where);
     }
@@ -257,5 +257,11 @@ class Controller extends Config
             $i++;
         }
         return $data;
+    }
+
+    public function checkPreviewWebSite()
+    {
+        if (isset($_SERVER['HTTP_REFERER'])) return $_SERVER['HTTP_REFERER'];
+        else return null;
     }
 }
