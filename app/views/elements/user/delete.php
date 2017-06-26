@@ -1,9 +1,30 @@
 <section>
     <article>
-        <div>
-            <button>
-                Usuń rekord
-            </button>
-        </div>
+        <table>
+            <thead>
+            <tr>
+                <td>
+                    id
+                </td>
+                <td>
+                    Content
+                </td>
+                <td>
+                    Created Date
+                </td>
+
+                <td>
+                    Update Date
+                </td>
+                <td>
+                    Action
+                </td>
+            </tr>
+            </thead>
+            <tbody>
+            <?= $data->getDataToPage(["tr", "td"], true,"Delete") ?>
+            </tbody>
+        </table>
+
     </article>
 </section>

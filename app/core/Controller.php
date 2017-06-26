@@ -32,8 +32,9 @@ class Controller extends Config
      * Method add element to view
      * @param $name string - file name
      * @param $directory string - directory in folder elements (default - default)
+     * @param $data Model
      * */
-    public function importElement($name, $directory = "default")
+    public function importElement($name, $directory = "default", $data = null)
     {
         require_once "../app/views/elements/" . $directory . "/" . $name . ".php";
     }
@@ -88,7 +89,6 @@ class Controller extends Config
         return "/" . $this->config["system"]["default-directory"] . "/public/";
     }
 
-
     public function checkAddress()
     {
         if ($_GET == null)
@@ -139,7 +139,6 @@ class Controller extends Config
             echo "'>" . $name . "</a>";
         }
     }
-
 
     /**
      * Method create attribute href

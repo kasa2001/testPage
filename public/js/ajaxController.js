@@ -10,15 +10,12 @@ $(document).ready(function () {
             });
         });
     } else if (zmienna[zmienna.length - 1] === "add" && zmienna[zmienna.length - 2] === "user") {
-        alert(window.location.href);
         $("button").on("click",function () {
             $.post("/PTW/public/api/sendInsert",{text: $("#text").val()}, function(data, status){
-                alert(status);
-                alert(data);
+                alert(status+"! Data is sent to database");
             });
         });
     } else if (zmienna[zmienna.length - 1] === "delete" && zmienna[zmienna.length - 2] === "user") {
-        alert(window.location.href);
         $("button").on("click",function () {
             $.post("/PTW/public/api/sendDelete", function (data, status) {
                 alert(status);

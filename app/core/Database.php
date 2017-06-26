@@ -370,11 +370,22 @@ class Database extends Config
 
     /**
      * Method get data from result query and load to page
-     */
-    public function getDataToPage()
+     * @param $element array string
+     * @param $button boolean
+     * @param $name string
+     * */
+    public function getDataToPage($element=[], $button=false, $name=null)
     {
         while ($this->result = $this->data->fetch_assoc()) {
-
+            if (count($element)!=1)
+                echo "<" . $element[0] . ">";
+            foreach ($this->result as $result) {
+                if (count($element)==1) echo "<" . $element . ">" . $result . "</" . $element . ">";
+                else echo "<" . $element[1] . ">" . $result . "</" . $element[1] . ">";
+            }
+            if ($button) echo "<" . $element[1] . "><button data-id = '" . $this->result["id"] . "'>" . $name . "</button></" . $element[1] . ">";
+            if (count($element)!=1)
+                echo "</" . $element[0] . ">";
         }
     }
 }

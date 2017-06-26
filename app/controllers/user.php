@@ -23,29 +23,31 @@ class User extends Controller
 
     public function add()
     {
-        $user = $this->loadModel('TestData');
         $this->js = "ajax";
-        $this->view('user/add', $user, $this->css, $this->js);
+        $this->view('user/add', null, $this->css, $this->js);
     }
 
 
     public function delete()
     {
         $user = $this->loadModel('TestData');
+        $user->request($user->createQuery($user->table(),"SELECT"));
         $this->js = "ajax";
-        $this->view('user/add', $user, $this->css, $this->js);
+        $this->view('user/delete', $user, $this->css, $this->js);
     }
 
     public function modify()
     {
         $user = $this->loadModel('TestData');
+        $user->request($user->createQuery($user->table(),"SELECT"));
         $this->js = "ajax";
-        $this->view('user/add', $user, $this->css, $this->js);
+        $this->view('user/modify', $user, $this->css, $this->js);
     }
 
     public function select()
     {
         $user = $this->loadModel("TestData");
-        $this->view('user/add', $user, $this->css, $this->js);
+        $user->request($user->createQuery($user->table(),"SELECT"));
+        $this->view('user/select', $user, $this->css, $this->js);
     }
 }

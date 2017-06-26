@@ -8,7 +8,7 @@
         </label>
         <?=
         $this->endForm();
-        $this->button("Dodaj dane");
+        $this->button("Add data");
         ?>
     </article>
 </section>
