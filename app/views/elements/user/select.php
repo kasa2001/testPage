@@ -1,7 +1,16 @@
 <section>
     <article>
-        <table>
-            <thead>
+        <?php
+        if ($data->isEmpty()):
+            ?>
+            <p>
+                Brak danych
+            </p>
+            <?php
+        else:
+            ?>
+            <table>
+                <thead>
                 <tr>
                     <td>
                         id
@@ -17,11 +26,13 @@
                         Update Date
                     </td>
                 </tr>
-            </thead>
-            <tbody>
-            <?= $data->getDataToPage(["tr", "td"]) ?>
-            </tbody>
-        </table>
-
+                </thead>
+                <tbody>
+                <?= $this->generateDynamic($data,["tr", "td"]) ?>
+                </tbody>
+            </table>
+            <?php
+        endif;
+        ?>
     </article>
 </section>

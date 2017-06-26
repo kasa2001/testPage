@@ -51,6 +51,7 @@ footer {
     display: block;
 }
 
+
 footer > div {
     text-align: center;
 }
@@ -71,7 +72,7 @@ section {
     width:65%;
 }
 
-header > a {
+header > a, header > button {
     display: inline-block;
     margin-top: 6px;
 }

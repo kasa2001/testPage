@@ -60,8 +60,8 @@ class Database extends Config
      * Method which create a new query
      * @param $table string data about load table
      * @param $choose string select type of query (SELECT, INSERT, DELETE, UPDATE)
-     * @param $modify string degree modify the query "a" - and "o" - or (default null)
      * @param $data array string. Additional data (default empty array)
+     * @param $modify string degree modify the query "a" - and "o" - or (default null)
      * @param $sort integer sort score query (default 0)
      * @return string return generated query
      */
@@ -345,7 +345,7 @@ class Database extends Config
      * Method which send query to database and get result query
      * @param $query string
      * */
-    public function request($query)
+    public function request($query = null)
     {
         if ($query === null)
             $this->data = $this->connect->query($this->query);
@@ -359,33 +359,31 @@ class Database extends Config
     public function saveData()
     {
         if ($this->data->num_rows == 1) {
-            while ($this->result = $this->data->fetch_assoc()) {
-                print_r($this->result);
-                $this->session = new Session();
-                $this->session->writeToSession($this->result);
-            }
+            $this->result = $this->data->fetch_assoc();
+            Session::writeToSession($this->result);
         } else
             Security::addLog("sql");
     }
 
     /**
-     * Method get data from result query and load to page
-     * @param $element array string
-     * @param $button boolean
-     * @param $name string
+     * Method get data from result query
      * */
-    public function getDataToPage($element=[], $button=false, $name=null)
+    public function getData()
     {
-        while ($this->result = $this->data->fetch_assoc()) {
-            if (count($element)!=1)
-                echo "<" . $element[0] . ">";
-            foreach ($this->result as $result) {
-                if (count($element)==1) echo "<" . $element . ">" . $result . "</" . $element . ">";
-                else echo "<" . $element[1] . ">" . $result . "</" . $element[1] . ">";
-            }
-            if ($button) echo "<" . $element[1] . "><button data-id = '" . $this->result["id"] . "'>" . $name . "</button></" . $element[1] . ">";
-            if (count($element)!=1)
-                echo "</" . $element[0] . ">";
-        }
+        return $this->data->fetch_assoc();
+    }
+
+    /**
+     * Method return 1 if query is empty or 0 if not empty
+     * @return boolean
+     * */
+    public function isEmpty()
+    {
+        return $this->data->num_rows == 0;
+    }
+
+    public function echoResult()
+    {
+        return $this->data->fetch_assoc();
     }
 }

@@ -1,5 +1,5 @@
 <footer>
     <div>
-        JS na NaN%
+        Created by kasa2001
     </div>
 </footer>

@@ -191,25 +191,71 @@ class Controller extends Config
         echo ">" . $text . "</button>";
     }
 
+    /**
+     * Method get data from file without loading all page
+     * @param $file string
+     * @param $model Model
+     * */
     public function getJSON($file, $model)
     {
         require_once "../app/views/API/" . $file . ".php";
     }
 
-    public function redirect($where=null)
+    /**
+     * Method redirect to another page. If $where is null redirect to preview page
+     * @param $where string
+     * */
+    public function redirect($where = null)
     {
-        if ($where==null)
+        if ($where == null)
             header("Location: " . $_SERVER['HTTP_REFERER']);
         else
             header("Location: " . $this->baseLink() . $where);
     }
 
-    public function checkIsJS(){
-        if(!isset($_SERVER['HTTP_X_REQUESTED_WITH'])){
+    /**
+     * Method redirecting if someone try go to file with JSON
+     * */
+    public function checkIsJS()
+    {
+        if (!isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
             if (!isset($_SERVER['HTTP_REFERER']))
                 $this->redirect("home/index");
             else
                 $this->redirect();
         }
+    }
+
+    /**
+     * Method wears data from database to element
+     * @param $model Model
+     * @param $element array string
+     * @param $button boolean
+     * @param $name string
+     * */
+    public function generateDynamic($model, $element = [], $button = false, $name = null)
+    {
+        while ($result = $model->getData()) {
+            if (count($element) != 1)
+                echo "<" . $element[0] . ">";
+            foreach ($result as $r) {
+                if (count($element) == 1) echo "<" . $element . ">" . $r . "</" . $element . ">";
+                else echo "<" . $element[1] . ">" . $r . "</" . $element[1] . ">";
+            }
+            if ($button) echo "<" . $element[1] . "><button data-id = '" . $result["id"] . "'>" . $name . "</button></" . $element[1] . ">";
+            if (count($element) != 1)
+                echo "</" . $element[0] . ">";
+        }
+    }
+
+    public function indexedData($array)
+    {
+        $i=0;
+        $data = [];
+        foreach ($array as $value){
+            $data[$i]=$value;
+            $i++;
+        }
+        return $data;
     }
 }

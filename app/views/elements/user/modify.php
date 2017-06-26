@@ -1,30 +1,41 @@
 <section>
     <article>
-        <table>
-            <thead>
-            <tr>
-                <td>
-                    id
-                </td>
-                <td>
-                    Content
-                </td>
-                <td>
-                    Created Date
-                </td>
+        <?php
+        if ($data->isEmpty()):
+            ?>
+            <p>
+                Brak danych
+            </p>
+            <?php
+        else:
+            ?>
+            <table>
+                <thead>
+                <tr>
+                    <td>
+                        id
+                    </td>
+                    <td>
+                        Content
+                    </td>
+                    <td>
+                        Created Date
+                    </td>
 
-                <td>
-                    Update Date
-                </td>
-                <td>
-                    Action
-                </td>
-            </tr>
-            </thead>
-            <tbody>
-            <?= $data->getDataToPage(["tr", "td"], true, "Edit") ?>
-            </tbody>
-        </table>
-
+                    <td>
+                        Update Date
+                    </td>
+                    <td>
+                        Action
+                    </td>
+                </tr>
+                </thead>
+                <tbody>
+                <?= $this->generateDynamic($data,["tr", "td"], true, "Edit") ?>
+                </tbody>
+            </table>
+            <?php
+        endif;
+        ?>
     </article>
 </section>

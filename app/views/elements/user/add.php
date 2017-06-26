@@ -7,8 +7,8 @@
             <input type="text" id="text">
         </label>
         <?=
-        $this->endForm();
         $this->button("Add data");
+        $this->endForm();
         ?>
     </article>
 </section>

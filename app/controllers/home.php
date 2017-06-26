@@ -7,11 +7,18 @@ class Home extends Controller
 {
     public function index($name = '')
     {
-        if ($_POST!=null)
+        $user=null;
+        if ($_POST!=null){
+            Security::slashSQLForm($_POST);
+            Security::analyzeXSS($_POST);
             $user = $this->loadModel('User');
+            $query = $user->createQuery($user->table(),"SELECT",array_merge($user->login(), $this->indexedData($_POST)) ,"a");
+            $user->request($query);
+            $user->saveData();
+        }
         $css = "main home";
         $js = "main home";
-        $this->view('home/index', NULL, $css, $js);
+        $this->view('home/index', $user, $css, $js);
     }
 
     public function error()

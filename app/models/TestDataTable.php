@@ -5,7 +5,8 @@ class TestDataTable extends Model
 
     use DeleteData;
 
-    public function __construct(){
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -22,6 +23,7 @@ class TestDataTable extends Model
         $columns[3] = 'update_at';
         return $columns;
     }
+
     public function insertData()
     {
         $columns[0] = "data";
@@ -33,6 +35,11 @@ class TestDataTable extends Model
     public function updateData()
     {
         return "data";
+    }
+
+    public function getUpdateDate()
+    {
+        return "update_at";
     }
 
 }
