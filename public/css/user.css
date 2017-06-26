@@ -16,3 +16,8 @@ td{
     border:1px solid white;
     min-width: 150px;
 }
+
+td > input {
+    width: 150px;
+    margin:0;
+}

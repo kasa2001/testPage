@@ -1,5 +1,6 @@
 <?php
 
+require_once 'models/DeleteData.php';
 require_once 'core/Security.php';
 require_once 'core/Config.php';
 require_once 'core/Cookies.php';
