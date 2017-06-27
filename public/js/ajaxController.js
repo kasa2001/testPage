@@ -28,7 +28,7 @@ $(document).ready(function () {
             $.post("/PTW/public/api/sendDelete", {id: $(this).data("id")},function (data, status) {
                 alert(status+"! Data deleted from database");
                 if(temporary.parent().children().length===1){
-                    temporary.parent().parent().parent().html("<p>Brak danych </p>");
+                    temporary.parent().parent().parent().html("<p>No data</p>");
                 }else{
                     temporary.remove();
                 }

@@ -4,7 +4,7 @@
         if ($data->isEmpty()):
             ?>
             <p>
-                Brak danych
+                No data
             </p>
             <?php
         else:
