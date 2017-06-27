@@ -24,9 +24,15 @@ $(document).ready(function () {
         });
     } else if (zmienna[zmienna.length - 1] === "delete" && zmienna[zmienna.length - 2] === "user") {
         $("td > button").on("click",function () {
-            $(this).parent().parent().remove();
+            var temporary = $(this).parent().parent();
             $.post("/PTW/public/api/sendDelete", {id: $(this).data("id")},function (data, status) {
                 alert(status+"! Data deleted from database");
+                if(temporary.parent().children().length===1){
+                    temporary.parent().parent().parent().html("<p>Brak danych </p>");
+                }else{
+                    temporary.remove();
+                }
+
             });
         });
     }
