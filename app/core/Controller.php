@@ -27,7 +27,6 @@ class Controller extends Config
         require_once '../app/views/layout/layout.php';
     }
 
-
     /**
      * Method add element to view
      * @param $name string - file name
@@ -44,7 +43,6 @@ class Controller extends Config
      * @param $view string
      * @param $data array
      * */
-
     public function content($view, $data = [])
     {
         require_once '../app/views/' . $view . '.php';
@@ -60,7 +58,7 @@ class Controller extends Config
             $table = explode(' ', $css);
             $address = $this->address();
             for ($i = 0; $i < (count($table)); $i++) {
-                echo '<link href="' . $address . 'css/' . $table[$i] . '.css" rel="stylesheet" type="text/css">';
+                echo '<link rel="stylesheet" href="' . $address . 'css/' . $table[$i] . '.css"  type="text/css">';
             }
         }
     }
@@ -89,6 +87,10 @@ class Controller extends Config
         return "/" . $this->config["system"]["default-directory"] . "/public/";
     }
 
+    /**
+     * Method check address
+     * @return string/null
+     */
     public function checkAddress()
     {
         if ($_GET == null)
@@ -255,10 +257,10 @@ class Controller extends Config
      * */
     public function indexedData($array)
     {
-        $i=0;
+        $i = 0;
         $data = [];
-        foreach ($array as $value){
-            $data[$i]=$value;
+        foreach ($array as $value) {
+            $data[$i] = $value;
             $i++;
         }
         return $data;
@@ -272,5 +274,101 @@ class Controller extends Config
     {
         if (isset($_SERVER['HTTP_REFERER'])) return $_SERVER['HTTP_REFERER'];
         else return null;
+    }
+
+    /**
+     * Method generate beginning links
+     * */
+    public function addBeginningLink()
+    {
+        return $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["SERVER_NAME"];
+    }
+
+    /**
+     * Method add to head canonical link
+     * */
+    public function addCanonicalLink()
+    {
+        echo "<link rel=\"canonical\" href= \"" . $this->addBeginningLink() . $_SERVER["REQUEST_URI"] . "\">";
+    }
+
+    /**
+     * Method add base page to head
+     * */
+    public function addBasePage()
+    {
+        echo "<base href= \"" . $this->addBeginningLink() . $this->baseLink() . "\">";
+    }
+
+    /**
+     * Method generate mobile beginning links
+     * */
+    public function addMobileBeginningLink()
+    {
+        return $_SERVER["REQUEST_SCHEME"] . "://m";
+    }
+
+    /**
+     * Method at this moment do nothing. Todo write him and pagination
+     * */
+    public function addNextPageLink()
+    {
+
+    }
+
+    /**
+     * Method at this moment do nothing. Todo write him and pagination
+     * */
+    public function addPreviousPageLink()
+    {
+
+    }
+
+    /**
+     * Method add alternate link for mobile
+     */
+    public function addMobileLink()
+    {
+        echo "<link rel=\"alternate\" media=\" only screen and (max-width: 640px)\" href=";
+    }
+
+    /**
+     * Method add description page
+     * @param  $data string
+     */
+    public function addDescription($data)
+    {
+        echo "<meta name=\"description\" content=\"" . $data . "\">";
+    }
+
+    /**
+     * Method add languages page
+     * @param  $lang array
+     */
+    public function addLanguageLink($lang)
+    {
+        foreach ($lang as $l)
+            echo "<link rel=\"alternate\" hreflang=\"" . $l ."\" href=\"" . $this->addBeginningLink() . $_SERVER["REQUEST_URI"] ."\">";
+    }
+
+    /**
+     * Method add mailing link
+     * @param $mail string
+     */
+    public function mailingTo($mail)
+    {
+        echo "<a href=\"mailto:" . $mail."\">" . $mail . "</a>";
+    }
+
+    /**
+     * Method add metadata for search bots
+     * @param $agree boolean
+     * */
+    public function addRobotsFollow($agree)
+    {
+        if ($agree)
+            echo "<meta name=\"robots\" content=\"index,follow\">";
+        else
+            echo "<meta name=\"robots\" content=\"none\">";
     }
 }

@@ -15,7 +15,7 @@
                 Password: password
             </p>
             <p>
-                You can registry and check how app is work. If you see what can add in framework, please send me a message.
+                You can registry and check how app is work. If you see what can add in framework, please send message to <?=$this->mailingTo("pawelgomolka@interia.pl")?>
             </p>
         </div>
     </article>

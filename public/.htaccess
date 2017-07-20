@@ -1,9 +1,35 @@
+#Block multiviews
 Options -MultiViews
+
+#Directory index
+DirectoryIndex index.php
+
+#Run Rewrite Engine
 RewriteEngine ON
 
+#Set base catalog
 RewriteBase /PTW/public
 
+#Check first param REQUEST_URI
+RewriteCond %{REQUEST_URI} !^/PTW
+
+#If first param is true redirect error (flag R)
+RewriteRule ^(.*)$  /index [R=404]
+
+#Check HTTP_HOST
+RewriteCond %{HTTP_HOST} !^$
+RewriteCond %{HTTP_HOST} !^www.
+
+#Rewrite if not exists in HTTP_HOST www.
+RewriteRule ^ http%1://www.%{HTTP_HOST}%{REQUEST_URI}/$1 [R=301,N]
+
+#Checking exists files
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 
+#Rewrite url
 RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+
+
+#Adding error document
+ErrorDocument 404 http://www.localhost/PTW/public/home/error404

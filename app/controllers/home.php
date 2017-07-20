@@ -21,7 +21,7 @@ class Home extends Controller
         $this->view('home/index', $user, $css, $js);
     }
 
-    public function error()
+    public function error404()
     {
         $this->view("home/error", NULL);
     }

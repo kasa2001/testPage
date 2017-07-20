@@ -22,7 +22,8 @@ class App
                 unset($url[1]);
             } else {
                 $this->controller = "home";
-                $this->method = 'error';
+                $this->method = "error404";
+                require_once '../app/controllers/' . $this->controller . '.php';
                 $this->controller = new $this->controller;
             }
         }
