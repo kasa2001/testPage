@@ -19,9 +19,6 @@ trait GetInstance
             echo $exception;
             echo "</pre>";
         }
-        echo "<pre>";
-        print_r($_SERVER);
-        echo "</pre>";
         return self::$object;
     }
 }
