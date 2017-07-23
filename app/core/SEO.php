@@ -3,10 +3,13 @@
 class SEO
 {
     private static $object;
+    private $uri;
 
-    private function __construct()
+    use GetInstance;
+
+    private function __construct($config)
     {
-
+        $this->uri = Factory::getInstance("URI",$config);
     }
 
     /**
@@ -30,15 +33,7 @@ class SEO
      * */
     public function addBasePage()
     {
-        echo "<base href= \"" . $this->addBeginningLink() . $this->baseLink() . "\">";
-    }
-
-    /**
-     * Method generate mobile beginning links
-     * */
-    public function addMobileBeginningLink()
-    {
-        return $_SERVER["REQUEST_SCHEME"] . "://m";
+        echo "<base href= \"" . $this->uri->getBase(). "\">";
     }
 
     /**

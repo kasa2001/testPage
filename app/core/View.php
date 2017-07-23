@@ -6,11 +6,13 @@ class View
 
     private static $object;
     private $config;
+    private $seo;
 
     private function __construct($config)
     {
 
         $this->config = $config;
+        $this->seo = Factory::getInstance("SEO", $config);
     }
 
     /**
@@ -210,5 +212,10 @@ class View
             if (count($element) != 1)
                 echo "</" . $element[0] . ">";
         }
+    }
+
+    public function getSEO()
+    {
+        return $this->seo;
     }
 }

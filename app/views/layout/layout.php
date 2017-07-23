@@ -2,19 +2,17 @@
 <html <?= $this->loadLanguage() ?>>
 <head>
     <?php
-    if ($seo){
-        $this->addBasePage();
-    }
+    $seo = $this->getSEO();
+    $seo->addBasePage();
+
 
     $this->loadTitle();
     $this->loadCharset();
-    //$this->addRobotsFollow($seo);
+    $seo->addRobotsFollow($seo);
+    $seo->addDescription("Strona testowa frameworka");
+    $seo->addCanonicalLink();
+    $seo->addLanguageLink(array("pl"));
 
-    if ($seo){
-        $this->addDescription("Strona testowa frameworka");
-        $this->addCanonicalLink();
-        $this->addLanguageLink(array("pl"));
-    }
 
     $this->loadCss($css);
     ?>

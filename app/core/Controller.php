@@ -4,21 +4,6 @@
 class Controller extends Config
 {
     /**
-     * @var $seo SEO
-     */
-    protected $seo;
-
-    /**
-     * @var $pagination Pagination
-     * */
-    protected $pagination;
-
-    /**
-     * @var $uri URI
-     * */
-    protected $uri;
-
-    /**
      * @var $view View
      * */
     protected $view;

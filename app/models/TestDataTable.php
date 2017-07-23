@@ -2,9 +2,6 @@
 
 class TestDataTable extends Model
 {
-
-    use DeleteData;
-
     public function __construct()
     {
         parent::__construct();
@@ -42,4 +39,8 @@ class TestDataTable extends Model
         return "update_at";
     }
 
+    public function deleteData()
+    {
+        return "id";
+    }
 }

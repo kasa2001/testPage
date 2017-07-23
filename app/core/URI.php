@@ -4,7 +4,7 @@ class URI
 {
     use GetInstance;
 
-    private static $uri;
+    private static $object;
     private $scheme;
     private $host;
     private $base;

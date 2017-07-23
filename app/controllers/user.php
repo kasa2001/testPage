@@ -17,7 +17,7 @@ class User extends Controller
             $this->redirect("home/index");
         }else{
             $this->view = View::getInstance($this->config);
-            $this->view->view('user/login', NULL, $this->css, $this->js, false);
+            $this->view->view('user/login', NULL, $this->css, $this->js);
         }
     }
 
@@ -28,7 +28,7 @@ class User extends Controller
             $this->redirect("home/index");
         }else{
             $this->view = View::getInstance($this->config);
-            $this->view->view('user/registry', NULL, $this->css, $this->js, false);
+            $this->view->view('user/registry', NULL, $this->css, $this->js);
         }
     }
 
@@ -37,7 +37,7 @@ class User extends Controller
         if (Session::getDataWithSession("Id")!==null){
             $this->js = "ajax";
             $this->view = View::getInstance($this->config);
-            $this->view->view('user/add', NULL, $this->css, $this->js, false);
+            $this->view->view('user/add', NULL, $this->css, $this->js);
         }else{
             $this->redirect("home/index");
         }
@@ -51,7 +51,7 @@ class User extends Controller
             $user->request($user->createQuery($user->table(),"SELECT"));
             $this->js = "ajax";
             $this->view = View::getInstance($this->config);
-            $this->view->view('user/delete', $user, $this->css, $this->js, false);
+            $this->view->view('user/delete', $user, $this->css, $this->js);
         }else{
             $this->redirect("home/index");
         }
@@ -64,7 +64,7 @@ class User extends Controller
             $user->request($user->createQuery($user->table(),"SELECT"));
             $this->js = "ajax";
             $this->view = View::getInstance($this->config);
-            $this->view->view('user/modify', $user, $this->css, $this->js, false);
+            $this->view->view('user/modify', $user, $this->css, $this->js);
         }else{
             $this->redirect("home/index");
         }
@@ -76,7 +76,7 @@ class User extends Controller
             $user = $this->loadModel("TestData");
             $user->request($user->createQuery($user->table(),"SELECT"));
             $this->view = View::getInstance($this->config);
-            $this->view->view('user/select', $user, $this->css, $this->js, false);
+            $this->view->view('user/select', $user, $this->css, $this->js);
         }else{
             $this->redirect("home/index");
         }
