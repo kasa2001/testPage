@@ -16,7 +16,8 @@ class User extends Controller
         if (Session::getDataWithSession("Id")!==null){
             $this->redirect("home/index");
         }else{
-            $this->view('user/login', NULL, $this->css, $this->js);
+            $this->view = View::getInstance($this->config);
+            $this->view->view('user/login', NULL, $this->css, $this->js, false);
         }
     }
 
@@ -26,7 +27,8 @@ class User extends Controller
         if (Session::getDataWithSession("Id")!==null){
             $this->redirect("home/index");
         }else{
-            $this->view('user/registry', null, $this->css, $this->js);
+            $this->view = View::getInstance($this->config);
+            $this->view->view('user/registry', NULL, $this->css, $this->js, false);
         }
     }
 
@@ -34,7 +36,8 @@ class User extends Controller
     {
         if (Session::getDataWithSession("Id")!==null){
             $this->js = "ajax";
-            $this->view('user/add', null, $this->css, $this->js);
+            $this->view = View::getInstance($this->config);
+            $this->view->view('user/add', NULL, $this->css, $this->js, false);
         }else{
             $this->redirect("home/index");
         }
@@ -47,7 +50,8 @@ class User extends Controller
             $user = $this->loadModel('TestData');
             $user->request($user->createQuery($user->table(),"SELECT"));
             $this->js = "ajax";
-            $this->view('user/delete', $user, $this->css, $this->js);
+            $this->view = View::getInstance($this->config);
+            $this->view->view('user/delete', $user, $this->css, $this->js, false);
         }else{
             $this->redirect("home/index");
         }
@@ -59,7 +63,8 @@ class User extends Controller
             $user = $this->loadModel('TestData');
             $user->request($user->createQuery($user->table(),"SELECT"));
             $this->js = "ajax";
-            $this->view('user/modify', $user, $this->css, $this->js);
+            $this->view = View::getInstance($this->config);
+            $this->view->view('user/modify', $user, $this->css, $this->js, false);
         }else{
             $this->redirect("home/index");
         }
@@ -70,7 +75,8 @@ class User extends Controller
         if (Session::getDataWithSession("Id")!==null){
             $user = $this->loadModel("TestData");
             $user->request($user->createQuery($user->table(),"SELECT"));
-            $this->view('user/select', $user, $this->css, $this->js);
+            $this->view = View::getInstance($this->config);
+            $this->view->view('user/select', $user, $this->css, $this->js, false);
         }else{
             $this->redirect("home/index");
         }

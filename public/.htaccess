@@ -14,7 +14,7 @@ RewriteBase /PTW/public
 RewriteCond %{REQUEST_URI} !^/PTW
 
 #If first param is true redirect error (flag R)
-RewriteRule ^(.*)$  /index [R=404]
+RewriteRule ^(.*)$  /* [R=404]
 
 #Check HTTP_HOST
 RewriteCond %{HTTP_HOST} !^$
@@ -32,4 +32,5 @@ RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
 
 
 #Adding error document
+ErrorDocument 403 http://www.localhost/PTW/public/home/error403
 ErrorDocument 404 http://www.localhost/PTW/public/home/error404

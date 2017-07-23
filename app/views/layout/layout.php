@@ -1,14 +1,22 @@
 <!doctype html>
 <html <?= $this->loadLanguage() ?>>
 <head>
-    <?=
-    $this->addBasePage();
+    <?php
+    if ($seo){
+        $this->addBasePage();
+    }
+
     $this->loadTitle();
     $this->loadCharset();
-    $this->addDescription("Strona testowa frameworka");
+    //$this->addRobotsFollow($seo);
+
+    if ($seo){
+        $this->addDescription("Strona testowa frameworka");
+        $this->addCanonicalLink();
+        $this->addLanguageLink(array("pl"));
+    }
+
     $this->loadCss($css);
-    $this->addCanonicalLink();
-    $this->addLanguageLink(array("pl"));
     ?>
 </head>
 <body>

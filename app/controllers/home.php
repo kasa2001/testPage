@@ -5,7 +5,7 @@
  * */
 class Home extends Controller
 {
-    public function index($name = '')
+    public function index()
     {
         $user = null;
         if (isset($_POST["nick"])) {
@@ -17,12 +17,21 @@ class Home extends Controller
             $user->saveData();
         }
         $css = "main home";
-        $js = null;
-        $this->view('home/index', $user, $css, $js);
+        $this->view = View::getInstance($this->config);
+        $this->view->view("home/index", null, $css, null, false);
     }
 
     public function error404()
     {
-        $this->view("home/error", NULL);
+        $_SERVER["REDIRECT_STATUS"] = 404;
+        $this->view = View::getInstance($this->config);
+        $this->view->view("home/error", array('error'=> 404), null, null, false);
+    }
+
+    public function error403()
+    {
+        $_SERVER["REDIRECT_STATUS"] = 403;
+        $this->view = View::getInstance($this->config);
+        $this->view->view("home/error", array('error'=> 403), null, null, false);
     }
 }
