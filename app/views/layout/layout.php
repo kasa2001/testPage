@@ -8,7 +8,7 @@
 
     $this->loadTitle();
     $this->loadCharset();
-    $seo->addRobotsFollow($seo);
+    $seo->addRobotsFollow(true);
     $seo->addDescription("Strona testowa frameworka");
     $seo->addCanonicalLink();
     $seo->addLanguageLink(array("pl"));
