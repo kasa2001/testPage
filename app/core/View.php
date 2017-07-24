@@ -10,7 +10,6 @@ class View
 
     private function __construct($config)
     {
-
         $this->config = $config;
         $this->seo = Factory::getInstance("SEO", $config);
     }
@@ -57,9 +56,8 @@ class View
     {
         if ($css != "" or $css != null) {
             $table = explode(' ', $css);
-            for ($i = 0; $i < (count($table)); $i++) {
+            for ($i = 0; $i < (count($table)); $i++)
                 echo '<link rel="stylesheet" href="/' . $this->config["system"]["default-directory"] . '/public/css/' . $table[$i] . '.css"  type="text/css">';
-            }
         }
     }
 
@@ -214,6 +212,10 @@ class View
         }
     }
 
+    /**
+     * Method get SEO object
+     * @return SEO
+     * */
     public function getSEO()
     {
         return $this->seo;

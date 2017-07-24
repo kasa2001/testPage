@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class supports MySQL only.
+ * Class supports MySQL only on this moment
  * */
 class Database extends Config
 {
@@ -26,7 +26,7 @@ class Database extends Config
     protected $base;
 
     /**
-     * @var $connect object. It is a object class mysqli
+     * @var $connect object. It is a object class PDO
      * */
     protected $connect;
 
@@ -52,8 +52,15 @@ class Database extends Config
         $this->login = $this->config['database']['user'];
         $this->password = $this->config['database']['password'];
         $this->base = $this->config['database']['database'];
-        $this->connect = new mysqli($this->server, $this->login, $this->password, $this->base);
-        $this->connect->set_charset("utf8");
+        try{
+            $this->connect = new PDO($this->config['database']['sql'] . ":host=" . $this->server . ";dbname=" . $this->base, $this->login, $this->password);
+        }catch (PDOException $exception){
+            echo '<pre>';
+            print_r($exception);
+            echo '</pre>';
+        }
+
+        $this->connect->exec("set names utf8");
     }
 
     /**
@@ -358,8 +365,8 @@ class Database extends Config
      * */
     public function saveData()
     {
-        if ($this->data->num_rows == 1) {
-            $this->result = $this->data->fetch_assoc();
+        if ($this->data->rowCount() == 1) {
+            $this->result = $this->getData();
             Session::writeToSession($this->result);
         } else
             Security::addLog("sql");
@@ -370,7 +377,7 @@ class Database extends Config
      * */
     public function getData()
     {
-        return $this->data->fetch_assoc();
+        return $this->data->fetch(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -379,15 +386,6 @@ class Database extends Config
      * */
     public function isEmpty()
     {
-        return $this->data->num_rows == 0;
-    }
-
-    /**
-     * Method return one record from query result
-     * @return array
-     * */
-    public function echoResult()
-    {
-        return $this->data->fetch_assoc();
+        return $this->data->rowCount() == 0;
     }
 }

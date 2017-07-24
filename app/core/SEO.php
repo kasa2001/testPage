@@ -13,23 +13,15 @@ class SEO
     }
 
     /**
-     * Method generate beginning links
-     * */
-    public function addBeginningLink()
-    {
-        return $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["SERVER_NAME"];
-    }
-
-    /**
-     * Method add to head canonical link
+     * Method add to head canonical link. Use one link for page.
      * */
     public function addCanonicalLink()
     {
-        echo "<link rel=\"canonical\" href= \"" . $this->addBeginningLink() . $_SERVER["REQUEST_URI"] . "\">";
+        echo "<link rel=\"canonical\" href= \"" . $this->uri->getBase() . $_SERVER["REQUEST_URI"] . "\">";
     }
 
     /**
-     * Method add base page to head
+     * Method add base page to head. Use one link for page
      * */
     public function addBasePage()
     {
@@ -37,7 +29,7 @@ class SEO
     }
 
     /**
-     * Method add alternate link for mobile
+     * Method add alternate link for mobile. Use when you got page for mobile view
      */
     public function addMobileLink()
     {
@@ -45,7 +37,15 @@ class SEO
     }
 
     /**
-     * Method add description page
+     * Method add meta tag for mobile view init. Use only, when you have responsive page
+     * */
+    public function addViewport()
+    {
+        echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
+    }
+
+    /**
+     * Method add description page. Use one link for page
      * @param  $data string
      */
     public function addDescription($data)
@@ -60,11 +60,11 @@ class SEO
     public function addLanguageLink($lang)
     {
         foreach ($lang as $l)
-            echo "<link rel=\"alternate\" hreflang=\"" . $l ."\" href=\"" . $this->addBeginningLink() . $_SERVER["REQUEST_URI"] ."\">";
+            echo "<link rel=\"alternate\" hreflang=\"" . $l ."\" href=\"" . $this->uri->getAddress() ."\">";
     }
 
     /**
-     * Method add metadata for search bots
+     * Method add metadata for search bots. Use one link for page
      * @param $agree boolean
      * */
     public function addRobotsFollow($agree)
@@ -76,11 +76,19 @@ class SEO
     }
 
     /**
-     * Method add h1 element to page
+     * Method add h1 element to page. You can use normally, but cautiously
      * @param $words string
+     * @param $class array default null
      * */
-    public function addKeyWords($words)
+    public function addKeyWords($words, $class=null)
     {
-        echo "<h1>" . $words ."</h1>";
+        echo "<h1";
+        if ($class!==null){
+            echo" class = \"";
+            foreach ($class as $item)
+                echo $item . " ";
+            echo "\"";
+        }
+        echo ">" . $words ."</h1>";
     }
 }
