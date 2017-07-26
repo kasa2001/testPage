@@ -42,24 +42,31 @@ class Database extends Config
 
     protected $result;
 
+    protected $driver;
+
     /**
      * Connect with database
+     * @param $driver string/null
+     * @param $host string/null
+     * @param $db string/null
+     * @param $user string/null
+     * @param  $password string/null
      */
-    public function __construct()
+    public function __construct($driver = null, $host = null, $db = null, $user = null, $password = null)
     {
         parent::__construct();
-        $this->server = $this->config['database']['host'];
-        $this->login = $this->config['database']['user'];
-        $this->password = $this->config['database']['password'];
-        $this->base = $this->config['database']['database'];
-        try{
-            $this->connect = new PDO($this->config['database']['sql'] . ":host=" . $this->server . ";dbname=" . $this->base, $this->login, $this->password);
-        }catch (PDOException $exception){
+        $this->server = ($host === null) ? $this->config['database']['host'] : $host;
+        $this->login = ($user === null) ? $this->config['database']['user'] : $user;
+        $this->password = ($password === null) ? $this->config['database']['password'] : $password;
+        $this->base = ($db === null) ? $this->config['database']['database'] : $db;
+        $this->driver = ($driver === null) ? $this->config['database']['sql'] : $driver;
+        try {
+            $this->connect = new PDO($this->driver . ":host=" . $this->server . ";dbname=" . $this->base, $this->login, $this->password);
+        } catch (PDOException $exception) {
             echo '<pre>';
             print_r($exception);
             echo '</pre>';
         }
-
         $this->connect->exec("set names utf8");
     }
 

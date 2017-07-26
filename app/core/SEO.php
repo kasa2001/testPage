@@ -30,6 +30,7 @@ class SEO
 
     /**
      * Method add alternate link for mobile. Use when you got page for mobile view
+     * todo (this method is incomplete)
      */
     public function addMobileLink()
     {
@@ -90,5 +91,10 @@ class SEO
             echo "\"";
         }
         echo ">" . $words ."</h1>";
+    }
+
+    public function addHttpEquiv($charset)
+    {
+        echo '<meta http-equiv="content-type" content="text/html; charset=' . $charset . '">';
     }
 }
