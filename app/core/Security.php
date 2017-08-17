@@ -51,10 +51,6 @@ class Security
      * @return array
      * */
     public static function analyzeXSS($data){
-        return self::entitiesData($data);
-    }
-
-    private static function entitiesData($data){
         foreach($data as $key=>$datum)
             $data[$key] = htmlspecialchars($datum);
         return $data;
