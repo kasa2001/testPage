@@ -11,13 +11,15 @@ class Server
 
     }
 
-    public function setError($code)
+    public function setCode($code)
     {
         $_SERVER["REDIRECT_STATUS"] = $code;
     }
 
-    public function httpRequest(){
+    public function getHttpRequest(){
         return $_SERVER['HTTP_X_REQUESTED_WITH'];
     }
+
+
 
 }
