@@ -19,6 +19,7 @@ class Home extends Controller
         $css = "main home";
         $this->view = View::getInstance($this->config);
         $this->view->view("home/index", null, $css, null);
+        $mail = Mail::getInstance($this->config["mail"]);
     }
 
     public function error404()
