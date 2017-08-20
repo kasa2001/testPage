@@ -68,4 +68,16 @@ class URI
     {
         return $this->requestURI;
     }
+
+    public function toPagination()
+    {
+        $data = explode("/",$this->requestURI);
+        $how = count($data);
+        for ($i=0; $i < $how; $i++) {
+            if (is_numeric($data[$i]) || $data[$i]=='all' || strlen($data[$i])===0)
+                unset($data[$i]);
+
+        }
+        return implode("/", $data) . "/";
+    }
 }

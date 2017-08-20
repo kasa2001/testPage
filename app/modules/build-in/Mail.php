@@ -21,7 +21,7 @@ class Mail
     {
         $mail = new PHPMailer();
         $mail->isSMTP();
-        $mail->SMTPAuth = true; //We need to authenticate
+        $mail->SMTPAuth = true;
         $mail->Host = $this->config['host'];
         $mail->Port = $this->config['port'];
         $mail->Username = $this->config['email'];
@@ -34,8 +34,5 @@ class Mail
         $mail->Body = $message;
         $mail->isHTML(true);
 //        $mail->send();
-        echo "<pre>";
-        print_r($mail);
-        echo "</pre>";
     }
 }

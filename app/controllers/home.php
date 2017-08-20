@@ -19,20 +19,27 @@ class Home extends Controller
         $css = "main home";
         $this->view = View::getInstance($this->config);
         $this->view->view("home/index", null, $css, null);
-        $mail = Mail::getInstance($this->config["mail"]);
+
     }
 
     public function error404()
     {
         $_SERVER["REDIRECT_STATUS"] = 404;
         $this->view = View::getInstance($this->config);
-        $this->view->view("home/error", array('error'=> 404), null, null);
+        $this->view->view("home/error", array('error' => 404), null, null);
     }
 
     public function error403()
     {
         $_SERVER["REDIRECT_STATUS"] = 403;
         $this->view = View::getInstance($this->config);
-        $this->view->view("home/error", array('error'=> 403), null, null);
+        $this->view->view("home/error", array('error' => 403), null, null);
+    }
+
+    public function error410()
+    {
+        $_SERVER["REDIRECT_STATUS"] = 410;
+        $this->view = View::getInstance($this->config);
+        $this->view->view("home/error", array('error' => 410), null, null);
     }
 }

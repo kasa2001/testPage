@@ -5,7 +5,7 @@
     $seo = $this->getSEO();
     $seo->addBasePage();
 
-
+    Pagination::checkExist();
     $this->loadTitle();
     $this->loadCharset();
     $seo->addRobotsFollow(true);
