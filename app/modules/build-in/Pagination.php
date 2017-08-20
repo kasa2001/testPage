@@ -93,9 +93,8 @@ class Pagination
 
             if ($start === 0)
                 $html .= $this->_directLink($this->address,(($start/$this->limit)+1));
-            else{
+            else
                 $html .= $this->_directLink(($this->address . '/' . $start),(($start/$this->limit)+1));
-            }
         }
 
         return $html;
