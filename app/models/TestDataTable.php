@@ -1,11 +1,7 @@
 <?php
 
-class TestDataTable extends Model
+class TestDataTable extends Database
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     public function table()
     {

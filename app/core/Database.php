@@ -44,6 +44,10 @@ class Database extends Config
 
     protected $driver;
 
+    protected $table;
+
+    protected $columns = [];
+
     /**
      * Connect with database
      * @param $driver string/null

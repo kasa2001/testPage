@@ -9,7 +9,6 @@ require_once 'modules/build-in/Cookies.php';
 require_once 'core/Database.php';
 require_once 'modules/build-in/Factory.php';
 require_once 'modules/build-in/Mail.php';
-require_once 'core/Model.php';
 require_once 'modules/build-in/Pagination.php';
 require_once 'modules/build-in/Security.php';
 require_once 'modules/build-in/SEO.php';

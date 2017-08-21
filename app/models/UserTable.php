@@ -1,15 +1,8 @@
 <?php
 
-class UserTable extends Model
+class UserTable extends Database
 {
     protected $database;
-
-    /**
-     * Construct create new object -> Model
-     * */
-    public function __construct(){
-        parent::__construct();
-    }
 
     public function table()
     {
