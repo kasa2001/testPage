@@ -20,6 +20,8 @@ class Home extends Controller
         $this->view = View::getInstance($this->config);
         $this->view->view("home/index", null, $css, null);
 
+        $user = $this->loadModel('TestData');
+        echo $user->createCountQuery($user->table(), $user->deleteData(), array("test"));
     }
 
     public function error404()

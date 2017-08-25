@@ -95,6 +95,8 @@ class Database extends Config
                 return $this->createDeleteQuery($table, $modify, $data);
             case "UPDATE":
                 return $this->createUpdateQuery($table, $modify, $data);
+            case "COUNT":
+                return $this->createCountQuery($table, $data);
             default:
                 echo 'Bad choose query. Check second param in call method createQuery()';
         }
@@ -115,10 +117,37 @@ class Database extends Config
         if ($modify) {
             $sort != 0 ? $i = 1 : $i = 0;
             $n = count($data);
-            if ($i < $n) $query = $this->where($query, $i, $n, $data, $modify);
+            if ($i < $n) $query = $this->where($query, $i, $n, $modify ,$data);
             else if ($i > $n) return $this->warning();
         }
         if ($sort) $query = $this->sort($query, $data, $sort);
+        return $query;
+    }
+
+    public function from($tables, $alias = [])
+    {
+        $query = " FROM `";
+        for ($i=0; $i<count($tables); $i++){
+            $query .= $tables[$i] . "` ";
+            if (isset($alias[$i]) && $alias[$i] != "")
+                $query .= $this->setAlias($alias[$i]);
+            if ($i<(count($tables)-1))
+                $query .= ", `";
+        }
+        return $query;
+    }
+
+    public function setAlias($alias)
+    {
+        return " as " . $alias. " ";
+    }
+
+    public function createCountQuery($table, $data, $alias = [], $where = null, $modify = null)
+    {
+        $query = "SELECT count(`" . $data ."`)";
+        $query .= $this->from(array($table), $alias);
+        if ($where !=null)
+            $query .= $this->where($query,0, count($data), $modify, $data);
         return $query;
     }
 
@@ -149,7 +178,7 @@ class Database extends Config
         $i = 0;
         $n = count($data);
         if ($i > $n) return $this->warning();
-        $query = $this->where($query, $i, $n, $data, $modify);
+        $query = $this->where($query, $i, $n, $modify ,$data);
         return $query;
     }
 
@@ -163,7 +192,7 @@ class Database extends Config
     public function createUpdateQuery($table, $modify, $data = [])
     {
         $query = "UPDATE `" . $table . "` SET `" . $data[0] . "` = '" . $data[1] . "' ";
-        $query = $this->where($query, 2, count($data), $data, $modify);
+        $query = $this->where($query, 2, count($data), $modify, $data);
         return $query;
     }
 
@@ -176,7 +205,7 @@ class Database extends Config
      * @param $modify
      * @return string $query
      * */
-    public function where($query, $i, $n, $data = [], $modify)
+    public function where($query, $i, $n,  $modify, $data = [])
     {
         $query .= "WHERE `";
         for (; $i < $n; $i++) {
