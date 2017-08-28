@@ -3,7 +3,7 @@
 class Pagination
 {
 
-    use GetInstance;
+   use \GetInstance;
 
     private static $object;
     private $uri;

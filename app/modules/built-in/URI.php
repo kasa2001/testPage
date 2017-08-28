@@ -2,7 +2,7 @@
 
 class URI
 {
-    use GetInstance;
+    use \GetInstance;
 
     private static $object;
     private $scheme;

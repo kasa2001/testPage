@@ -9,7 +9,7 @@ class Chat
     /**/
     private $model;
 
-    use GetInstance;
+    use \GetInstance;
 
     private function __construct($model)
     {

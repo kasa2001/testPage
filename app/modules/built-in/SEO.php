@@ -5,7 +5,7 @@ class SEO
     private static $object;
     private $uri;
 
-    use GetInstance;
+    use \GetInstance;
 
     private function __construct($config)
     {

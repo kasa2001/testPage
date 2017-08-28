@@ -2,7 +2,7 @@
 
 class View
 {
-    use GetInstance;
+    use \GetInstance;
 
     private static $object;
     private $config;
@@ -22,7 +22,7 @@ class View
      * @param $js string
      * @param $seo boolean
      * */
-    public function view($view, $data = [], $css = null, $js = null, $seo = true)
+    public function display($view, $data = [], $css = null, $js = null, $seo = true)
     {
         require_once '../app/views/layout/layout.php';
     }
@@ -100,7 +100,7 @@ class View
     }
 
     /**
-     * Method create element a in view
+     * Method creates element a in view
      * @param $name string
      * @param $data string
      * @param $class array string (default null)
@@ -119,7 +119,7 @@ class View
     }
 
     /**
-     * Method create attribute href
+     * Method creates attribute href
      * @return string
      * */
     public function baseLink()
@@ -155,7 +155,7 @@ class View
     }
 
     /**
-     * Method create in page button
+     * Method creates in page button
      * @param $text string
      * @param $class array
      * */
@@ -171,7 +171,7 @@ class View
 
     /**
      * Method check address
-     * @return string/null
+     * @return string|null
      */
     public function checkAddress()
     {
@@ -219,5 +219,15 @@ class View
     public function getSEO()
     {
         return $this->seo;
+    }
+
+    /**
+     * Method get data from file without loading all page
+     * @param $file string
+     * @param $model Database
+     * */
+    public function getJSON($file, $model)
+    {
+        require_once "../app/views/API/" . $file . ".php";
     }
 }

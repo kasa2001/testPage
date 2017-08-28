@@ -5,7 +5,7 @@ class Mail
 {
     private static $object;
     private $config;
-    use GetInstance;
+    use \GetInstance;
     private $mail;
 
     private function __construct($config)
