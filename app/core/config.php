@@ -9,7 +9,7 @@ class Config
 
     public function __construct()
     {
-        $this->loader = AutoLoader::getInstance(null);
+        $this->loader = autoloader::getInstance(null);
         $this->loader->changeRegister('loadModule');
         if (file_exists($this->path) and (filesize($this->path) !== 0)) {
             $this->config=parse_ini_file($this->path,true);

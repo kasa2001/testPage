@@ -10,7 +10,7 @@ class App
 
     public function __construct()
     {
-        $this->loader = AutoLoader::getInstance(null);
+        $this->loader = autoloader::getInstance(null);
         $this->loader->changeRegister('loadController');
         $url = $this->parseUrl();
         if (file_exists('../app/controllers/' . $url[0] . '.php')) {

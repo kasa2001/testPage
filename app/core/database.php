@@ -3,7 +3,7 @@
 /**
  * Class supports MySQL only on this moment
  * */
-class Database extends Config
+class Database extends config
 {
     /**
      * @var $server string. It is a data about server

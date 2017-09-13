@@ -1,5 +1,5 @@
 <?php
 
-require_once 'modules/built-in/GetInstance.php';
-require_once 'core/AutoLoader.php';
-$autoLoader = AutoLoader::getInstance('loadCore');
+require_once 'modules/built-in/getinstance.php';
+require_once 'core/autoloader.php';
+$autoLoader = autoloader::getInstance('loadCore');

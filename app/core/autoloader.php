@@ -10,16 +10,18 @@ class AutoLoader
     private $_modules;
     private $_custom;
     private $_controller;
+    private $_exception;
     private $_current;
 
     private function __construct($method)
     {
         $this->_core = "../app/core/";
-        $this->_lib = "../app/core/";
-        $this->_modules = "../app/modules/built-in";
+        $this->_lib = "../app/lib/";
+        $this->_modules = "../app/modules/built-in/";
         $this->_models = "../app/models/";
         $this->_controller = "../app/controllers/";
-        $this->_custom = "../app/modules/custom";
+        $this->_custom = "../app/modules/custom/";
+        $this->_exception = "../app/modules/built-in/exception";
         spl_autoload_extensions(".php");
         $this->_current = array($this, $method);
         spl_autoload_register($this->_current);
@@ -50,6 +52,12 @@ class AutoLoader
         return $this->_loadClass($model);
     }
 
+    public function loadException($exception)
+    {
+        set_include_path($this->_exception);
+        return $this->_loadClass($exception);
+    }
+
     public function loadCore($core)
     {
         set_include_path($this->_core);
@@ -70,10 +78,11 @@ class AutoLoader
 
     private function _loadClass($class)
     {
+        spl_autoload_extensions(".php");
         if (is_array($class)) {
             foreach ($class as $c) {
                 if ($c) {
-                    spl_autoload($c);
+                    spl_autoload($c,".php");
                 }
                 return true;
             }

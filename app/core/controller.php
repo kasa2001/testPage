@@ -1,7 +1,7 @@
 <?php
 
 
-class Controller extends Config
+class Controller extends config
 {
     /**
      * @var $view View
