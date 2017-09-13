@@ -3,26 +3,38 @@
 class Action extends Controller
 {
     public function logout(){
-        $server = Server::getInstance($this->config);
-        if ($server->checkPreviewWebSite()!==null){
+        $this->server = Server::getInstance($this->config);
+        if ($this->server->checkPreviewWebSite()!==null){
             Session::destroySession();
         }
-        $server->redirect("home/index");
+        $this->server->redirect("home/index");
     }
 
     public function checkExists()
     {
-        $server = Server::getInstance($this->config);
+        $this->server = Server::getInstance($this->config);
         $model = $this->loadModel("User");
         $query = $model->createQuery($model->table(),"select",[$model->checkRegistry(), $_POST["nick"]]);
         $model->request($query);
         if ($model->isEmpty()){
-            $query = $model->createQuery($model->table(),"INSERT",array_merge($model->registration(), $this->indexedData($_POST)) ,"a");
-            $model->request($query);
-            $server->redirect("home/index");
+            $query = $model->createQuery($model->table(),"INSERT",array_merge($model->registration(), $this->indexedData($_POST)));
+            $model->insert($query);
+            $this->server->redirect("home/index");
         }else{
-            $server->redirect("user/registry");
+            $this->server->redirect("user/registry");
         }
     }
 
+    public function sendMail()
+    {
+        $this->server = Server::getInstance($this->config);
+        $mail = Mail::getInstance($this->config['mail']);
+        if ($mail->sendMail($_POST["to"], $_POST["subject"], $_POST["content"])) {
+            echo "success";
+            $this->server->redirect('home/index');
+        }else {
+            echo "Dramat... nie pykło coś";
+        }
+
+    }
 }

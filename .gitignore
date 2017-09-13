@@ -6,3 +6,4 @@
 public/.htaccess
 app/.htaccess
 app/config/*
+.idea/inspectionProfiles/

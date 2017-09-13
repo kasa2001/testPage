@@ -19,8 +19,6 @@ class Home extends Controller
         $css = "main home";
         $this->view = View::getInstance($this->config);
         $this->view->display("home/index", null, $css, null);
-        $date = new Date();
-
         $user = $this->loadModel('TestData');
     }
 

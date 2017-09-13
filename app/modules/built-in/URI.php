@@ -69,6 +69,10 @@ class URI
         return $this->requestURI;
     }
 
+    /**
+     * Method prepare link to pagination
+     * @return string
+     */
     public function toPagination()
     {
         $data = explode("/",$this->requestURI);

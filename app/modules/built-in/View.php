@@ -138,10 +138,11 @@ class View
     /**
      * Method open form
      * @param $action string - link to another page
+     * @param $method string - method
      * */
-    public function startForm($action = null)
+    public function startForm($action = null, $method='post')
     {
-        echo "<form method='post'";
+        echo "<form method='" . $method . "'";
         if ($action == null) echo ">";
         else echo " action='" . $this->baseLink() . $action . "'>";
     }

@@ -1,6 +1,5 @@
 <?php
 
-//SMTP!!! TODO!!!
 class Mail
 {
     private static $object;
@@ -14,25 +13,41 @@ class Mail
         require_once '../app/lib/PHPMailer/PHPMailerAutoload.php';
         require_once '../app/lib/PHPMailer/class.phpmailer.php';
         require_once '../app/lib/PHPMailer/class.smtp.php';
-        $this->sendMail("pawelgomolka@interia.pl", "Test", "Wiadomość testowa");
     }
 
     public function sendMail($to, $subject, $message)
     {
-        $mail = new PHPMailer();
-        $mail->isSMTP();
-        $mail->SMTPAuth = true;
-        $mail->Host = $this->config['host'];
-        $mail->Port = $this->config['port'];
-        $mail->Username = $this->config['email'];
-        $mail->Password = $this->config['password'];
-        $mail->SMTPSecure = $this->config['secure'];
-        $mail->From = $this->config['email'];
-        $mail->FromName = "Paweł Gomółka";
-        $mail->addAddress($to);
-        $mail->Subject = $subject;
-        $mail->Body = $message;
-        $mail->isHTML(true);
-//        $mail->send();
+        $this->mail = new PHPMailer();
+        $this->mail->CharSet = "UTF-8";
+        $this->mail->isSMTP();
+        $this->mail->SMTPAuth = true;
+        $this->mail->Host = $this->config['host'];
+        $this->mail->Port = $this->config['port'];
+        $this->mail->Username = $this->config['email'];
+        $this->mail->Password = $this->config['password'];
+        $this->mail->SMTPSecure = $this->config['secure'];
+        $this->mail->From = $this->config['email'];
+        $this->mail->FromName = "Jan Kowalski";
+        $this->mail->addAddress($to);
+        $this->mail->Subject = $subject;
+        $this->mail->Body = $message;
+        $this->mail->SMTPDebug = 4;
+        $this->mail->isHTML(true);
+        $this->mail->SMTPOptions = array(
+        'ssl' => array(
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+            'allow_self_signed' => true
+        )
+    );
+        echo "<pre>";
+        print_r($this);
+        if ($this->mail->send()) {
+            echo "</pre>";
+            return true;
+        } else {
+            echo "</pre>";
+            return false;
+        }
     }
 }

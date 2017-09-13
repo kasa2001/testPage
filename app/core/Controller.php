@@ -11,7 +11,7 @@ class Controller extends Config
     /**
      * @var $server Server
      * */
-    protected static $server;
+    protected $server;
 
     /**
      * Method where add model and connect whit database if exists $_POST
