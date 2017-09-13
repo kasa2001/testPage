@@ -19,4 +19,5 @@ W ramach projektu przewidziano
 8. Server
 9. Security
 10. Compile (download library)
-11. Installer (Download only modules selected) 
+11. Collection
+12. Installer (Download only modules selected) 
