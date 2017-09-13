@@ -46,6 +46,7 @@ class View
     public function content($view, $data = [])
     {
         require_once '../app/views/' . $view . '.php';
+
     }
 
     /**

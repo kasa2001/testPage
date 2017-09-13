@@ -6,9 +6,9 @@ class Collection implements JsonSerializable, Countable
     const WRONG_OBJECT = 2;
     const WRONG_SORT = 3;
 
-    private $collection = array();
-    private $_how = 0;
-    private $loader;
+    protected $collection = array();
+    protected $_how = 0;
+    protected $loader;
 
     /*
      * Public methods
@@ -16,7 +16,7 @@ class Collection implements JsonSerializable, Countable
 
     /**
      * Construct create new Collection object
-     * @param $data null|array|object (default null)
+     * @param $data mixed (default null)
      * @param $how int (default 0)
      * */
     public function __construct($data = null, $how = 0)
@@ -36,7 +36,7 @@ class Collection implements JsonSerializable, Countable
 
     /**
      * Method push object or another variable to Collection
-     * @param $object object|array|int|string|boolean|double
+     * @param $object mixed
      */
     public function push($object)
     {
@@ -48,7 +48,7 @@ class Collection implements JsonSerializable, Countable
     /**
      * Method pop object from Collection
      * @param $index int
-     * @return object|array|int|string|boolean|double
+     * @return mixed
      * */
     public function pop($index)
     {
@@ -74,7 +74,7 @@ class Collection implements JsonSerializable, Countable
     /**
      * Method get object from Collection but do not remove it
      * @param $index int
-     * @return object|array|int|string|boolean|double
+     * @return mixed
      * */
     public function get($index)
     {
@@ -169,14 +169,14 @@ class Collection implements JsonSerializable, Countable
     }
 
     /*
-     * Private methods
+     * Protected methods
      * */
 
     /**
      * Method get Collection Exception data
      * @param $e CollectionException
      * */
-    private function _getError($e)
+    protected function _getError($e)
     {
         echo "Collection Exception <br/>";
         echo "Code: " . $e->getCode() . " <br/>";
@@ -193,7 +193,7 @@ class Collection implements JsonSerializable, Countable
      * Method check type of object
      * @param $data array|object
      * */
-    private function _check($data)
+    protected function _check($data)
     {
         if ($this->_how != 0) {
             $this->_type($data);
@@ -202,7 +202,11 @@ class Collection implements JsonSerializable, Countable
         }
     }
 
-    private function _type($data)
+    /**
+     * Method check type of data when pushed to collection
+     * @param $data array
+     * */
+    protected function _type($data)
     {
         if (gettype($data) == "object") {
             $type = get_class($this->collection[0]);
@@ -218,7 +222,7 @@ class Collection implements JsonSerializable, Countable
      * @param $data array
      * @param $type string
      * */
-    private function _loopObject($data, $type)
+    protected function _loopObject($data, $type)
     {
         try {
             if (!is_array($data)) {
@@ -244,7 +248,7 @@ class Collection implements JsonSerializable, Countable
      * @param $data array
      * @param $type string
      * */
-    private function _loopVariable($data, $type)
+    protected function _loopVariable($data, $type)
     {
         try {
             if (!is_array($data)) {
