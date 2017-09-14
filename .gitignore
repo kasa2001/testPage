@@ -3,7 +3,6 @@
 .idea/php.xml
 .idea/watcherTasks.xml
 .idea/workspace.xml
-public/.htaccess
 app/.htaccess
 app/config/*
 .idea/inspectionProfiles/
