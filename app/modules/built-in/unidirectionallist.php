@@ -13,13 +13,18 @@ class UnidirectionalList extends Collection implements Iterator
         $this->key = 0;
     }
 
+    /**
+     * Method return current object
+     * @return object
+     * */
     public function current()
     {
         return $this->collection[$this->key];
     }
 
     /**
-     * @return mixed
+     * Method return next object
+     * @return object
      */
     public function next()
     {
@@ -34,7 +39,8 @@ class UnidirectionalList extends Collection implements Iterator
     }
 
     /**
-     * @return mixed
+     * Method return current key
+     * @return int
      */
     public function key()
     {
@@ -42,7 +48,8 @@ class UnidirectionalList extends Collection implements Iterator
     }
 
     /**
-     * @return mixed
+     * Method check end of list
+     * @return boolean
      */
     public function valid()
     {
@@ -50,12 +57,17 @@ class UnidirectionalList extends Collection implements Iterator
     }
 
     /**
-     * @return mixed
+     * Method reset current position
      */
     public function rewind()
     {
         $this->key = 0;
-        return true;
+    }
+
+    public function clear()
+    {
+        parent::clear();
+        $this->key = 0;
     }
 
 }

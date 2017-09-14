@@ -24,7 +24,7 @@ class View
      * */
     public function display($view, $data = [], $css = null, $js = null, $seo = true)
     {
-        require_once '../app/views/layout/layout.php';
+        require_once 'app/views/layout/layout.php';
     }
 
     /**
@@ -35,7 +35,7 @@ class View
      * */
     public function importElement($name, $directory = "default", $data = null)
     {
-        require_once "../app/views/elements/" . $directory . "/" . $name . ".php";
+        require_once "app/views/elements/" . $directory . "/" . $name . ".php";
     }
 
     /**
@@ -45,7 +45,7 @@ class View
      * */
     public function content($view, $data = [])
     {
-        require_once '../app/views/' . $view . '.php';
+        require_once 'app/views/' . $view . '.php';
 
     }
 
@@ -58,7 +58,7 @@ class View
         if ($css != "" or $css != null) {
             $table = explode(' ', $css);
             for ($i = 0; $i < (count($table)); $i++)
-                echo '<link rel="stylesheet" href="/' . $this->config["system"]["default-directory"] . '/public/css/' . $table[$i] . '.css"  type="text/css">';
+                echo '<link rel="stylesheet" href="' . $this->config["system"]["default-directory"] . '/public/css/' . $table[$i] . '.css"  type="text/css">';
         }
     }
 
@@ -70,9 +70,9 @@ class View
     {
         if ($js != "" or $js != null) {
             $table = explode(' ', $js);
-            echo '<script src="/' . $this->config["system"]["default-directory"]  . '/public/js/jquery-3.2.1.min.js" type="text/JavaScript"></script>';
+            echo '<script src="' . $this->config["system"]["default-directory"]  . '/public/js/jquery-3.2.1.min.js" type="text/JavaScript"></script>';
             for ($i = 0; $i < (count($table)); $i++)
-                echo '<script src="/' . $this->config["system"]["default-directory"]  . '/public/js/' . $table[$i] . 'Controller.js" type="text/JavaScript"></script>';
+                echo '<script src="' . $this->config["system"]["default-directory"]  . '/public/js/' . $table[$i] . 'Controller.js" type="text/JavaScript"></script>';
         }
     }
 
@@ -131,9 +131,9 @@ class View
                 $data = "/";
                 for ($i = 1; $i < (count($address) - 2); $i++) $data .= $address[$i] . "/";
                 return $data;
-            } else return "/" . $this->config["system"]["default-directory"] . "/public/";
+            } else return "/" . $this->config["system"]["default-directory"] . "/";
         } else
-            return "/" . $this->config["system"]["default-directory"] . "/public/";
+            return "/" . $this->config["system"]["default-directory"] . "/";
     }
 
     /**
@@ -230,6 +230,6 @@ class View
      * */
     public function getJSON($file, $model)
     {
-        require_once "../app/views/API/" . $file . ".php";
+        require_once "app/views/api/" . $file . ".php";
     }
 }

@@ -13,7 +13,7 @@ class App
         $this->loader = AutoLoader::getInstance(null);
         $this->loader->changeRegister('loadController');
         $url = $this->parseUrl();
-        if (file_exists('../app/controllers/' . $url[0] . '.php')) {
+        if (file_exists('app/controllers/' . $url[0] . '.php')) {
             $this->controller = $url[0];
             unset($url[0]);
         }

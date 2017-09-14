@@ -5,7 +5,7 @@ class Config
     protected $loader;
     protected $config;
     protected $session;
-    private $path='../app/config/config.ini';
+    private $path='app/config/config.ini';
 
     public function __construct()
     {

@@ -8,7 +8,7 @@ DirectoryIndex index.php
 RewriteEngine ON
 
 #Set base catalog
-RewriteBase /framework/public
+RewriteBase /framework/
 
 #Check first param REQUEST_URI
 RewriteCond %{REQUEST_URI} !^/framework
@@ -25,5 +25,5 @@ RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
 
 
 #Adding error document
-ErrorDocument 403 http://localhost/framework/public/home/error403
-ErrorDocument 404 http://localhost/framework/public/home/error404
+ErrorDocument 403 http://localhost/framework/home/error403
+ErrorDocument 404 http://localhost/framework/home/error404

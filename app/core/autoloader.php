@@ -15,13 +15,13 @@ class AutoLoader
 
     private function __construct($method)
     {
-        $this->_core = "../app/core/";
-        $this->_lib = "../app/lib/";
-        $this->_modules = "../app/modules/built-in/";
-        $this->_models = "../app/models/";
-        $this->_controller = "../app/controllers/";
-        $this->_custom = "../app/modules/custom/";
-        $this->_exception = "../app/modules/built-in/exception";
+        $this->_core = "app/core/";
+        $this->_lib = "app/lib/";
+        $this->_modules = "app/modules/built-in/";
+        $this->_models = "app/models/";
+        $this->_controller = "app/controllers/";
+        $this->_custom = "app/modules/custom/";
+        $this->_exception = "app/modules/built-in/exception";
         spl_autoload_extensions(".php");
         $this->_current = array($this, $method);
         spl_autoload_register($this->_current);

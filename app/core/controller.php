@@ -22,7 +22,7 @@ class Controller extends config
     {
         $this->loader->changeRegister('loadModel');
         $model .= "Table";
-        require_once '../app/models/' . $model . '.php';
+        require_once 'app/models/' . $model . '.php';
         $model = new $model();
         $this->loader->changeRegister('loadModule');
         return $model;
