@@ -8,7 +8,8 @@ class Security
      * @param $data string
      * @return string/null
      * */
-    public static function slashSQLString($data){
+    public static function slashSQLString($data)
+    {
         return addslashes($data);
     }
 
@@ -17,8 +18,9 @@ class Security
      * @param $data array
      * @return array
      * */
-    public static function slashSQLForm($data){
-        foreach ($data as $key=>$datum)
+    public static function slashSQLForm($data)
+    {
+        foreach ($data as $key => $datum)
             $data[$key] = addslashes($datum);
         return $data;
     }
@@ -28,11 +30,13 @@ class Security
      * @param $data array
      * @return boolean
      * */
-    public static function checkNumber($data){
+    public static function checkNumber($data)
+    {
         foreach ($data as $datum)
             if (!is_numeric($datum)) return false;
         return true;
     }
+
     /**
      * Method save data about attack on page
      * @param $attack string
@@ -50,8 +54,9 @@ class Security
      * @param $data array
      * @return array
      * */
-    public static function analyzeXSS($data){
-        foreach($data as $key=>$datum)
+    public static function analyzeXSS($data)
+    {
+        foreach ($data as $key => $datum)
             $data[$key] = htmlspecialchars($datum);
         return $data;
     }

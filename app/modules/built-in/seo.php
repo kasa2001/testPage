@@ -4,6 +4,7 @@ class SEO
 {
     private static $object;
     private $uri;
+    private $h1 = false;
 
     use \GetInstance;
 
@@ -77,12 +78,21 @@ class SEO
     }
 
     /**
-     * Method add h1 element to page. You can use normally, but cautiously
+     * Method add h1 element to page.
      * @param $words string
      * @param $class array default null
      * */
     public function addKeyWords($words, $class=null)
     {
+        try {
+            if ($this->h1) {
+                $loader = AutoLoader::getInstance(null);
+                $loader->changeRegister("loadException");
+                throw new SEOException("Element h1 can be use only one time");
+            }
+        } catch (SEOException $e) {
+
+        }
         echo "<h1";
         if ($class!==null){
             echo" class = \"";
@@ -91,6 +101,8 @@ class SEO
             echo "\"";
         }
         echo ">" . $words ."</h1>";
+
+        $this->h1 = true;
     }
 
     public function addHttpEquiv($charset)

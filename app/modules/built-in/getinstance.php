@@ -14,9 +14,13 @@ trait GetInstance
                 self::$object = new $className($config);
                 $construct->setAccessible(false);
             }
-        } catch (ReflectionException $exception) {
+        } catch (ReflectionException $e) {
+            echo "Reflection Exception</br>";
+            echo "Code: " . $e->getCode() . "</br>";
+            echo "Message: " . $e->getMessage() . "</br>";
+            echo "Stack trace: ";
             echo "<pre>";
-            echo $exception;
+            print_r($e->getTrace());
             echo "</pre>";
         }
         return self::$object;
