@@ -1,13 +1,24 @@
 <?php
 
-class Collection implements JsonSerializable, Countable
+abstract class Collection implements JsonSerializable, Countable
 {
     const WRONG_INDEX = 1;
     const WRONG_OBJECT = 2;
     const WRONG_SORT = 3;
 
+    /**
+     * @var $collection array
+     * */
     protected $collection = array();
+
+    /**
+     * @var $_how int
+     * */
     protected $_how = 0;
+
+    /**
+     * @var $loader AutoLoader
+     */
     protected $loader;
 
     /*
@@ -35,63 +46,6 @@ class Collection implements JsonSerializable, Countable
     }
 
     /**
-     * Method push object or another variable to Collection
-     * @param $object mixed
-     */
-    public function push($object)
-    {
-        $this->_check($object);
-        array_push($this->collection, $object);
-        ++$this->_how;
-    }
-
-    /**
-     * Method pop object from Collection
-     * @param $index int
-     * @return mixed
-     * */
-    public function pop($index)
-    {
-        $object = null;
-
-        try {
-            if (!isset($this->collection[$index])) {
-                $this->loader->changeRegister('loadException');
-                throw new CollectionException("Wrong index", self::WRONG_INDEX);
-            }
-
-        } catch (CollectionException $e) {
-            $this->_getError($e);
-        }
-
-        $object = $this->collection[$index];
-        unset($this->collection[$index]);
-        --$this->_how;
-        $this->collection = array_values($this->collection);
-        return $object;
-    }
-
-    /**
-     * Method get object from Collection but do not remove it
-     * @param $index int
-     * @return mixed
-     * */
-    public function get($index)
-    {
-        try {
-            if (!isset($this->collection[$index])) {
-                $this->loader->changeRegister('loadException');
-                throw new CollectionException("Wrong index", self::WRONG_INDEX);
-            }
-
-        } catch (CollectionException $e) {
-            $this->_getError($e);
-        }
-
-        return $this->collection[$index];
-    }
-
-    /**
      * Method clear Collection
      * */
     public function clear()
@@ -104,10 +58,7 @@ class Collection implements JsonSerializable, Countable
      * Method copy Collection
      * @return Collection
      * */
-    public function copy()
-    {
-        return new Collection($this->collection, $this->_how);
-    }
+    public abstract function copy();
 
     /**
      * Method return array of object
@@ -146,26 +97,6 @@ class Collection implements JsonSerializable, Countable
         $this->_check($array);
         $this->collection = array_merge($this->collection, $array);
         $collection->clear();
-    }
-
-    /**
-     * Method sort data in Collection todo (check sort for object)
-     * @param $type string (value "asc" or "desc". Default desc)
-     * */
-    public function sort($type = "asc")
-    {
-        try {
-            if ($type == "asc") {
-                asort($this->collection);
-            } else if ($type == "desc") {
-                arsort($this->collection);
-            } else {
-                $this->loader->changeRegister('loadException');
-                throw new CollectionException("Wrong type of sort", self::WRONG_SORT);
-            }
-        } catch (CollectionException $e) {
-            $this->_getError($e);
-        }
     }
 
     /*

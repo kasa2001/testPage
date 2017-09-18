@@ -8,10 +8,10 @@ DirectoryIndex index.php
 RewriteEngine ON
 
 #Set base catalog
-RewriteBase /framework/
+RewriteBase /PTW/
 
 #Check first param REQUEST_URI
-RewriteCond %{REQUEST_URI} !^/framework
+RewriteCond %{REQUEST_URI} !^/PTW
 
 #If first param is true redirect error (flag R)
 RewriteRule ^(.*)$  /* [R=404]
@@ -25,5 +25,5 @@ RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
 
 
 #Adding error document
-ErrorDocument 403 http://localhost/framework/home/error403
-ErrorDocument 404 http://localhost/framework/home/error404
+ErrorDocument 403 http://localhost/PTW/home/error403
+ErrorDocument 404 http://localhost/PTW/home/error404
