@@ -58,8 +58,22 @@ class ArrayList extends Collection implements Iterator
         $this->key = 0;
     }
 
-    public function remove()
+    public function remove($key = null)
     {
+        try {
+            if ($key != null && !isset($this->collection[$key])){
+                $this->loader->changeRegister('loadException');
+                throw new CollectionException('Wrong Index', self::WRONG_INDEX);
+            }
+        }catch (CollectionException $e){
+            $this->_getError($e);
+        }
+
+        if ($key == null)
+            $this->rewind();
+        else
+            $this->key = $key;
+
         unset($this->collection[$this->key]);
         $this->collection = array_values($this->collection);
         -- $this->_count;

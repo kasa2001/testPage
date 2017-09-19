@@ -21,6 +21,40 @@ class Home extends Controller
         $this->view->display("home/index", null, $css, null);
     }
 
+    /**
+     * Method for test collection.
+     * */
+    public function collection()
+    {
+        $map = new Map();
+        $list = new ArrayList();
+        $queue = new Queue();
+        $stack = new Stack();
+
+        $map->add(new Database(),'database');
+        $map->add(new Database(),'connect');
+        $map->add(new Database(),'connection');
+        $map->add(new Database(),'second');
+
+        $list->add(new Database());
+        $list->add(new Database());
+        $list->add(new Database());
+        $list->add(new Database());
+
+        $queue->enQueue(new Database());
+        $queue->enQueue(new Database());
+        $queue->enQueue(new Database());
+        $queue->enQueue(new Database());
+
+        $stack->push(new Database());
+        $stack->push(new Database());
+        $stack->push(new Database());
+        $stack->push(new Database());
+
+        $this->view = View::getInstance($this->config);
+        $this->view->display('home/collection',array($map,$list,$queue,$stack),'main home');
+    }
+
     public function error404()
     {
         $this->view = View::getInstance($this->config);
@@ -41,16 +75,19 @@ class Home extends Controller
 
     public function error402()
     {
-
+        $this->view = View::getInstance($this->config);
+        $this->view->display("home/error", array('error' => 402), null, null);
     }
 
     public function error401()
     {
-
+        $this->view = View::getInstance($this->config);
+        $this->view->display("home/error", array('error' => 401), null, null);
     }
 
     public function error400()
     {
-
+        $this->view = View::getInstance($this->config);
+        $this->view->display("home/error", array('error' => 400), null, null);
     }
 }
