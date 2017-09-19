@@ -22,6 +22,7 @@ trait GetInstance
             echo "<pre>";
             print_r($e->getTrace());
             echo "</pre>";
+            exit();
         }
         return self::$object;
     }
