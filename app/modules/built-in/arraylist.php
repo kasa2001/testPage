@@ -14,14 +14,14 @@ class ArrayList extends Collection implements Iterator
 
     public function copy()
     {
-        return new ArrayList($this->collection, $this->_how);
+        return new ArrayList($this->collection, $this->_count);
     }
 
     public function add($object)
     {
         $this->_check($object);
         array_push($this->collection, $object);
-        ++$this->_how;
+        ++$this->_count;
     }
 
     public function current()
@@ -40,14 +40,7 @@ class ArrayList extends Collection implements Iterator
 
     public function next()
     {
-        try {
-            if (!isset($this->collection[$this->key + 1])) {
-                $this->loader->changeRegister("loadException");
-                throw new CollectionException("Index not exists", self::INDEX_NOT_EXISTS);
-            }
-        } catch (CollectionException $e) {
-            $this->_getError($e);
-        }
+        $this->key++;
     }
 
     public function key()
@@ -57,11 +50,31 @@ class ArrayList extends Collection implements Iterator
 
     public function valid()
     {
-        return ($this->_how > $this->key);
+        return ($this->key < ($this->_count));
     }
 
     public function rewind()
     {
         $this->key = 0;
+    }
+
+    public function remove()
+    {
+        unset($this->collection[$this->key]);
+        $this->collection = array_values($this->collection);
+        -- $this->_count;
+    }
+
+    public function get($index)
+    {
+        try {
+            if (!isset($this->collection[$index])){
+                $this->loader->changeRegister("loadException");
+                throw new CollectionException("Wrong index", self::WRONG_INDEX);
+            }
+        }catch (CollectionException $e) {
+            $this->_getError($e);
+        }
+        return $this->collection[$index];
     }
 }

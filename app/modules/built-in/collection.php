@@ -12,9 +12,9 @@ abstract class Collection implements JsonSerializable, Countable
     protected $collection = array();
 
     /**
-     * @var $_how int
+     * @var $_count int
      * */
-    protected $_how = 0;
+    protected $_count = 0;
 
     /**
      * @var $loader AutoLoader
@@ -28,21 +28,21 @@ abstract class Collection implements JsonSerializable, Countable
     /**
      * Construct create new Collection object
      * @param $data mixed (default null)
-     * @param $how int (default 0)
+     * @param $count int (default 0)
      * */
-    public function __construct($data = null, $how = 0)
+    public function __construct($data = null, $count = 0)
     {
         $this->loader = AutoLoader::getInstance(null);
         if ($data !== null) {
             $this->collection = $data;
             $this->_check($data);
-            if ($how == 0)
-                $this->_how = count($data);
+            if ($count == 0)
+                $this->_count = count($data);
             else
-                $this->_how = $how;
+                $this->_count = $count;
 
         } else
-            $this->_how = $how;
+            $this->_count = $count;
     }
 
     /**
@@ -51,7 +51,7 @@ abstract class Collection implements JsonSerializable, Countable
     public function clear()
     {
         $this->collection = array();
-        $this->_how = 0;
+        $this->_count = 0;
     }
 
     /**
@@ -84,7 +84,7 @@ abstract class Collection implements JsonSerializable, Countable
      * */
     public function count()
     {
-        return $this->_how;
+        return $this->_count;
     }
 
     /**
@@ -126,7 +126,7 @@ abstract class Collection implements JsonSerializable, Countable
      * */
     protected function _check($data)
     {
-        if ($this->_how != 0) {
+        if ($this->_count != 0) {
             $this->_type($data);
         } else if (is_array($data)) {
             $this->_type($data);
@@ -139,13 +139,35 @@ abstract class Collection implements JsonSerializable, Countable
      * */
     protected function _type($data)
     {
-        if (gettype($data) == "object") {
-            $type = get_class($this->collection[0]);
-            $this->_loopObject($data, $type);
+        if (is_array($data)){
+            $type = null;
+            foreach ($data as $datum)
+                $get = gettype($datum);
+            if ($get == "object") {
+                $type = null;
+                foreach($this->collection as $collection){
+                    $type = get_class($collection);
+                    break;
+                }
+                $this->_loopObject($data, $type);
+            } else {
+                $type = gettype($this->collection[0]);
+                $this->_loopVariable($data, $type);
+            }
         } else {
-            $type = gettype($this->collection[0]);
-            $this->_loopVariable($data, $type);
+            if (gettype($data) == "object") {
+                $type = null;
+                foreach($this->collection as $collection){
+                    $type = get_class($collection);
+                    break;
+                }
+                $this->_loopObject($data, $type);
+            } else {
+                $type = gettype($this->collection[0]);
+                $this->_loopVariable($data, $type);
+            }
         }
+
     }
 
     /**
@@ -199,6 +221,5 @@ abstract class Collection implements JsonSerializable, Countable
             $this->_getError($e);
         }
     }
-
 
 }

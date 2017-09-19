@@ -11,7 +11,7 @@ class Stack extends Collection
 
     public function copy()
     {
-        return new Stack($this->collection, $this->_how);
+        return new Stack($this->collection, $this->_count);
     }
 
     /**
@@ -22,7 +22,7 @@ class Stack extends Collection
     {
         $this->_check($object);
         array_push($this->collection, $object);
-        ++$this->_how;
+        ++$this->_count;
     }
 
     /**
@@ -32,15 +32,36 @@ class Stack extends Collection
     public function pop()
     {
         try {
-            if ($this->_how == 0) {
+            if ($this->_count == 0) {
                 $this->loader->changeRegister("loadException");
                 throw new CollectionException("Empty stack", self::EMPTY_STACK);
             }
         } catch (CollectionException $e) {
             $this->_getError($e);
         }
-        $object = $this->collection[$this->_how];
-        --$this->_how;
+        $object = $this->collection[($this->_count - 1)];
+
+        unset ($this->collection[$this->_count - 1]);
+
+        --$this->_count;
         return $object;
+    }
+
+    /**
+     * Method peek how object is first in stack
+     * @return mixed
+     * */
+    public function peek()
+    {
+        try {
+            if ($this->_count == 0) {
+                $this->loader->changeRegister("loadException");
+                throw new CollectionException("Empty stack", self::EMPTY_STACK);
+            }
+        } catch (CollectionException $e) {
+            $this->_getError($e);
+        }
+
+        return $this->collection[($this->_count-1)];
     }
 }

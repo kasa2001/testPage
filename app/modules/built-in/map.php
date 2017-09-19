@@ -11,15 +11,15 @@ class Map extends Collection
 
     public function copy()
     {
-        return new Map($this->collection, $this->_how);
+        return new Map($this->collection, $this->_count);
     }
 
     public function add($object, $key)
     {
         $this->_check($object);
         $this->_checkIndex($key);
-        array_push($this->collection, array($key => $object));
-        ++$this->_how;
+        $this->collection = array_merge($this->collection,array($key=>$object));
+        ++$this->_count;
     }
 
     public function get($key)
@@ -46,6 +46,8 @@ class Map extends Collection
             $this->_getError($e);
         }
         unset($this->collection[$key]);
+
+        -- $this->_count;
     }
 
     protected function _checkIndex($key)

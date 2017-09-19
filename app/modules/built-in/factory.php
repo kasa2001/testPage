@@ -11,4 +11,24 @@ class Factory
     {
         return new Database($driver, $host, $db, $user, $password);
     }
+
+    public static function getMail($data)
+    {
+        return Mail::getInstance($data);
+    }
+
+    public static function getPagination($data)
+    {
+        return Pagination::getInstance($data);
+    }
+
+    public static function getSEO($data)
+    {
+        return SEO::getInstance($data);
+    }
+
+    public static function getDate($data = null)
+    {
+        return new Date($data);
+    }
 }

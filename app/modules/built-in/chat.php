@@ -18,7 +18,7 @@ class Chat
 
     public function sendMessage()
     {
-        $this->model->createQuery();
+
     }
 
     public function getMessage()

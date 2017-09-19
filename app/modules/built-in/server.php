@@ -19,7 +19,6 @@ class Server
         $this->uri = Factory::getInstance('URI', $data);
     }
 
-
     /**
      * Method redirecting if someone try go to file with JSON
      * */
@@ -53,7 +52,6 @@ class Server
         return $_SERVER['HTTP_REFERER'];
     }
 
-
     /**
      * Method redirect to another page. If $where is null redirect to preview page
      * @param $where string
@@ -84,17 +82,25 @@ class Server
     {
         header("Location: " . $this->uri->getBase() . "/home/error" . $code);
 
-        if ($code == 404)
-            header("HTTP/1.1 404 " . self::ERROR404);
-        else if ($code == 410)
-            header("HTTP/1.1 410 " . self::ERROR410);
-        else if ($code == 403)
-            header("HTTP/1.1 403 " . self::ERROR403);
-        else if ($code == 402)
-            header("HTTP/1.1 402 " . self::ERROR402);
-        else if ($code == 401)
-            header("HTTP/1.1 401 " . self::ERROR401);
-        else
-            header("HTTP/1.1 400 " . self::ERROR400);
+        switch ($code) {
+            case 404:
+                header("HTTP/1.1 404 " . self::ERROR404);
+                break;
+            case 410:
+                header("HTTP/1.1 410 " . self::ERROR410);
+                break;
+            case 403:
+                header("HTTP/1.1 403 " . self::ERROR403);
+                break;
+            case 402:
+                header("HTTP/1.1 402 " . self::ERROR402);
+                break;
+            case 401:
+                header("HTTP/1.1 401 " . self::ERROR401);
+                break;
+            default:
+                header("HTTP/1.1 400 " . self::ERROR400);
+                break;
+        }
     }
 }
