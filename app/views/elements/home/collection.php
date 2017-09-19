@@ -2,7 +2,7 @@
     <article>
         <pre>
         <?php
-            echo "Iterator for Map and ArrayList</br></br>";
+            echo "Iterator for Map and Array List</br></br>";
             foreach ($data as $key=>$item) {
                 echo get_class($item);
                 foreach ($item as $keys=>$items) {
