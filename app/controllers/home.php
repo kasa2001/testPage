@@ -3,6 +3,10 @@
 /**
  * All new classes must extends which class Controller.
  * */
+namespace Controllers;
+
+use \Core\Controller,\Lib\Built\Collection, \Lib\Built\View\View, Lib\Built\Security\Security, \Core;
+
 class Home extends Controller
 {
     public function index()
@@ -26,30 +30,30 @@ class Home extends Controller
      * */
     public function collection()
     {
-        $map = new Map();
-        $list = new ArrayList();
-        $queue = new Queue();
-        $stack = new Stack();
+        $map = new Collection\Map();
+        $list = new Collection\ArrayList();
+        $queue = new Collection\Queue();
+        $stack = new Collection\Stack();
 
-        $map->add(new Database(),'database');
-        $map->add(new Database(),'connect');
-        $map->add(new Database(),'connection');
-        $map->add(new Database(),'second');
+        $map->add(new Core\Database(),'database');
+        $map->add(new Core\Database(),'connect');
+        $map->add(new Core\Database(),'connection');
+        $map->add(new Core\Database(),'second');
 
-        $list->add(new Database());
-        $list->add(new Database());
-        $list->add(new Database());
-        $list->add(new Database());
+        $list->add(new Core\Database());
+        $list->add(new Core\Database());
+        $list->add(new Core\Database());
+        $list->add(new Core\Database());
 
-        $queue->enQueue(new Database());
-        $queue->enQueue(new Database());
-        $queue->enQueue(new Database());
-        $queue->enQueue(new Database());
+        $queue->enQueue(new Core\Database());
+        $queue->enQueue(new Core\Database());
+        $queue->enQueue(new Core\Database());
+        $queue->enQueue(new Core\Database());
 
-        $stack->push(new Database());
-        $stack->push(new Database());
-        $stack->push(new Database());
-        $stack->push(new Database());
+        $stack->push(new Core\Database());
+        $stack->push(new Core\Database());
+        $stack->push(new Core\Database());
+        $stack->push(new Core\Database());
 
         $this->view = View::getInstance($this->config);
         $this->view->display('home/collection',array($map,$list,$queue,$stack),'main home');

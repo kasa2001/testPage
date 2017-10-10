@@ -1,5 +1,9 @@
 <?php
 
+namespace Controllers;
+
+use \Core\Controller, Lib\Built\Server\Server, Lib\Built\Session\Session, Lib\Built\View\View;
+
 class User extends Controller
 {
 

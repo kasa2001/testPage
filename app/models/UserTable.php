@@ -1,5 +1,9 @@
 <?php
 
+namespace Models;
+
+use Core\Database;
+
 class UserTable extends Database
 {
     protected $database;

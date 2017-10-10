@@ -1,10 +1,13 @@
 <?php
 
-class Action extends Controller
+namespace Controllers;
+
+use \Core, Lib\Built\Server\Server, Lib\Built\Mail\Mail, Lib\Built\Session\Session;
+class Action extends Core\Controller
 {
     public function logout(){
         $this->server = Server::getInstance($this->config);
-        if ($this->server->checkPreviewWebSite()!==null){
+        if ($this->server->getPreviewWebSite()!==null){
             Session::destroySession();
         }
         $this->server->redirect("home/index");

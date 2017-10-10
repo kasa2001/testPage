@@ -1,9 +1,13 @@
 <?php
 
+namespace Core;
+use Lib\Built\Security\Security;
+use Lib\Built\Session\Session;
+
 /**
  * Class supports MySQL only on this moment
  * */
-class Database extends config
+class Database extends Config
 {
     /**
      * @var $server string. It is a data about server
@@ -65,8 +69,8 @@ class Database extends config
         $this->base = ($db === null) ? $this->config['database']['database'] : $db;
         $this->driver = ($driver === null) ? $this->config['database']['sql'] : $driver;
         try {
-            $this->connect = new PDO($this->driver . ":host=" . $this->server . ";dbname=" . $this->base, $this->login, $this->password);
-        } catch (PDOException $exception) {
+            $this->connect = new \PDO($this->driver . ":host=" . $this->server . ";dbname=" . $this->base, $this->login, $this->password);
+        } catch (\PDOException $exception) {
             echo '<pre>';
             print_r($exception);
             echo '</pre>';
@@ -417,7 +421,7 @@ class Database extends config
      * */
     public function getData()
     {
-        return $this->data->fetch(PDO::FETCH_ASSOC);
+        return $this->data->fetch(\PDO::FETCH_ASSOC);
     }
 
     /**

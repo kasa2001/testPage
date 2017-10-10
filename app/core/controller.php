@@ -1,7 +1,11 @@
 <?php
 
+namespace Core;
 
-class Controller extends config
+use Lib\Built\Server\Server;
+use Lib\Built\View\View;
+
+class Controller extends Config
 {
     /**
      * @var $view View
@@ -20,12 +24,8 @@ class Controller extends config
      * */
     public function loadModel($model)
     {
-        $this->loader->changeRegister('loadModel');
-        $model .= "Table";
-        require_once 'app/models/' . $model . '.php';
-        $model = new $model();
-        $this->loader->changeRegister('loadModule');
-        return $model;
+        $model = "Models\\".$model."Table";
+        return new $model();
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+namespace Core;
+
 class AutoLoader
 {
     use \GetInstance;
@@ -10,18 +12,16 @@ class AutoLoader
     private $_modules;
     private $_custom;
     private $_controller;
-    private $_exception;
     private $_current;
 
     private function __construct($method)
     {
         $this->_core = "app/core/";
         $this->_lib = "app/lib/";
-        $this->_modules = "app/modules/built-in/";
+        $this->_modules = "app/modules/built/";
         $this->_models = "app/models/";
         $this->_controller = "app/controllers/";
         $this->_custom = "app/modules/custom/";
-        $this->_exception = "app/modules/built-in/exception";
         spl_autoload_extensions(".php");
         $this->_current = array($this, $method);
         spl_autoload_register($this->_current);
@@ -50,12 +50,6 @@ class AutoLoader
     {
         set_include_path($this->_models);
         return $this->_loadClass($model);
-    }
-
-    public function loadException($exception)
-    {
-        set_include_path($this->_exception);
-        return $this->_loadClass($exception);
     }
 
     public function loadCore($core)
@@ -93,5 +87,10 @@ class AutoLoader
             }
         }
         return false;
+    }
+
+    public function loadPSR0($class) {
+        $class = "app/" . str_replace("\\","/",$class);
+        spl_autoload($class);
     }
 }

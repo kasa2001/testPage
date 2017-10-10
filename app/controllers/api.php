@@ -1,6 +1,10 @@
 <?php
 
-class API extends Controller
+namespace Controllers;
+
+use \Core, Lib\Built\Server\Server, Lib\Built\Security\Security, Lib\Built\View\View;
+
+class API extends Core\Controller
 {
 
     public function index()
@@ -16,7 +20,7 @@ class API extends Controller
         Security::analyzeXSS($_POST);
         $user = $this->loadModel("TestData");
         $this->view = View::getInstance($this->config);
-        $this->view->getJSON("sendDelete", $user);
+        $this->view->getJSON("sendInsert", $user);
     }
 
     public function sendDelete()
@@ -38,7 +42,7 @@ class API extends Controller
         Security::analyzeXSS($_POST);
         $user = $this->loadModel("TestData");
         $this->view = View::getInstance($this->config);
-        $this->view->getJSON("sendDelete", $user);
+        $this->view->getJSON("sendModify", $user);
     }
 
     public function sendSelect()
@@ -47,6 +51,6 @@ class API extends Controller
         $server->checkIsJS();
         $user = $this->loadModel("TestData");
         $this->view = View::getInstance($this->config);
-        $this->view->getJSON("sendDelete", $user);
+        $this->view->getJSON("sendSelect", $user);
     }
 }

@@ -10,25 +10,26 @@ $(document).ready(function () {
             } else {
                 revert(this);
                 var here = $(this).parent().parent().children();
-                $.post("/framework/api/sendModify", {
+                $.post("/PTW/api/sendModify", {
                     id: here.eq(0).text(),
                     content: here.eq(1).text()
                 }, function (data, status) {
                     alert(status + "! Data is modified");
-                    here.eq(3).load("/framework/api/sendSelect", {id: here.eq(0).text()});
+                    alert(data);
+                    here.eq(3).load("/PTW/api/sendSelect", {id: here.eq(0).text()});
                 });
             }
         });
     } else if (zmienna[zmienna.length - 1] === "add" && zmienna[zmienna.length - 2] === "user") {
         $("form > button").on("click", function () {
-            $.post("/framework/api/sendInsert", {text: $("#text").val()}, function (data, status) {
+            $.post("/PTW/api/sendInsert", {text: $("#text").val()}, function (data, status) {
                 alert(status + "! Data is sent to database");
             });
         });
     } else if (zmienna[zmienna.length - 1] === "delete" && zmienna[zmienna.length - 2] === "user") {
         $("td > button").on("click", function () {
             var temporary = $(this).parent().parent();
-            $.post("/framework/api/sendDelete", {id: $(this).data("id")}, function (data, status) {
+            $.post("/PTW/api/sendDelete", {id: $(this).data("id")}, function (data, status) {
                 alert(status + "! Data deleted from database");
                 if (temporary.parent().children().length === 1) {
                     temporary.parent().parent().parent().html("<p>No data</p>");

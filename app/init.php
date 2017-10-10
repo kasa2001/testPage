@@ -1,5 +1,5 @@
 <?php
 
-require_once 'modules/built-in/getinstance.php';
+require_once 'lib/built/trait/getinstance.php';
 require_once 'core/autoloader.php';
-$autoLoader = autoloader::getInstance('loadCore');
+$autoLoader = \Core\AutoLoader::getInstance('loadPSR0');
