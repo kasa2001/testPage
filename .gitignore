@@ -2,4 +2,4 @@
 
 app/config/*
 .htaccess
-.idea
+.idea/*
