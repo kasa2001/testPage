@@ -1,9 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
-.idea/jsLibraryMappings.xml
-.idea/php.xml
-.idea/watcherTasks.xml
-.idea/workspace.xml
-app/.htaccess
+
 app/config/*
-.idea/inspectionProfiles/
 .htaccess
+.idea/
