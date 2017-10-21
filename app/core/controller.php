@@ -4,6 +4,7 @@ namespace Core;
 
 use Lib\Built\Server\Server;
 use Lib\Built\View\View;
+use Models;
 
 class Controller extends Config
 {
@@ -19,12 +20,11 @@ class Controller extends Config
 
     /**
      * Method where add model and connect whit database if exists $_POST
-     * @param $model - how model
+     * @param $model string how model
      * @return Database. Return new model from view
      * */
     public function loadModel($model)
     {
-        $model = "Models\\".$model."Table";
         return new $model();
     }
 
@@ -43,5 +43,4 @@ class Controller extends Config
         }
         return $data;
     }
-
 }

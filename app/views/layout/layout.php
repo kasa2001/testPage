@@ -1,21 +1,18 @@
+<?php
+    $seo = $this->getSEO();
+?>
 <!doctype html>
 <html <?= $this->loadLanguage() ?>>
 <head>
-    <?php
-    $seo = $this->getSEO();
-    $seo->addBasePage();
-
-    \Modules\Built\Pagination\Pagination::checkExist();
-    $this->loadTitle();
-    $this->loadCharset();
-    $seo->addRobotsFollow(true);
-    $seo->addDescription("Strona testowa frameworka");
-    $seo->addCanonicalLink();
-    $seo->addLanguageLink(array("pl"));
-
-
-    $this->loadCss($css);
-    ?>
+    <?= $seo->addBasePage(); ?>
+    <?=\Modules\Built\Pagination\Pagination::checkExist();?>
+    <?=$this->loadTitle();?>
+    <?=$this->loadCharset();?>
+    <?=$seo->addDescription("Strona testowa frameworka");?>
+    <?=$seo->addRobotsFollow(true);?>
+    <?=$seo->addCanonicalLink();?>
+    <?=$seo->addLanguageLink(array("pl"));?>
+    <?=$this->loadCss($css);?>
 </head>
 <body>
 <?=

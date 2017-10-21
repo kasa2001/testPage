@@ -4,7 +4,7 @@ namespace Models;
 
 use Core\Database;
 
-class UserTable extends Database
+class User extends Database
 {
     protected $database;
 

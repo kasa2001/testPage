@@ -2,6 +2,8 @@
 
 namespace Modules\Built\Pagination;
 
+use \Lib\Built\URI;
+
 class Pagination
 {
 
@@ -13,7 +15,7 @@ class Pagination
     private static $object;
 
     /**
-     * @var $uri URI
+     * @var $uri \Lib\Built\URI\URI
      */
     private $uri;
     private $allPages;
@@ -39,7 +41,7 @@ class Pagination
         unset($data["visible"]);
         $this->form = $data["form"];
         unset($data["form"]);
-        $this->uri = URI::getInstance($data);
+        $this->uri =URI\URI::getInstance($data);
         $this->_prepareLinks();
     }
 
@@ -73,8 +75,9 @@ class Pagination
     public function addNextPageLink()
     {
         if ($this->nextLink !== null) {
-            echo '<link rel="next" href=" ' . $this->nextLink . '">';
+            return '<link rel="next" href=" ' . $this->nextLink . '">';
         }
+        return null;
     }
 
     /**
@@ -83,8 +86,9 @@ class Pagination
     public function addPreviousPageLink()
     {
         if ($this->prevLink !== null) {
-            echo '<link rel="prev" href=" ' . $this->prevLink . '">';
+            return '<link rel="prev" href=" ' . $this->prevLink . '">';
         }
+        return null;
     }
 
     private function _addLinks($html = null, $start = 0)
@@ -143,9 +147,11 @@ class Pagination
 
     public static function checkExist()
     {
+        $html = '';
         if (self::$object !== null) {
-            self::$object->addNextPageLink();
-            self::$object->addPreviousPageLink();
+            $html .= self::$object->addNextPageLink();
+            $html .=self::$object->addPreviousPageLink();
         }
+        return $html;
     }
 }

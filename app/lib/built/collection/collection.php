@@ -20,11 +20,6 @@ abstract class Collection implements \JsonSerializable, \Countable
      * */
     protected $_count = 0;
 
-    /**
-     * @var $loader \Core\AutoLoader
-     */
-    protected $loader;
-
     /*
      * Public methods
      * */
@@ -36,7 +31,6 @@ abstract class Collection implements \JsonSerializable, \Countable
      * */
     public function __construct($data = null, $count = 0)
     {
-        $this->loader = Core\AutoLoader::getInstance(null);
         if ($data !== null) {
             $this->collection = $data;
             $this->_check($data);

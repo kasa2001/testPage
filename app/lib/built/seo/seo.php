@@ -88,8 +88,6 @@ class SEO
     {
         try {
             if ($this->h1) {
-                $loader = AutoLoader::getInstance(null);
-                $loader->changeRegister("loadException");
                 throw new SEOException("Element h1 can be use only one time");
             }
         } catch (SEOException $e) {

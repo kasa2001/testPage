@@ -1,6 +1,7 @@
 <?php
 
 namespace Core;
+
 use \Controllers, \Lib\Built\Server\Server;
 
 class App
@@ -10,13 +11,12 @@ class App
     protected $params = [];
 
     /**
-     * @var $loader AutoLoader
-     */
-    private $loader;
+     * @var Router
+     * */
+    protected $router;
 
     public function __construct()
     {
-        $this->loader = AutoLoader::getInstance(null);
         $url = $this->parseUrl();
         if (file_exists('app/controllers/' . $url[0] . '.php')) {
             $this->controller = "\\Controllers\\" . $url[0];
@@ -42,13 +42,13 @@ class App
      * */
     public function parseUrl()
     {
-        if (isset($_GET['url'])) {
-            return $url = explode('/', filter_var(rtrim($_GET['url'], '/'), FILTER_SANITIZE_URL));
-        }
-        return NULL;
+        $this->router = Router::getInstance(null);
+        $url = $this->router->checkRoute(isset($_GET['url']) ? $_GET["url"] : '');
+        return explode('/', $url);
     }
 
-    private function _error() {
+    private function _error()
+    {
         $config = new Config();
         $server = Server::getInstance($config->getConfig());
         $server->redirect(404);

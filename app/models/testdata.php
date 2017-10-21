@@ -4,7 +4,7 @@ namespace Models;
 
 use Core\Database;
 
-class TestDataTable extends Database
+class TestData extends Database
 {
 
     public function table()

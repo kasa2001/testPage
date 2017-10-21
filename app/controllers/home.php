@@ -15,7 +15,7 @@ class Home extends Controller
         if (isset($_POST["nick"])) {
             Security::slashSQLForm($_POST);
             Security::analyzeXSS($_POST);
-            $user = $this->loadModel('User');
+            $user = $this->loadModel('\Models\User');
             $query = $user->createQuery($user->table(), "SELECT", array_merge($user->login(), $this->indexedData($_POST)), "a");
             $user->request($query);
             $user->saveData();
