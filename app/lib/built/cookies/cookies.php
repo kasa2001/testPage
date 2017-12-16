@@ -4,22 +4,36 @@
  * */
 
 namespace Lib\Built\Cookies;
+
 class Cookies
 {
-    public static function getFromCookies($name,$i)
+    public function __construct()
     {
-        return $_COOKIE[$name.$i];
+
     }
 
-    public static function destroyCookies($name)
+    public function setCookie($name, $value, $expire)
     {
-        unset($_COOKIE[$name]);
+        setcookie($name,$value,$expire);
     }
 
-    public static function cookieValue($name, $value, $time=null)
+    public function getCookie($name)
     {
-        if ($time==null)
-            setcookie($name, $value);
-        else setcookie($name,$value,$time);
+        return $_COOKIE["$name"];
+    }
+
+    public function changeCookie()
+    {
+
+    }
+
+    public function removeCookie($name)
+    {
+        setcookie($name, "", -1);
+    }
+
+    public function checkExist($name)
+    {
+        return isset($_COOKIE["$name"]);
     }
 }

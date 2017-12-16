@@ -5,7 +5,13 @@
  * */
 namespace Controllers;
 
-use \Core\Controller,\Lib\Built\Collection, \Lib\Built\View\View, Lib\Built\Security\Security, \Core;
+use \Core\Controller;
+use \Lib\Built\Collection;
+use \Lib\Built\View\View;
+use Lib\Built\Security\Security;
+use \Core;
+use Lib\Built\Server\Server;
+use Modules\Built\Pagination\Pagination;
 
 class Home extends Controller
 {
@@ -22,7 +28,17 @@ class Home extends Controller
         }
         $css = "main home";
         $this->view = View::getInstance($this->config);
+        $pagination = new Pagination(5,5, 2201);
         $this->view->display("home/index", null, $css, null);
+        echo $pagination;
+
+        $database = new Core\Database2();
+        $database->select("id", "name")
+            ->from("table")
+            ->where("a=a");
+//        echo "<pre>";
+//        print_r($database);
+//        echo "</pre>";
     }
 
     /**
@@ -59,39 +75,14 @@ class Home extends Controller
         $this->view->display('home/collection',array($map,$list,$queue,$stack),'main home');
     }
 
-    public function error404()
+    public function taxonomy()
     {
-        $this->view = View::getInstance($this->config);
-        $this->view->display("home/error", array('error' => 404), null, null);
+
     }
 
-    public function error403()
+    public function error($message = null)
     {
         $this->view = View::getInstance($this->config);
-        $this->view->display("home/error", array('error' => 403), null, null);
-    }
-
-    public function error410()
-    {
-        $this->view = View::getInstance($this->config);
-        $this->view->display("home/error", array('error' => 410), null, null);
-    }
-
-    public function error402()
-    {
-        $this->view = View::getInstance($this->config);
-        $this->view->display("home/error", array('error' => 402), null, null);
-    }
-
-    public function error401()
-    {
-        $this->view = View::getInstance($this->config);
-        $this->view->display("home/error", array('error' => 401), null, null);
-    }
-
-    public function error400()
-    {
-        $this->view = View::getInstance($this->config);
-        $this->view->display("home/error", array('error' => 400), null, null);
+        $this->view->display("home/error", array('message' => $message, 'code' => Server::getStatus()), null, null);
     }
 }

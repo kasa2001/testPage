@@ -25,7 +25,7 @@ class Controller extends Config
      * */
     public function loadModel($model)
     {
-        return new $model();
+        return new  $model();
     }
 
     /**

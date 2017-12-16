@@ -8,15 +8,15 @@ class ArrayList extends Collection implements \Iterator
     const INDEX_NOT_EXISTS = 6;
     private $key;
 
-    public function __construct($data = null, $how = 0)
+    public function __construct($data = null)
     {
-        parent::__construct($data, $how);
+        parent::__construct($data);
         $this->key = 0;
     }
 
     public function copy()
     {
-        return new ArrayList($this->collection, $this->_count);
+        return new ArrayList($this->collection);
     }
 
     public function add($object)
@@ -30,7 +30,6 @@ class ArrayList extends Collection implements \Iterator
     {
         try {
             if (!isset($this->collection[$this->key])) {
-                $this->loader->changeRegister("loadException");
                 throw new CollectionException("Index not exists", self::INDEX_NOT_EXISTS);
             }
         } catch (CollectionException $e) {
@@ -64,7 +63,6 @@ class ArrayList extends Collection implements \Iterator
     {
         try {
             if ($key != null && !isset($this->collection[$key])){
-                $this->loader->changeRegister('loadException');
                 throw new CollectionException('Wrong Index', self::WRONG_INDEX);
             }
         }catch (CollectionException $e){
@@ -85,7 +83,6 @@ class ArrayList extends Collection implements \Iterator
     {
         try {
             if (!isset($this->collection[$index])){
-                $this->loader->changeRegister("loadException");
                 throw new CollectionException("Wrong index", self::WRONG_INDEX);
             }
         }catch (CollectionException $e) {

@@ -3,6 +3,8 @@
 namespace Core;
 
 
+use Lib\Built\Error\Error;
+
 class Router
 {
 
@@ -22,6 +24,8 @@ class Router
     public function checkRoute($uri)
     {
         switch ($uri) {
+            case "home/taxonomy":
+                Error::raiseError(403);
             default:
                 return $uri;
         }

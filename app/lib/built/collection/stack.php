@@ -6,14 +6,14 @@ class Stack extends Collection
 {
     const EMPTY_STACK = 4;
 
-    public function __construct($data = null, $how = 0)
+    public function __construct($data = null)
     {
-        parent::__construct($data, $how);
+        parent::__construct($data);
     }
 
     public function copy()
     {
-        return new Stack($this->collection, $this->_count);
+        return new Stack($this->collection);
     }
 
     /**
@@ -35,7 +35,6 @@ class Stack extends Collection
     {
         try {
             if ($this->_count == 0) {
-                $this->loader->changeRegister("loadException");
                 throw new CollectionException("Empty stack", self::EMPTY_STACK);
             }
         } catch (CollectionException $e) {
@@ -57,7 +56,6 @@ class Stack extends Collection
     {
         try {
             if ($this->_count == 0) {
-                $this->loader->changeRegister("loadException");
                 throw new CollectionException("Empty stack", self::EMPTY_STACK);
             }
         } catch (CollectionException $e) {

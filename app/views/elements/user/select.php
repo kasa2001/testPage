@@ -25,6 +25,12 @@
                     <td>
                         Update Date
                     </td>
+                    <td>
+                        Alias
+                    </td>
+                    <td>
+                        Title
+                    </td>
                 </tr>
                 </thead>
                 <tbody>

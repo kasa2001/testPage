@@ -1,3 +1,5 @@
 <?php
-$query=$model->createQuery($model->table(),"UPDATE", [$model->updateData(), $_POST["content"],$model->deleteData(),$_POST["id"]]);
-$model->request($query);
+$query = "UPDATE `testdata` set `data` = '" . $_POST["data"] . "', `alias` = '" . $_POST["alias"] . "', `title` = '" . $_POST["title"] . "' where `id` = " . $_POST["id"];
+$model->execute($query);
+
+echo $query;

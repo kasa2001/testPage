@@ -18,7 +18,7 @@ class API extends Core\Controller
         $server->checkIsJS();
         Security::slashSQLForm($_POST);
         Security::analyzeXSS($_POST);
-        $user = $this->loadModel("TestData");
+        $user = $this->loadModel("Models\TestData");
         $this->view = View::getInstance($this->config);
         $this->view->getJSON("sendInsert", $user);
     }
@@ -29,7 +29,7 @@ class API extends Core\Controller
         $server->checkIsJS();
         Security::slashSQLForm($_POST);
         Security::analyzeXSS($_POST);
-        $user = $this->loadModel("TestData");
+        $user = $this->loadModel("Models\TestData");
         $this->view = View::getInstance($this->config);
         $this->view->getJSON("sendDelete", $user);
     }
@@ -40,7 +40,7 @@ class API extends Core\Controller
         $server->checkIsJS();
         Security::slashSQLForm($_POST);
         Security::analyzeXSS($_POST);
-        $user = $this->loadModel("TestData");
+        $user = $this->loadModel("Models\TestData");
         $this->view = View::getInstance($this->config);
         $this->view->getJSON("sendModify", $user);
     }
@@ -49,7 +49,7 @@ class API extends Core\Controller
     {
         $server = Server::getInstance($this->config);
         $server->checkIsJS();
-        $user = $this->loadModel("TestData");
+        $user = $this->loadModel("Models\TestData");
         $this->view = View::getInstance($this->config);
         $this->view->getJSON("sendSelect", $user);
     }

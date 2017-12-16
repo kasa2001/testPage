@@ -1,5 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
 
-app/config/*
 .htaccess
-.idea/*
+.idea/
+app/config/

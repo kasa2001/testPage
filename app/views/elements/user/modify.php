@@ -26,6 +26,12 @@
                         Update Date
                     </td>
                     <td>
+                        Title
+                    </td>
+                    <td>
+                        Alias
+                    </td>
+                    <td>
                         Action
                     </td>
                 </tr>

@@ -2,156 +2,101 @@
 
 namespace Modules\Built\Pagination;
 
-use \Lib\Built\URI;
+
+use Lib\Built\Error\Error;
+use Lib\Built\URI\URI;
 
 class Pagination
 {
-
-    use \GetInstance;
-
-    /**
-     * @var object Pagination
-     * */
-    private static $object;
-
-    /**
-     * @var $uri \Lib\Built\URI\URI
-     */
-    private $uri;
-    private $allPages;
-    private $prevLink;
     private $limit;
-    private $visible;
-    private $nextLink;
-    private $startLink;
-    private $endLink;
+    private $display;
+    private $total;
     private $current;
-    private $form;
-    private $address;
-
-    private function __construct($data)
-    {
-        $this->allPages = $data["pages"];
-        unset($data["pages"]);
-        $this->limit = $data["limit"];
-        unset($data["limit"]);
-        $this->current = $data["current"];
-        unset($data["current"]);
-        $this->visible = $data["visible"];
-        unset($data["visible"]);
-        $this->form = $data["form"];
-        unset($data["form"]);
-        $this->uri =URI\URI::getInstance($data);
-        $this->_prepareLinks();
-    }
-
-    protected function _prepareLinks()
-    {
-        $next = $this->current + $this->limit;
-        $end = $this->current - $this->limit;
-        $all = $this->limit * $this->allPages;
-
-        $this->endLink = $this->uri->toPagination() . ($all);
-        $this->startLink = $this->uri->toPagination();
-        $this->address = $this->uri->toPagination();
-
-        if ($next > $all)
-            $this->nextLink = $this->endLink;
-        else
-            if ($next === $all)
-                $this->nextLink = $this->endLink;
-            else
-                $this->nextLink = $this->uri->toPagination() . $next;
-
-        if ($end <= 0)
-            $this->prevLink = $this->startLink;
-        else
-            $this->prevLink = $this->uri->toPagination() . $end;
-    }
+    private $start;
+    private $end;
 
     /**
-     * Method add to head element next link
+     * @var  $uri URI
      * */
-    public function addNextPageLink()
+    private $uri;
+
+    public function __construct($limit, $display, $total)
     {
-        if ($this->nextLink !== null) {
-            return '<link rel="next" href=" ' . $this->nextLink . '">';
+        $this->uri = URI::getInstance(null);
+        $this->current = $this->uri->getCurrentPage();
+        if ($this->current % $limit != 0 || $this->current > $total || $this->current < 0) {
+            Error::raiseError(404);
         }
-        return null;
+        $this->limit = $limit;
+        $this->display = $display;
+        $this->total = $total;
+        $this->_setDisplay($limit * floor(($display / 2)), $limit * ceil($display / 2));
     }
 
-    /**
-     * Method add to head element prev link
-     * */
-    public function addPreviousPageLink()
+    private function _setDisplay($start, $end)
     {
-        if ($this->prevLink !== null) {
-            return '<link rel="prev" href=" ' . $this->prevLink . '">';
+        if (($this->current - $start) < 0) {
+            $this->start = 0;
+        } else {
+            $this->start = $this->current - $start;
         }
-        return null;
+
+        if ($this->current + $end > $this->total) {
+            $this->end = $this->total;
+        } else {
+            $this->end = $this->current + $end;
+        }
     }
 
-    private function _addLinks($html = null, $start = 0)
+    protected function _inactive($title)
     {
-        $set = $this->current / $this->limit;
+        return "<p>$title</p>";
+    }
 
-        if (($this->visible / 2) <= $set)
-            if ($this->visible % 2 == 0)
-                $start = (++$set - ($this->visible / 2)) * $this->limit;
-            else
-                $start = (++$set - (($this->visible + 1) / 2)) * $this->limit;
-
-        for ($i = 0; $i < $this->visible; $i++, $start += $this->limit) {
-            if ($start > ($this->allPages * $this->limit)) break;
-
-            if ($start === 0)
-                $html .= $this->_directLink($this->address, (($start / $this->limit) + 1));
-            else
-                $html .= $this->_directLink(($this->address . '/' . $start), (($start / $this->limit) + 1));
+    protected function _active($link, $title, $visible)
+    {
+        if ($visible) {
+            return '<a href="' . $link . '"> ' . $title . '</a>';
         }
+        return '<a href="' . $link . '" class="hidden-xs"> ' . $title . '</a>';
+    }
 
-        return $html;
+    protected function _checkActive($link, $title)
+    {
+        if ('/'.$link != $this->uri->getRequestURI() && (($this->start) != 0 || $this->current != 0))
+            return $this->_active($link, $title, false);
+
+        return $this->_inactive($title);
     }
 
     public function __toString()
     {
-        $html = '<div class="pagination">';
+        $link = $this->uri->toPagination();
+        $html = '<nav class="pagination">';
 
-        if ($this->form > 1)
-            $html .= $this->_directLink($this->startLink, "First");
+        if (($this->start - $this->limit) > 0)
+            $html .= $this->_active($link, 1, true);
 
-        $html .= $this->_directLink($this->prevLink, "Previous");
+        for ($i = 0; $i < $this->display; $i++) {
 
-        if ($this->form > 0)
-            $html .= $this->_addLinks();
+            $html .= $this->_checkActive($link . $this->start, (($this->start / $this->limit) + 1));
 
-        $html .= $this->_directLink($this->nextLink, "Next");
+            $this->start += $this->limit;
 
-        if ($this->form > 1)
-            $html .= $this->_directLink($this->endLink, "Last");
-
-
-        if ($this->form > 2)
-            $html .= $this->_directLink(($this->address . 'all'), "See all");
-
-        return $html . '</div>';
-    }
-
-    protected function _directLink($link, $name)
-    {
-        if ($this->uri->getRequestURI() == "/" . $link)
-            return '<span class="current">' . $name . '</span>';
-        else
-            return '<a href=" ' . $link . '">' . $name . '</a>';
-    }
-
-    public static function checkExist()
-    {
-        $html = '';
-        if (self::$object !== null) {
-            $html .= self::$object->addNextPageLink();
-            $html .=self::$object->addPreviousPageLink();
+            if ($this->start >= $this->total)
+                break;
         }
+
+        if ($this->start + $this->limit < $this->total)
+            $html .= $this->_active($link . (floor($this->total / $this->limit) * $this->limit), ceil($this->total / $this->limit), true);
+
+        $html .= '</nav>';
+
         return $html;
+    }
+
+    public function addRelation()
+    {
+
     }
 }

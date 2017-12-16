@@ -12,10 +12,11 @@ $(document).ready(function () {
                 var here = $(this).parent().parent().children();
                 $.post("/PTW/api/sendModify", {
                     id: here.eq(0).text(),
-                    content: here.eq(1).text()
+                    data: here.eq(1).text(),
+                    title: here.eq(5).text(),
+                    alias: here.eq(4).text()
                 }, function (data, status) {
                     alert(status + "! Data is modified");
-                    alert(data);
                     here.eq(3).load("/PTW/api/sendSelect", {id: here.eq(0).text()});
                 });
             }
@@ -44,16 +45,28 @@ $(document).ready(function () {
     function replace(object) {
         var here = $(object).parent().parent().children();
         var inThis = here.eq(1);
+        var title = here.eq(4);
+        var alias = here.eq(5);
         var template = inThis.html();
         inThis.html("<input value='" + template + "'>");
+        template = title.html();
+        title.html("<input value='" + template + "'>");
+        template = alias.html();
+        alias.html("<input value='" + template + "'>");
         here.last().children().html("Save");
     }
 
     function revert(object) {
         var here = $(object).parent().parent().children();
-        var inThis = here.eq(1);
+        var inThis = here.eq(1)
+        ;var title = here.eq(4);
+        var alias = here.eq(5);
         var template = inThis.children().val();
         inThis.html(template);
+        template = title.children().val();
+        title.html(template);
+        template = alias.children().val();
+        alias.html(template);
         here.last().children().html("Edit");
     }
 });

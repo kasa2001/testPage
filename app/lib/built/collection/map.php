@@ -10,9 +10,9 @@ class Map extends Collection implements \Iterator
     private $keys = array();
     private $where;
 
-    public function __construct($data = null, $key = null, $count = 0)
+    public function __construct($data = null, $key = null)
     {
-        parent::__construct($data, $count);
+        parent::__construct($data);
         if ($key !== null) {
             if (is_array($key)) {
                 foreach ($key as $item) {
@@ -31,7 +31,7 @@ class Map extends Collection implements \Iterator
 
     public function copy()
     {
-        return new Map($this->collection, $this->keys, $this->_count);
+        return new Map($this->collection, $this->keys);
     }
 
     public function add($object, $key)
@@ -47,7 +47,6 @@ class Map extends Collection implements \Iterator
     {
         try {
             if (!isset($this->collection[$key])) {
-                $this->loader->changeRegister("loadException");
                 throw new CollectionException("Wrong index", self::WRONG_INDEX);
             }
         } catch (CollectionException $e) {
@@ -60,7 +59,6 @@ class Map extends Collection implements \Iterator
     {
         try {
             if (!isset($this->collection[$key])) {
-                $this->loader->changeRegister("loadException");
                 throw new CollectionException("Wrong index", self::WRONG_INDEX);
             }
         } catch (CollectionException $e) {
@@ -75,7 +73,6 @@ class Map extends Collection implements \Iterator
     {
         try {
             if (!isset($this->collection[$this->keys[$this->where]])) {
-                $this->loader->changeRegister("loadException");
                 throw new CollectionException("Map empty", self::MAP_EMPTY);
             }
         } catch (CollectionException $e) {
@@ -93,7 +90,6 @@ class Map extends Collection implements \Iterator
     {
         try {
             if (!isset($this->collection[$this->keys[$this->where]])) {
-                $this->loader->changeRegister("loadException");
                 throw new CollectionException("Map empty", self::MAP_EMPTY);
             }
         } catch (CollectionException $e) {
@@ -116,7 +112,6 @@ class Map extends Collection implements \Iterator
     {
         try {
             if (isset($this->collection[$key])) {
-                $this->loader->changeRegister("loadException");
                 throw new CollectionException("Index busy", self::INDEX_BUSY);
             }
         } catch (CollectionException $e) {

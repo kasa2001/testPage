@@ -3,6 +3,8 @@
 namespace Lib\Built\View;
 
 use Lib\Built\Factory\Factory;
+use Lib\Built\SEO\SEO;
+use Lib\Built\URI\URI;
 
 
 class View
@@ -11,12 +13,22 @@ class View
 
     private static $object;
     private $config;
+
+    /**
+     * @var $seo SEO
+     * */
     private $seo;
+
+    /**
+     * @var $uri URI
+     * */
+    private $uri;
 
     private function __construct($config)
     {
         $this->config = $config;
         $this->seo = Factory::getInstance("\Lib\Built\SEO\SEO", $config);
+        $this->uri = Factory::getInstance("\Lib\Built\URI\URI","");
     }
 
     /**
@@ -82,21 +94,28 @@ class View
         if ($js != "" or $js != null) {
 
             $table = explode(' ', $js);
-            $html .= '<script src="' . $this->config["system"]["default-directory"] . '/public/js/jquery-3.2.1.min.js" type="text/JavaScript"></script>';
+            $html .= '<script src="' . (!empty($this->config["system"]["default-directory"])?$this->config["system"]["default-directory"]: '') . '/public/js/jquery-3.2.1.min.js" type="text/JavaScript"></script>';
 
             for ($i = 0; $i < (count($table)); $i++)
-                $html .= '<script src="' . $this->config["system"]["default-directory"] . '/public/js/' . $table[$i] . '.js" type="text/JavaScript"></script>';
+                $html .= '<script src="' . (!empty($this->config["system"]["default-directory"])?$this->config["system"]["default-directory"]: '') . '/public/js/' . $table[$i] . '.js" type="text/JavaScript"></script>';
         }
-
         return $html;
     }
 
     /**
      * Method load title page
+     * @param $title string
+     * @return string
      * */
-    public function loadTitle()
+    public function loadTitle($title = null)
     {
-        return '<title>' . $this->config["system"]["default-title"] . '</title>';
+        if ($title == null) {
+            return '<title>' . $this->config["system"]["default-title"] . '</title>';
+        } else {
+            return '<title>' . $title . '</title>';
+        }
+
+
     }
 
     /**
@@ -120,11 +139,13 @@ class View
      * @param $name string
      * @param $data string
      * @param $class array string (default null)
+     * @param $target string
+     * @param $relation string
      * @return string;
      * */
-    public function buildLink($name, $data, $class = null)
+    public function buildLink($name, $data, $class = null, $target = null, $relation = null)
     {
-        $html = '<a href="' . $this->baseLink() . $data . '"';
+        $html = '<a href="' . $this->uri->getBase() . (!empty($this->config["system"]["default-directory"])?$this->config["system"]["default-directory"] . '/':'') . $data . '"';
 
         if (count($class) != 0) {
             $html .= 'class="';
@@ -135,28 +156,13 @@ class View
             $html .= '"';
         }
 
+        if ($target != null)
+            $html .= ' target=" '. $target . '"';
+        if ($relation != null)
+            $html .= ' relation=" '. $relation . '"';
         $html .= '>' . $name . '</a>';
 
         return $html;
-    }
-
-    /**
-     * Method creates attribute href
-     * @return string
-     * */
-    public function baseLink()
-    {
-        if ($_GET != null) {
-            if (count(explode("/", $_GET["url"])) >= 2) {
-
-                $address = explode("/", $_SERVER["REQUEST_URI"]);
-                $data = "/";
-                for ($i = 1; $i < (count($address) - 2); $i++) $data .= $address[$i] . "/";
-                return $data;
-
-            } else return "/" . $this->config["system"]["default-directory"] . "/";
-        } else
-            return "/" . $this->config["system"]["default-directory"] . "/";
     }
 
     /**
@@ -169,7 +175,7 @@ class View
     {
         $html = '<form method="' . $method . '"';
         if ($action == null) $html .= '>';
-        else $html .= ' action="' . $this->baseLink() . $action . '">';
+        else $html .= ' action="' . $this->uri->getBase() . (!empty($this->config["system"]["default-directory"])?$this->config["system"]["default-directory"] . '/':'') . $action . '">';
         return $html;
     }
 

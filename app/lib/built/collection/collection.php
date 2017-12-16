@@ -2,8 +2,6 @@
 
 namespace Lib\Built\Collection;
 
-use \Core;
-
 abstract class Collection implements \JsonSerializable, \Countable
 {
     const WRONG_INDEX = 1;
@@ -29,7 +27,7 @@ abstract class Collection implements \JsonSerializable, \Countable
      * @param $data mixed (default null)
      * @param $count int (default 0)
      * */
-    public function __construct($data = null, $count = 0)
+    public function __construct($data = null)
     {
         if ($data !== null) {
             $this->collection = $data;
@@ -40,7 +38,7 @@ abstract class Collection implements \JsonSerializable, \Countable
                 $this->_count = $count;
 
         } else
-            $this->_count = $count;
+            $this->_count = count($data);
     }
 
     /**
@@ -178,13 +176,11 @@ abstract class Collection implements \JsonSerializable, \Countable
         try {
             if (!is_array($data)) {
                 if (get_class($data) != $type) {
-                    $this->loader->changeRegister('loadException');
                     throw new CollectionException("Wrong object added to collection", self::WRONG_OBJECT);
                 }
             }else {
                 foreach ($data as $item) {
                     if (get_class($item) != $type) {
-                        $this->loader->changeRegister('loadException');
                         throw new CollectionException("Wrong object added to collection", self::WRONG_OBJECT);
                     }
                 }
@@ -204,13 +200,11 @@ abstract class Collection implements \JsonSerializable, \Countable
         try {
             if (!is_array($data)) {
                 if (gettype($data) != $type) {
-                    $this->loader->changeRegister('loadException');
                     throw new CollectionException("Wrong variable added to collection", self::WRONG_OBJECT);
                 }
             } else {
                 foreach ($data as $item) {
                     if (gettype($item) != $type) {
-                        $this->loader->changeRegister('loadException');
                         throw new CollectionException("Wrong variable added to collection", self::WRONG_OBJECT);
                     }
                 }

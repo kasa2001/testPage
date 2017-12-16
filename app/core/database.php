@@ -1,8 +1,13 @@
 <?php
 
 namespace Core;
+use Lib\Built\Collection\ArrayList;
+use Lib\Built\Collection\Map;
+use Lib\Built\Collection\Queue;
+use Lib\Built\Collection\Stack;
 use Lib\Built\Security\Security;
 use Lib\Built\Session\Session;
+use Lib\Built\StdObject\StdObject;
 
 /**
  * Class supports MySQL only on this moment
@@ -52,6 +57,7 @@ class Database extends Config
 
     protected $columns = [];
 
+
     /**
      * Connect with database
      * @param $driver string/null
@@ -77,7 +83,6 @@ class Database extends Config
         }
         $this->connect->exec("set names utf8");
     }
-
     /**
      * Method which create a new query
      * @param $table string data about load table
@@ -422,6 +427,84 @@ class Database extends Config
     public function getData()
     {
         return $this->data->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    /*
+     * New database. TODO
+     * */
+
+    public function execute($query = null)
+    {
+        if ($query === null)
+            $this->data = $this->connect->query($this->query);
+        else
+            $this->data = $this->connect->query($query);
+
+    }
+
+    public function loadArray()
+    {
+        return $this->data->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    public function loadQueue()
+    {
+        $queue = new Queue();
+        $item = $this->data->fetch(\PDO::FETCH_ASSOC);
+        $object = new StdObject();
+        foreach ($item as $data) {
+            foreach ($data as $key => $i) {
+                $object->$key = $i;
+            }
+            $queue->enQueue($object);
+        }
+
+        return $queue;
+    }
+
+    public function loadStack()
+    {
+        $stack  = new Stack();
+        $item = $this->data->fetch(\PDO::FETCH_ASSOC);
+        $object = new StdObject();
+        foreach ($item as $data) {
+            foreach ($data as $key => $i) {
+                $object->$key = $data;
+            }
+            $stack->push($object);
+        }
+
+        return $stack;
+    }
+
+    public function loadMap()
+    {
+        $map = new Map();
+        $item = $this->data->fetch(\PDO::FETCH_ASSOC);
+        $object = new StdObject();
+        foreach ($item as $key => $data) {
+            foreach ($data as $keys => $datum) {
+                $object->$keys = $datum;
+            }
+            $map->add($object, $key);
+        }
+
+        return $map;
+    }
+
+    public function loadList()
+    {
+        $list = new ArrayList();
+        $item = $this->data->fetch(\PDO::FETCH_ASSOC);
+        $object = new StdObject();
+        foreach ($item as $data) {
+            foreach ($data as $key => $i) {
+                $object->$key = $i;
+            }
+            $list->add($object);
+        }
+
+        return $list;
     }
 
     /**

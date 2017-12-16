@@ -55,12 +55,14 @@ class Server
      * Method redirect to another page. If $where is null redirect to preview page
      * @param $where string
      * @param $code int
+     * @param $message string
      * */
-    public function redirect($code = 200, $where = null)
+    public function redirect($code = 200, $where = null, $message)
     {
         if ($where === null) {
             if ($code > 399 && $code < 500) {
                 $this->_setError($code);
+                $this->_loadErrorPage($message);
             } else {
                 header("Location: /home/index");
             }
@@ -107,11 +109,15 @@ class Server
         }
         http_response_code($code);
         $_SERVER['REDIRECT_STATUS'] = $code;
-        $this->_loadErrorPage($code);
     }
 
-    private function _loadErrorPage($code)
+    public static function getStatus()
     {
-        call_user_func_array(array(new Home(), "error".$code),array());
+        return $_SERVER['REDIRECT_STATUS'];
+    }
+
+    private function _loadErrorPage($message)
+    {
+        call_user_func_array(array(new Home(), "error"),array($message));
     }
 }

@@ -31,7 +31,10 @@ class TestData extends Database
 
     public function updateData()
     {
-        return "data";
+        $columns[0] = "title";
+        $columns[1] = "alias";
+        $columns[2] = "data";
+        return $columns;
     }
 
     public function getUpdateDate()

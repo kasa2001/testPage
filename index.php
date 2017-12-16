@@ -1,4 +1,8 @@
 <?php
 
 require_once 'app/init.php';
-$app = new Core\App();
+try {
+    $app = new Core\App();
+} catch (Exception $e) {
+
+}

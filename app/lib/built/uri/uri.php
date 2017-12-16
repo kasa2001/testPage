@@ -2,6 +2,8 @@
 
 namespace Lib\Built\URI;
 
+use Core\Router;
+
 class URI
 {
     use \GetInstance;
@@ -36,6 +38,8 @@ class URI
      * */
     private $address;
 
+
+    private $config;
     /**
      * Construct create URI object
      * @param $config array
@@ -47,6 +51,7 @@ class URI
         $this->requestURI = $_SERVER["REQUEST_URI"];
         $this->base = $this->scheme . $this->host;
         $this->address = $this->base . $this->requestURI;
+        $this->config = $config;
     }
 
     /**
@@ -100,12 +105,28 @@ class URI
      */
     public function toPagination()
     {
-        $data = explode("/",$this->requestURI);
+        $data = explode("/", $this->requestURI);
         $how = count($data);
-        for ($i=0; $i < $how; $i++)
-            if (is_numeric($data[$i]) || $data[$i]=='all' || strlen($data[$i])===0)
+        for ($i = 0; $i < $how; $i++)
+            if (is_numeric($data[$i]) || $data[$i]=='all' || strlen($data[$i]) == 0)
                 unset($data[$i]);
+
+        if ((isset($this->config["system"]["default-directory"]) && $how < 5)
+            || (!isset($this->config["system"]["default-directory"]) && $how < 4)) {
+            $router = Router::getInstance($this->config);
+            $data = array_merge($data, explode('/', $router->checkRoute('home/index')));
+        }
 
         return implode("/", $data) . "/";
     }
+
+    public function getCurrentPage()
+    {
+        $data = explode ("/" ,$this->requestURI);
+        if (is_numeric($data[(count($data)-1)]))
+            return $data[(count($data)-1)];
+        else
+            return 0;
+    }
+
 }

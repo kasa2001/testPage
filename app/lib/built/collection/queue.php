@@ -5,14 +5,14 @@ class Queue extends Collection
 {
     const EMPTY_QUEUE = 7;
 
-    public function __construct($data = null, $count = 0)
+    public function __construct($data = null)
     {
-        parent::__construct($data, $count);
+        parent::__construct($data);
     }
 
     public function copy()
     {
-        return new Queue($this->collection, $this->_count);
+        return new Queue($this->collection);
     }
 
     public function enQueue($object)
@@ -26,7 +26,6 @@ class Queue extends Collection
     {
         try {
             if ($this->_count == 0) {
-                $this->loader->changeRegister("loadException");
                 throw new CollectionException("Empty Queue", self::EMPTY_QUEUE);
             }
         } catch (CollectionException $e) {
@@ -43,7 +42,6 @@ class Queue extends Collection
     {
         try {
             if (!isset($this->collection[0])) {
-                $this->loader->changeRegister("loadException");
                 throw new CollectionException("Empty Queue", self::EMPTY_QUEUE);
             }
         } catch (CollectionException $e) {
