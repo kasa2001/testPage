@@ -7,6 +7,7 @@ use Lib\Built\Collection\ArrayList;
 use Lib\Built\Collection\Map;
 use Lib\Built\Collection\Queue;
 use Lib\Built\Collection\Stack;
+use Lib\Built\Error\Error;
 use Lib\Built\StdObject\StdObject;
 
 class Database2 extends Config
@@ -60,8 +61,6 @@ class Database2 extends Config
      * @var array
      * */
     private $where = array();
-
-//    private $set;
 
 
     /**
@@ -125,7 +124,7 @@ class Database2 extends Config
      * */
     public function loadStack()
     {
-        $stack  = new Stack();
+        $stack = new Stack();
         $item = $this->data->fetch(\PDO::FETCH_ASSOC);
         $object = new StdObject();
         foreach ($item as $data) {
@@ -200,25 +199,53 @@ class Database2 extends Config
         return $query;
     }
 
-
     /*
      * Methods TODO
      * */
-    public function select()
+
+    /**
+     * Method get class properties
+     * @param $object mixed
+     * @return $this
+     * */
+    public function select($object)
     {
-        array_push($this->select, func_get_args());
+        try {
+            $reflect = new \ReflectionClass($object);
+        } catch (\ReflectionException $exception) {
+            Error::raiseError(500);
+            exit;
+        }
+
+        $fields = $reflect->getProperties(\ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PRIVATE | \ReflectionProperty::IS_PUBLIC);
+
+        foreach ($fields as $field)
+            array_push($this->select, $field->name);
+
         return $this;
     }
 
-    public function from()
+    /**
+     * Method get class name to query
+     * @param $object mixed
+     * @return $this
+     * */
+    public function from($object)
     {
-        array_push($this->from, func_get_args());
+        $class = explode('\\', get_class($object));
+
+        $this->from = $class[count($class) - 1];
         return $this;
     }
 
-    public function where()
+    /**
+     * Method add where
+     * @param $callable callable
+     * @return $this
+     * */
+    public function where($callable)
     {
-        array_push($this->where, func_get_args());
+        $this->where = $callable;
         return $this;
     }
 

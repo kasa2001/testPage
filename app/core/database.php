@@ -27,7 +27,7 @@ class Database extends Config
     /**
      * @var $password string. It is a data about password to database
      * */
-    protected $password;
+    protected $pass;
 
     /**
      * @var $base string. It is a data about database
@@ -71,11 +71,11 @@ class Database extends Config
         parent::__construct();
         $this->server = ($host === null) ? $this->config['database']['host'] : $host;
         $this->login = ($user === null) ? $this->config['database']['user'] : $user;
-        $this->password = ($password === null) ? $this->config['database']['password'] : $password;
+        $this->pass = ($password === null) ? $this->config['database']['password'] : $password;
         $this->base = ($db === null) ? $this->config['database']['database'] : $db;
         $this->driver = ($driver === null) ? $this->config['database']['sql'] : $driver;
         try {
-            $this->connect = new \PDO($this->driver . ":host=" . $this->server . ";dbname=" . $this->base, $this->login, $this->password);
+            $this->connect = new \PDO($this->driver . ":host=" . $this->server . ";dbname=" . $this->base, $this->login, $this->pass);
         } catch (\PDOException $exception) {
             echo '<pre>';
             print_r($exception);

@@ -32,13 +32,18 @@ class Home extends Controller
         $this->view->display("home/index", null, $css, null);
         echo $pagination;
 
-        $database = new Core\Database2();
-        $database->select("id", "name")
-            ->from("table")
-            ->where("a=a");
-//        echo "<pre>";
-//        print_r($database);
-//        echo "</pre>";
+        $user = new \Models\User();
+        $database = new \Core\Database2();
+        $database
+            ->select($user)
+            ->from($user)
+            ->where(function() use ($user){
+                return $user->item() < 2;
+            });
+
+        echo '<pre>';
+        print_r($database);
+        echo '</pre>';
     }
 
     /**

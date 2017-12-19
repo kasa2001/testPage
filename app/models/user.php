@@ -2,11 +2,13 @@
 
 namespace Models;
 
-use Core\Database;
 
-class User extends Database
+class User
 {
-    protected $database;
+    protected $id;
+    protected $nick;
+    protected $email;
+    protected $password;
 
     public function table()
     {
@@ -40,5 +42,10 @@ class User extends Database
     public function checkRegistry()
     {
         return 'Nick';
+    }
+
+    public function item()
+    {
+        return 1;
     }
 }
