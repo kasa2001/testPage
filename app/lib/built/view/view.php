@@ -145,7 +145,7 @@ class View
      * */
     public function buildLink($name, $data, $class = null, $target = null, $relation = null)
     {
-        $html = '<a href="' . $this->uri->getBase() . (!empty($this->config["system"]["default-directory"])?$this->config["system"]["default-directory"] . '/':'') . $data . '"';
+        $html = '<a href="' . $this->uri->getBase() . (!empty($this->config["system"]["default-directory"])? '/'. $this->config["system"]["default-directory"] . '/':'') . $data . '"';
 
         if (count($class) != 0) {
             $html .= 'class="';

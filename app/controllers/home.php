@@ -42,7 +42,7 @@ class Home extends Controller
             });
 
         echo '<pre>';
-        print_r($database);
+        print_r($database->where);
         echo '</pre>';
     }
 

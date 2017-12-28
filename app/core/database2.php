@@ -60,7 +60,7 @@ class Database2 extends Config
     /**
      * @var array
      * */
-    private $where = array();
+    public $where = array();
 
 
     /**
@@ -210,6 +210,8 @@ class Database2 extends Config
      * */
     public function select($object)
     {
+        $reflect = null;
+
         try {
             $reflect = new \ReflectionClass($object);
         } catch (\ReflectionException $exception) {
@@ -245,6 +247,18 @@ class Database2 extends Config
      * */
     public function where($callable)
     {
+        if (get_class($callable) == 'Closure') {
+            $object = new \ReflectionFunction($callable);
+            $file = $object->getFileName();
+            $start = $object->getStartLine() - 1;
+            $end = $object->getEndLine();
+            $length = $end - $start;
+            $source = file($file);
+            $body = implode("", array_slice($source, $start, $length));
+            $table = array();
+            preg_match("/function\(\)[^{]*?{[^}]*?}/",$body, $table);
+            print_r($table);
+        }
         $this->where = $callable;
         return $this;
     }
