@@ -30,20 +30,17 @@ class Home extends Controller
         $this->view = View::getInstance($this->config);
         $pagination = new Pagination(5,5, 2201);
         $this->view->display("home/index", null, $css, null);
-        echo $pagination;
+//        echo $pagination;
 
         $user = new \Models\User();
+        $taxonomy = new \Models\Taxonomy();
         $database = new \Core\Database2();
         $database
             ->select($user)
             ->from($user)
-            ->where(function() use ($user){
-                return $user->item() < 2;
+            ->where(function() use ($user, $taxonomy){
+                return $user->item() < $user->item();
             });
-
-        echo '<pre>';
-        print_r($database->where);
-        echo '</pre>';
     }
 
     /**

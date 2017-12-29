@@ -60,8 +60,9 @@ class Database2 extends Config
     /**
      * @var array
      * */
-    public $where = array();
+    private $where = array();
 
+    private $method;
 
     /**
      * Connect with database
@@ -242,25 +243,90 @@ class Database2 extends Config
 
     /**
      * Method add where
-     * @param $callable callable
+     * @param $callable \Closure
      * @return $this
+     * @throws DatabaseException if not a function
      * */
     public function where($callable)
     {
-        if (get_class($callable) == 'Closure') {
-            $object = new \ReflectionFunction($callable);
-            $file = $object->getFileName();
-            $start = $object->getStartLine() - 1;
-            $end = $object->getEndLine();
-            $length = $end - $start;
-            $source = file($file);
-            $body = implode("", array_slice($source, $start, $length));
-            $table = array();
-            preg_match("/function\(\)[^{]*?{[^}]*?}/",$body, $table);
-            print_r($table);
-        }
-        $this->where = $callable;
+        if (!is_callable($callable))
+            throw new DatabaseException('<strong>Fatal Error:</strong> Variable $callable is not a function/method', 500);
+
+        $object = new \ReflectionFunction($callable);
+
+        $params = $object->getStaticVariables();
+
+        $body = $this->getFunctionBody($this->parseFunction($object));
+
+        $this->where = $this->renderCondition($body, $params);
+        echo $this->where;
         return $this;
+    }
+
+    private function getFunctionBody($function)
+    {
+        preg_match('/return[^;]*/', $function, $matches);
+        return str_replace('return', '', $matches[0]);
+    }
+
+    /**
+     * @param $object \ReflectionFunctionAbstract
+     * @return string
+     * */
+    private function parseFunction(\ReflectionFunctionAbstract $object)
+    {
+        $file = $object->getFileName();
+        $start = $object->getStartLine() - 1;
+        $end = $object->getEndLine();
+        $length = $end - $start;
+        $source = file($file);
+        $body = implode("", array_slice($source, $start, $length));
+        $matches = array();
+        preg_match("/function(?:[^\(]*?)\(\)[^{]*?{[^}]*?}/", $body, $matches);
+        return $matches[0];
+    }
+
+    private function renderCondition($body, $params)
+    {
+        $match = false;
+        $matches = array();
+        $data = 0;
+        $replaced = 1;
+        echo $body;
+        foreach ($params as $key => $item) {
+            if (is_object($item)) {
+                if (strpos(" " . $body, $key)) {
+                    if (!$match) {
+                        preg_match_all('/[^->]*?\(\)/',$body,$matches);
+                        $match = true;
+                        $matches = $matches[0];
+
+                    }
+                    $class = new \ReflectionClass($item);
+
+                    $matches[$data] = str_replace('()','',$matches[$data]);
+
+                    if ($class->hasMethod($matches[$data])) {
+                        $method = $class->getMethod($matches[$data]);
+                    } else throw new DatabaseException("Class doesn't get method $matches[$data]", 501);
+
+                    $this->method = $this->getFunctionBody($this->parseFunction($method));
+
+                    $body = preg_replace_callback('/[^->]*?\(\)/',array($this,'replace'),$body,$replaced);
+
+                    $data++;
+                }
+            }
+        }
+        return $body;
+    }
+
+    private function replace($matches)
+    {
+//        print_r($matches);
+        preg_match('/[^->]*?$/',$this->method,$item);
+//        echo $item[0];
+        return $item[0];
     }
 
     public function set()
@@ -273,7 +339,17 @@ class Database2 extends Config
         return $this;
     }
 
-    public function join()
+    public function leftJoin()
+    {
+        return $this;
+    }
+
+    public function innerJoin()
+    {
+        return $this;
+    }
+
+    public function rightJoin()
     {
         return $this;
     }

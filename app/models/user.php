@@ -46,6 +46,6 @@ class User
 
     public function item()
     {
-        return 1;
+        return $this->id;
     }
 }
