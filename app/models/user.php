@@ -48,4 +48,10 @@ class User
     {
         return $this->id;
     }
+
+    public function data()
+    {
+        return $this->email;
+    }
+
 }

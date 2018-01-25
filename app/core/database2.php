@@ -237,7 +237,7 @@ class Database2 extends Config
     {
         $class = explode('\\', get_class($object));
 
-        $this->from = $class[count($class) - 1];
+        $this->from = strtolower($class[count($class) - 1]);
         return $this;
     }
 
@@ -250,7 +250,7 @@ class Database2 extends Config
     public function where($callable)
     {
         if (!is_callable($callable))
-            throw new DatabaseException('<strong>Fatal Error:</strong> Variable $callable is not a function/method', 500);
+            throw new DatabaseException('Not Implemented', 501);
 
         $object = new \ReflectionFunction($callable);
 
@@ -259,7 +259,8 @@ class Database2 extends Config
         $body = $this->getFunctionBody($this->parseFunction($object));
 
         $this->where = $this->renderCondition($body, $params);
-        echo $this->where;
+
+//        echo $this->where;
         return $this;
     }
 
@@ -288,44 +289,38 @@ class Database2 extends Config
 
     private function renderCondition($body, $params)
     {
-        $match = false;
+        $body = str_replace('$', '', $body);
         $matches = array();
         $data = 0;
         $replaced = 1;
-        echo $body;
+        $method = null;
         foreach ($params as $key => $item) {
             if (is_object($item)) {
                 if (strpos(" " . $body, $key)) {
-                    if (!$match) {
-                        preg_match_all('/[^->]*?\(\)/',$body,$matches);
-                        $match = true;
-                        $matches = $matches[0];
-
-                    }
+                    preg_match_all('/[^->]*?\(\)/', $body, $matches);
+                    $matches = $matches[0];
                     $class = new \ReflectionClass($item);
-
-                    $matches[$data] = str_replace('()','',$matches[$data]);
-
-                    if ($class->hasMethod($matches[$data])) {
-                        $method = $class->getMethod($matches[$data]);
-                    } else throw new DatabaseException("Class doesn't get method $matches[$data]", 501);
-
-                    $this->method = $this->getFunctionBody($this->parseFunction($method));
-
-                    $body = preg_replace_callback('/[^->]*?\(\)/',array($this,'replace'),$body,$replaced);
-
-                    $data++;
+                    for ($i = 0; $i < count($matches); $i++) {
+                        $matches[$i] = str_replace('()', '', $matches[$data]);
+                        if ($class->hasMethod($matches[$data])) {
+                            $method = $class->getMethod($matches[$data]);
+                        } else if (count($params) != $data + 1) {
+                            throw new DatabaseException("Not implemented", 501);
+                        }
+                        $this->method = $this->getFunctionBody($this->parseFunction($method));
+                        $body = preg_replace_callback('/[^->]*?\(\)/', array($this, 'replace'), $body, $replaced);
+                        $data++;
+                    }
                 }
             }
         }
+        $body = str_replace('->', '.', $body);
         return $body;
     }
 
-    private function replace($matches)
+    private function replace()
     {
-//        print_r($matches);
-        preg_match('/[^->]*?$/',$this->method,$item);
-//        echo $item[0];
+        preg_match('/[^->]*?$/', $this->method, $item);
         return $item[0];
     }
 

@@ -39,8 +39,12 @@ class Home extends Controller
             ->select($user)
             ->from($user)
             ->where(function() use ($user, $taxonomy){
-                return $user->item() < $user->item();
+                return $user->item() < $taxonomy->id();
             });
+
+        echo '<pre>';
+        print_r($database);
+        echo '</pre>';
     }
 
     /**

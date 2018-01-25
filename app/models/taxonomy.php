@@ -8,6 +8,8 @@ use Core\Database;
 
 class Taxonomy extends Database
 {
+    private $id;
+
     public function removeTaxonomy($id)
     {
         $this->query = "DELETE FROM `taxonomy` WHERE `id` = $id UNION DELETE FROM `taxonomy_map` WHERE id_taxonomy = $id";
@@ -37,5 +39,10 @@ class Taxonomy extends Database
     {
         $this->query = "insert into `taxonomy_map` (`id_link`, `id_taxonomy`) values ($link->id, $taxonomy->id)";
         $this->execute();
+    }
+
+    public function id()
+    {
+        return $this->id;
     }
 }
