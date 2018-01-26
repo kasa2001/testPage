@@ -36,8 +36,10 @@ class Home extends Controller
         $taxonomy = new \Models\Taxonomy();
         $database = new \Core\Database2();
         $database
-            ->select($user)
-            ->from($user)
+            ->select(array(new class {
+                private $id;
+            }, $taxonomy))
+            ->from(array($user, $taxonomy))
             ->where(function() use ($user, $taxonomy){
                 return $user->item() < $taxonomy->id();
             });

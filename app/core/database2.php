@@ -207,38 +207,86 @@ class Database2 extends Config
     /**
      * Method get class properties
      * @param $object mixed
+     * @throws DatabaseException if is not a object
      * @return $this
      * */
     public function select($object)
     {
-        $reflect = null;
+        if (is_array($object)) {
 
-        try {
-            $reflect = new \ReflectionClass($object);
-        } catch (\ReflectionException $exception) {
-            Error::raiseError(500);
-            exit;
-        }
+            foreach ($object as $class) {
+                if (is_object($class)) {
+                    $this->renderSelect(new \ReflectionClass($class));
+                } else throw new DatabaseException("Internal Server Error", 500);
 
-        $fields = $reflect->getProperties(\ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PRIVATE | \ReflectionProperty::IS_PUBLIC);
+            }
 
-        foreach ($fields as $field)
-            array_push($this->select, $field->name);
+        } else if (is_object($object)){
+
+            $this->renderSelect(new \ReflectionClass($object));
+
+        } else throw new DatabaseException("Internal Server Error", 500);
 
         return $this;
+    }
+
+    private function renderSelect(\ReflectionClass $reflect)
+    {
+        $fields = $reflect->getProperties(\ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PRIVATE | \ReflectionProperty::IS_PUBLIC);
+
+        $assoc = strtolower($reflect->getShortName());
+        $this->select[$assoc] = array();
+
+        foreach ($fields as $field)
+            array_push($this->select[$assoc], $field->name);
     }
 
     /**
      * Method get class name to query
      * @param $object mixed
+     * @throws DatabaseException if is not a object (or array)
      * @return $this
      * */
     public function from($object)
     {
-        $class = explode('\\', get_class($object));
+        if (is_array($object)) {
 
-        $this->from = strtolower($class[count($class) - 1]);
+            foreach ($object as $class) {
+
+                if (is_object($class)) {
+                    $this->renderFrom(new \ReflectionClass($class));
+                } else throw new DatabaseException("Internal Server Error", 500);
+            }
+
+        } else if (is_object($object)){
+
+            $this->renderFrom(new \ReflectionClass($object));
+
+        } else throw new DatabaseException("Internal Server Error", 500);
+
         return $this;
+    }
+
+    private function renderFrom(\ReflectionClass $class)
+    {
+        $assoc = strtolower($class->getShortName());
+        array_push($this->from, $assoc);
+        if (!isset($this->select[$assoc])) {
+
+            foreach ($this->select as $key => $value) {
+                echo $key;
+                if (strpos(' ' . $key, 'class@anonymous')) {
+                    $this->select[$assoc] = array();
+
+                    foreach ($value as $item) {
+                        array_push($this->select[$assoc], $item);
+                    }
+
+                    unset($this->select[$key]);
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -347,5 +395,33 @@ class Database2 extends Config
     public function rightJoin()
     {
         return $this;
+    }
+
+    public function renderQuery()
+    {
+        $query = '';
+        if (!empty($this->select)) {
+            $query .= 'SELECT';
+            foreach ($this->select as $table => $columns) {
+                foreach ($columns as $column) {
+                    $query .= " `$table`.`$column`,";
+                }
+            }
+            $query = rtrim($query,',');
+        }
+
+        if (!empty($this->from)) {
+            $query .= " FROM";
+            foreach ($this->from as $from) {
+                $query .= " `$from`,";
+            }
+            $query = rtrim($query,',');
+        }
+
+        if (!empty($this->where)) {
+            $query .= " WHERE $this->where";
+        }
+
+        return $query;
     }
 }
