@@ -4,6 +4,8 @@
 
 namespace Lib\Built\Cache;
 
+use Lib\Built\View\View;
+
 class Cache
 {
 
@@ -32,9 +34,9 @@ class Cache
 
     }
 
-    public function getCachedDocument()
+    public function getCachedFile($file)
     {
-
+        $view = View::getInstance();
     }
 
     public function getCachedImage()

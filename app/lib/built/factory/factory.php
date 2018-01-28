@@ -3,6 +3,11 @@
 namespace Lib\Built\Factory;
 
 use Lib\Built\SEO\SEO;
+use Lib\Built\Mail\Mail;
+use Modules\Built\Pagination\Pagination;
+use Lib\Built\Date\Date;
+use Core\Database;
+
 class Factory
 {
     public static function getInstance($class, $data)

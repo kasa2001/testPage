@@ -2,7 +2,7 @@
 
 namespace Core;
 
-use \Controllers, \Lib\Built\Server\Server;
+use \Lib\Built\Server\Server;
 
 class App
 {

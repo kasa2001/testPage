@@ -22,6 +22,7 @@ class Controller extends Config
      * Method where add model and connect whit database if exists $_POST
      * @param $model string how model
      * @return Database. Return new model from view
+     * @deprecated  model can be loaded by PSR-4 standard
      * */
     public function loadModel($model)
     {

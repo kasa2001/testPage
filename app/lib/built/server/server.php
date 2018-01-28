@@ -57,10 +57,10 @@ class Server
      * @param $code int
      * @param $message string
      * */
-    public function redirect($code = 200, $where = null, $message)
+    public function redirect($code = 200, $where = null, $message = null)
     {
         if ($where === null) {
-            if ($code > 399 && $code < 500) {
+            if ($code > 399) {
                 $this->_setError($code);
                 $this->_loadErrorPage($message);
             } else {
@@ -79,7 +79,7 @@ class Server
      * Method set redirect error
      * @param $code int
      * */
-    private function _setError($code)
+    protected function _setError($code)
     {
         switch ($code) {
             case 404:
@@ -116,7 +116,7 @@ class Server
         return $_SERVER['REDIRECT_STATUS'];
     }
 
-    private function _loadErrorPage($message)
+    protected function _loadErrorPage($message)
     {
         call_user_func_array(array(new Home(), "error"),array($message));
     }

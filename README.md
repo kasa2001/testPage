@@ -9,17 +9,21 @@ W ramach projektu przewidziano
  
  TODO:
  
-1. Pagination (Finished)
+1. Pagination (Finished, to check)
 2. Mail (To check)
 3. SEO (Prepared only)
 4. ORM (To rebuild)
 5. URI (Prepared)
 6. Cookie 
-7. Date
-8. Server
-9. Security
+7. Date 
+8. Server 
+9. Security 
 10. Compile (download library)
-11. Collection (Prepare unit test)
-12. Cache
+11. Collection (Prepare unit test) 
+12. Cache 
 13. Installer (Download only modules selected) 
-14. Composer
+14. Composer 
+15. Image 
+16. Login module 
+17. Registry module 
+18. Search box module 

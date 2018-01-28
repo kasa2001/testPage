@@ -30,52 +30,14 @@ class Date
         }
     }
 
-    /**
-     * @return false|string
-     */
-    public function getDay()
+    public function __get($name)
     {
-        return $this->day;
+        return $this->$name;
     }
 
-    /**
-     * @return false|string
-     */
-    public function getMonth()
+    public function getDayOfWeek()
     {
-        return $this->month;
-    }
 
-    /**
-     * @return false|string
-     */
-    public function getYear()
-    {
-        return $this->year;
-    }
-
-    /**
-     * @return false|string
-     */
-    public function getHour()
-    {
-        return $this->hour;
-    }
-
-    /**
-     * @return false|string
-     */
-    public function getMinutes()
-    {
-        return $this->minutes;
-    }
-
-    /**
-     * @return false|string
-     */
-    public function getSeconds()
-    {
-        return $this->seconds;
     }
 
     public function getDate($format)
@@ -87,5 +49,4 @@ class Date
     {
         return $this->hour . $format . $this->minutes . $format . $this->seconds;
     }
-
 }

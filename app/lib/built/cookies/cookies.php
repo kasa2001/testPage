@@ -22,8 +22,12 @@ class Cookies
         return $_COOKIE["$name"];
     }
 
-    public function changeCookie()
+    public function changeCookie($name, $value, $expire = null)
     {
+        if ($expire == null)
+            setcookie($name, $value);
+        else
+            setcookie($name, $value, $expire);
 
     }
 
@@ -34,6 +38,6 @@ class Cookies
 
     public function checkExist($name)
     {
-        return isset($_COOKIE["$name"]);
+        return isset($_COOKIE[$name]);
     }
 }

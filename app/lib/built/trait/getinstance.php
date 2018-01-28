@@ -3,7 +3,7 @@
 trait GetInstance
 {
 
-    public static function getInstance($config)
+    public static function getInstance($config = null)
     {
         try {
             $className = __CLASS__;
@@ -14,16 +14,12 @@ trait GetInstance
                 self::$object = new $className($config);
                 $construct->setAccessible(false);
             }
-        } catch (ReflectionException $e) {
-            echo "Reflection Exception</br>";
-            echo "Code: " . $e->getCode() . "</br>";
-            echo "Message: " . $e->getMessage() . "</br>";
-            echo "Stack trace: ";
-            echo "<pre>";
-            print_r($e->getTrace());
-            echo "</pre>";
+        } catch (Exception $e) {
+            $server = \Lib\Built\Server\Server::getInstance($config);
+            $server->redirect(500);
             exit();
         }
+
         return self::$object;
     }
 }
