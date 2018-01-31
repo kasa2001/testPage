@@ -7,7 +7,6 @@ use Lib\Built\Collection\ArrayList;
 use Lib\Built\Collection\Map;
 use Lib\Built\Collection\Queue;
 use Lib\Built\Collection\Stack;
-use Lib\Built\Error\Error;
 use Lib\Built\StdObject\StdObject;
 
 class Database2 extends Config
@@ -62,7 +61,11 @@ class Database2 extends Config
      * */
     private $where = array();
 
+    private $join = array();
+
     private $method;
+
+    private $class;
 
     /**
      * Connect with database
@@ -188,16 +191,9 @@ class Database2 extends Config
     public function execute($query = null)
     {
         if ($query === null)
-            $this->data = $this->connect->query($this->prepareQuery());
+            $this->data = $this->connect->query($this->renderQuery());
         else
             $this->data = $this->connect->query($query);
-    }
-
-    private function prepareQuery()
-    {
-        $query = null;
-
-        return $query;
     }
 
     /*
@@ -274,7 +270,7 @@ class Database2 extends Config
         if (!isset($this->select[$assoc])) {
 
             foreach ($this->select as $key => $value) {
-                echo $key;
+
                 if (strpos(' ' . $key, 'class@anonymous')) {
                     $this->select[$assoc] = array();
 
@@ -306,9 +302,8 @@ class Database2 extends Config
 
         $body = $this->getFunctionBody($this->parseFunction($object));
 
-        $this->where = $this->renderCondition($body, $params);
+        $this->where = $this->renderCondition($body, $this->checkParams($params));
 
-//        echo $this->where;
         return $this;
     }
 
@@ -335,41 +330,66 @@ class Database2 extends Config
         return $matches[0];
     }
 
+    private function checkParams($params)
+    {
+        foreach ($params as $object) {
+            $class = new \ReflectionClass($object);
+
+            if (empty($this->select[strtolower($class->getShortName())]) && empty($this->join[strtolower($class->getShortName())]))
+                throw new DatabaseException("Internal Server Error" , 500);
+
+        }
+
+        return $params;
+    }
+
     private function renderCondition($body, $params)
     {
-        $body = str_replace('$', '', $body);
         $matches = array();
         $data = 0;
         $replaced = 1;
         $method = null;
+        $body = str_replace('$', '', $body);
         foreach ($params as $key => $item) {
             if (is_object($item)) {
                 if (strpos(" " . $body, $key)) {
-                    preg_match_all('/[^->]*?\(\)/', $body, $matches);
-                    $matches = $matches[0];
                     $class = new \ReflectionClass($item);
+
+                    preg_match_all('/' . $key . '[^->]*?->([a-z]{1,})\(\)/', $body, $matches);
+                    $matches = $matches[1];
+
                     for ($i = 0; $i < count($matches); $i++) {
-                        $matches[$i] = str_replace('()', '', $matches[$data]);
-                        if ($class->hasMethod($matches[$data])) {
-                            $method = $class->getMethod($matches[$data]);
-                        } else if (count($params) != $data + 1) {
+//                        $matches[$i] = str_replace('()', '', $matches[$i]);
+
+                        if ($class->hasMethod($matches[$i]))
+                            $method = $class->getMethod($matches[$i]);
+                        else if (count($params) != $i + 1)
                             throw new DatabaseException("Not implemented", 501);
-                        }
+                        else
+                            continue;
+
+                        $this->class = $class->getShortName();
                         $this->method = $this->getFunctionBody($this->parseFunction($method));
-                        $body = preg_replace_callback('/[^->]*?\(\)/', array($this, 'replace'), $body, $replaced);
+//                        echo $body;
+//                        echo "</br>";
+//                        echo '/' . $key . '[^->|<|=|>]*?->([A-Za-z]{1,})\(\)/';
+                        $body = preg_replace_callback('/' . $key . '[^->|<|=|>]*?->([A-Za-z]{1,})\(\)/', array($this, 'replace'), $body, $replaced);
                         $data++;
                     }
                 }
             }
         }
-        $body = str_replace('->', '.', $body);
-        return $body;
+
+        return  str_replace('->', '.', str_replace('==', '=', $body));
     }
 
-    private function replace()
+    private function replace($matches)
     {
+//        echo "<pre>";
+//        print_r($matches);
+//        echo "</pre>";
         preg_match('/[^->]*?$/', $this->method, $item);
-        return $item[0];
+        return '`' . strtolower($this->class) .'`' . '.' . $item[0];
     }
 
     public function set()

@@ -19,13 +19,14 @@ class Router
     /**
      * Method where you can prepare routing. Method this you can add to switch uri (if you not added uri default controller been execute)
      * @param $uri string
+     * @throws \Exception if page not found or gone
      * @return string
      * */
     public function checkRoute($uri)
     {
         switch ($uri) {
             case "home/taxonomy":
-                Error::raiseError(403);
+                throw new \Exception('Gone', 410);
             default:
                 return $uri;
         }

@@ -8,3 +8,4 @@ $autoLoader->registerNamespace('Core', 'app/core');
 $autoLoader->registerNamespace('Lib', 'app/lib');
 $autoLoader->registerNamespace('Models', 'app/models');
 $autoLoader->registerNamespace('Modules', 'app/modules');
+$autoLoader->registerNamespace('Tables', 'app/tables');

@@ -14,12 +14,6 @@ class AutoLoader
         spl_autoload_register(array($this, $method));
     }
 
-    public function loadPSR0($class)
-    {
-        $class = "app/" . str_replace("\\", "/", $class);
-        spl_autoload($class);
-    }
-
     /**
      * Method add namespace to autoload
      *

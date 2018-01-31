@@ -35,17 +35,26 @@ class Home extends Controller
         $user = new \Models\User();
         $taxonomy = new \Models\Taxonomy();
         $database = new \Core\Database2();
-        $database
-            ->select(array(new class {
-                private $id;
-            }, $taxonomy))
-            ->from(array($user, $taxonomy))
-            ->where(function() use ($user, $taxonomy){
-                return $user->item() < $taxonomy->id();
-            });
+        try {
+
+            $database
+                ->select([
+                    new class {
+                        private $id;
+                    },
+                    $taxonomy
+                    ])
+                ->from(array($user, $taxonomy))
+                ->where(function() use ($user, $taxonomy){
+                    return $user->item() < $taxonomy->id() and $user->item() >= $taxonomy->id();
+                });
+
+        } catch (\Exception $e) {
+            print_r($e->getMessage());
+        }
 
         echo '<pre>';
-        print_r($database);
+        print_r($database->renderQuery());
         echo '</pre>';
     }
 
