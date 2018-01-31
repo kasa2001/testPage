@@ -147,7 +147,7 @@ class View
     {
         $html = '<a href="' . $this->uri->getBase() . (!empty($this->config["system"]["default-directory"])? '/'. $this->config["system"]["default-directory"] . '/':'') . $data . '"';
 
-        if (count($class) != 0) {
+        if (!empty($class)) {
             $html .= 'class="';
 
             for ($i = 0; $i < count($class); $i++)

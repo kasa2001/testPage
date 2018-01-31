@@ -25,20 +25,16 @@ abstract class Collection implements \JsonSerializable, \Countable
     /**
      * Construct create new Collection object
      * @param $data mixed (default null)
-     * @param $count int (default 0)
      * */
     public function __construct($data = null)
     {
         if ($data !== null) {
             $this->collection = $data;
             $this->_check($data);
-            if ($count == 0)
-                $this->_count = count($data);
-            else
-                $this->_count = $count;
+            $this->_count = count($data);
 
         } else
-            $this->_count = count($data);
+            $this->_count = 0;
     }
 
     /**

@@ -217,7 +217,7 @@ class Database2 extends Config
 
             }
 
-        } else if (is_object($object)){
+        } else if (is_object($object)) {
 
             $this->renderSelect(new \ReflectionClass($object));
 
@@ -228,9 +228,19 @@ class Database2 extends Config
 
     private function renderSelect(\ReflectionClass $reflect)
     {
-        $fields = $reflect->getProperties(\ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PRIVATE | \ReflectionProperty::IS_PUBLIC);
+        $assoc = null;
+        $fields = $reflect->getProperties(
+            \ReflectionProperty::IS_PROTECTED
+            | \ReflectionProperty::IS_PRIVATE
+            | \ReflectionProperty::IS_PUBLIC
+        );
 
-        $assoc = strtolower($reflect->getShortName());
+        if (strpos(' ' . $reflect->getName(), 'class@anonymous')) {
+            $assoc = strtolower($reflect->getName());
+        } else {
+            $assoc = strtolower($reflect->getShortName());
+        }
+
         $this->select[$assoc] = array();
 
         foreach ($fields as $field)
@@ -241,6 +251,7 @@ class Database2 extends Config
      * Method get class name to query
      * @param $object mixed
      * @throws DatabaseException if is not a object (or array)
+     * @throws \ReflectionException if class not exists
      * @return $this
      * */
     public function from($object)
@@ -254,7 +265,7 @@ class Database2 extends Config
                 } else throw new DatabaseException("Internal Server Error", 500);
             }
 
-        } else if (is_object($object)){
+        } else if (is_object($object)) {
 
             $this->renderFrom(new \ReflectionClass($object));
 
@@ -290,6 +301,7 @@ class Database2 extends Config
      * @param $callable \Closure
      * @return $this
      * @throws DatabaseException if not a function
+     * @throws \ReflectionException if class not exists
      * */
     public function where($callable)
     {
@@ -336,7 +348,7 @@ class Database2 extends Config
             $class = new \ReflectionClass($object);
 
             if (empty($this->select[strtolower($class->getShortName())]) && empty($this->join[strtolower($class->getShortName())]))
-                throw new DatabaseException("Internal Server Error" , 500);
+                throw new DatabaseException("Internal Server Error", 500);
 
         }
 
@@ -345,51 +357,57 @@ class Database2 extends Config
 
     private function renderCondition($body, $params)
     {
-        $matches = array();
-        $data = 0;
-        $replaced = 1;
-        $method = null;
         $body = str_replace('$', '', $body);
+
         foreach ($params as $key => $item) {
-            if (is_object($item)) {
-                if (strpos(" " . $body, $key)) {
-                    $class = new \ReflectionClass($item);
-
-                    preg_match_all('/' . $key . '[^->]*?->([a-z]{1,})\(\)/', $body, $matches);
-                    $matches = $matches[1];
-
-                    for ($i = 0; $i < count($matches); $i++) {
-//                        $matches[$i] = str_replace('()', '', $matches[$i]);
-
-                        if ($class->hasMethod($matches[$i]))
-                            $method = $class->getMethod($matches[$i]);
-                        else if (count($params) != $i + 1)
-                            throw new DatabaseException("Not implemented", 501);
-                        else
-                            continue;
-
-                        $this->class = $class->getShortName();
-                        $this->method = $this->getFunctionBody($this->parseFunction($method));
-//                        echo $body;
-//                        echo "</br>";
-//                        echo '/' . $key . '[^->|<|=|>]*?->([A-Za-z]{1,})\(\)/';
-                        $body = preg_replace_callback('/' . $key . '[^->|<|=|>]*?->([A-Za-z]{1,})\(\)/', array($this, 'replace'), $body, $replaced);
-                        $data++;
-                    }
-                }
+            if (is_object($item) && strpos(" " . $body, $key)) {
+                $body = $this->prepareCondition($body, $key, $item, $params);
             }
-        }
 
-        return  str_replace('->', '.', str_replace('==', '=', $body));
+        }
+        return str_replace('->', '.', str_replace('==', '=', $body));
     }
 
-    private function replace($matches)
+    private function getClassName($matches)
     {
-//        echo "<pre>";
-//        print_r($matches);
-//        echo "</pre>";
+        $class = new \ReflectionClass($this->method);
+        return '`' . strtolower($class->getShortName()) . '`';
+    }
+
+    private function prepareCondition($body, $key, $item, $params, $replaced = 1)
+    {
+        $method = null;
+        $class = new \ReflectionClass($item);
+        preg_match_all('/' . $key . '[^->]*?->([A-Za-z]{1,})\(\)/', $body, $matches);
+
+        if (empty($matches[1])) {
+            $replaced = substr_count($body, $key);
+            $this->method = $item;
+            return preg_replace_callback('/' . $key . '/', array($this, 'getClassName'), $body, $replaced);
+        }
+
+        $matches = $matches[1];
+
+        for ($i = 0; $i < count($matches); $i++) {
+            if ($class->hasMethod($matches[$i]))
+                $method = $class->getMethod($matches[$i]);
+            else if (count($params) >= $i + 1)
+                throw new DatabaseException("Not implemented", 501);
+            else
+                continue;
+
+            $this->class = $class->getShortName();
+            $this->method = $this->getFunctionBody($this->parseFunction($method));
+            $body = preg_replace_callback('/' . $key . '[^->|<|=|>]*?->([A-Za-z]{1,})\(\)/', array($this, 'replace'), $body, $replaced);
+        }
+
+        return $body;
+    }
+
+    private function replace()
+    {
         preg_match('/[^->]*?$/', $this->method, $item);
-        return '`' . strtolower($this->class) .'`' . '.' . $item[0];
+        return '`' . strtolower($this->class) . '`' . '.' . $item[0];
     }
 
     public function set()
@@ -427,7 +445,7 @@ class Database2 extends Config
                     $query .= " `$table`.`$column`,";
                 }
             }
-            $query = rtrim($query,',');
+            $query = rtrim($query, ',');
         }
 
         if (!empty($this->from)) {
@@ -435,7 +453,7 @@ class Database2 extends Config
             foreach ($this->from as $from) {
                 $query .= " `$from`,";
             }
-            $query = rtrim($query,',');
+            $query = rtrim($query, ',');
         }
 
         if (!empty($this->where)) {
