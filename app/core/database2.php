@@ -314,7 +314,7 @@ class Database2 extends Config
 
         $body = $this->getFunctionBody($this->parseFunction($object));
 
-        $this->where = $this->renderCondition($body, $this->checkParams($params));
+        $this->where = $this->renderCondition($body, $params);
 
         return $this;
     }
@@ -342,33 +342,37 @@ class Database2 extends Config
         return $matches[0];
     }
 
-    private function checkParams($params)
-    {
-        foreach ($params as $object) {
-            $class = new \ReflectionClass($object);
-
-            if (empty($this->select[strtolower($class->getShortName())]) && empty($this->join[strtolower($class->getShortName())]))
-                throw new DatabaseException("Internal Server Error", 500);
-
-        }
-
-        return $params;
-    }
-
-    private function renderCondition($body, $params)
+    private function renderCondition($body, $params, $replaced = 1)
     {
         $body = str_replace('$', '', $body);
 
         foreach ($params as $key => $item) {
+
             if (is_object($item) && strpos(" " . $body, $key)) {
                 $body = $this->prepareCondition($body, $key, $item, $params);
-            }
+            } else if (!is_object($item)) {
+                $this->method = $item;
+                $body = preg_replace_callback('/[^>](' . $key . ')/', array($this, 'params'), $body, $replaced);
+            } else throw new DatabaseException("Internal Server Error" , 500);
 
         }
-        return str_replace('->', '.', str_replace('==', '=', $body));
+
+        $body = preg_replace_callback('/[^->]->([A-Za-z]{1,})/', array($this, 'field'), $body);
+
+        return str_replace('==', '= ', $body);
     }
 
-    private function getClassName($matches)
+    private function field($matches)
+    {
+        return '`.`' . $matches[1] . '`';
+    }
+
+    private function params()
+    {
+        return '\'' . $this->method . '\'';
+    }
+
+    private function getClassName()
     {
         $class = new \ReflectionClass($this->method);
         return '`' . strtolower($class->getShortName()) . '`';

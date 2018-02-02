@@ -32,22 +32,16 @@ class Home extends Controller
         $this->view->display("home/index", null, $css, null);
 //        echo $pagination;
 
-        $user = new \Models\User();
-        $taxonomy = new \Models\Taxonomy();
-        $database = new \Core\Database2();
-
         $home = new \Models\Logic\Home();
         try {
 
             $home->getItems();
 
+            $home->login('ala', 'makota');
+
         } catch (\Exception $e) {
             print_r($e->getMessage());
         }
-
-        echo '<pre>';
-        print_r($database->renderQuery());
-        echo '</pre>';
     }
 
     /**

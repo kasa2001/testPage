@@ -16,24 +16,36 @@ class Home
         $user = new User();
         $alamakota = new Taxonomy();
 
-        try {
-            $database
-                ->select([
-                    new class {
-                        private $id;
-                    },
-                    $alamakota
-                ])
-                ->from(array($user, $alamakota))
-                ->where(function() use ($user, $alamakota){
-                    return $user->id < $alamakota->id and ($user->id >= $alamakota->id or $user->id != $alamakota->id);
-                });
-        } catch (\Exception $exception){
+        $database
+            ->select([
+                new class {
+                    private $id;
+                },
+                $alamakota
+            ])
+            ->from(array($user, $alamakota))
+            ->where(function() use ($user, $alamakota){
+                return $user->id < $alamakota->id and ($user->id >= $alamakota->id or $user->id != $alamakota->id);
+            });
 
-        }
-
-        echo "<pre>";
-        print_r($database->renderQuery());
-        echo "</pre>";
     }
+
+    public function login($login, $password)
+    {
+        $database = new Database2();
+
+        $user = new User();
+
+
+        $database
+            ->select(new class{
+                private $id;
+            })
+            ->from ($user)
+            ->where(function() use ($user,$login, $password){
+                return $user->nick == $login && $user->password == $password;
+            });
+
+    }
+
 }
