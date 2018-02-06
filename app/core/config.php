@@ -6,7 +6,6 @@ use \Lib\Built\Session;
 
 class Config
 {
-    protected $loader;
     protected $config;
     protected $session;
     private $path = 'app/config/config.ini';

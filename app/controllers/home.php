@@ -7,6 +7,7 @@ namespace Controllers;
 
 use \Core\Controller;
 use \Lib\Built\Collection;
+use Lib\Built\Session\Session;
 use \Lib\Built\View\View;
 use Lib\Built\Security\Security;
 use \Core;
@@ -21,10 +22,15 @@ class Home extends Controller
         if (isset($_POST["nick"])) {
             Security::slashSQLForm($_POST);
             Security::analyzeXSS($_POST);
-            $user = $this->loadModel('\Models\User');
-            $query = $user->createQuery($user->table(), "SELECT", array_merge($user->login(), $this->indexedData($_POST)), "a");
-            $user->request($query);
-            $user->saveData();
+//            $user = $this->loadModel('\Models\User');
+//            $query = $user->createQuery($user->table(), "SELECT", array_merge($user->login(), $this->indexedData($_POST)), "a");
+//            $user->request($query);
+//            $user->saveData();
+
+            $model = new \Models\Logic\Home();
+            $user = $model->login($_POST['nick'], $_POST['password']);
+
+            Session::writeToSession($user);
         }
         $css = "main home";
         $this->view = View::getInstance($this->config);

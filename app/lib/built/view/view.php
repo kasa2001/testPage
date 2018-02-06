@@ -175,7 +175,7 @@ class View
     {
         $html = '<form method="' . $method . '"';
         if ($action == null) $html .= '>';
-        else $html .= ' action="' . $this->uri->getBase() . (!empty($this->config["system"]["default-directory"])?$this->config["system"]["default-directory"] . '/':'') . $action . '">';
+        else $html .= ' action="' . $this->uri->getBase() . (!empty($this->config["system"]["default-directory"])? '/' . $this->config["system"]["default-directory"] . '/':'') . $action . '">';
         return $html;
     }
 

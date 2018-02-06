@@ -1,62 +1,71 @@
 <?php
 
 namespace Core;
+
+
 use Lib\Built\Collection\ArrayList;
 use Lib\Built\Collection\Map;
 use Lib\Built\Collection\Queue;
 use Lib\Built\Collection\Stack;
-use Lib\Built\Security\Security;
-use Lib\Built\Session\Session;
 use Lib\Built\StdObject\StdObject;
 
-/**
- * Class supports MySQL only on this moment
- * */
 class Database extends Config
 {
     /**
-     * @var $server string. It is a data about server
+     * @var \PDOStatement
      * */
-    protected $server;
+    private $data;
 
     /**
-     * @var $login string. It is a data about database user
+     * @var \PDO
      * */
-    protected $login;
+    private $connect;
 
     /**
-     * @var $password string. It is a data about password to database
+     * @var string
      * */
-    protected $pass;
+    private $driver;
 
     /**
-     * @var $base string. It is a data about database
+     * @var string
      * */
-    protected $base;
+    private $server;
 
     /**
-     * @var $connect object. It is a object class PDO
+     * @var string
      * */
-    protected $connect;
+    private $login;
 
     /**
-     * @var $query string. It is a data about query
+     * @var string
      * */
-    protected $query;
+    private $password;
 
     /**
-     * @var $data array. It is a data about data to create query
+     * @var string
      * */
-    protected $data;
+    private $base;
 
-    protected $result;
+    /**
+     * @var array
+     * */
+    private $select = array();
 
-    protected $driver;
+    /**
+     * @var array
+     * */
+    private $from = array();
 
-    protected $table;
+    /**
+     * @var array
+     * */
+    private $where = array();
 
-    protected $columns = [];
+    private $join = array();
 
+    private $method;
+
+    private $class;
 
     /**
      * Connect with database
@@ -65,17 +74,17 @@ class Database extends Config
      * @param $db string/null
      * @param $user string/null
      * @param  $password string/null
-     */
+     * */
     public function __construct($driver = null, $host = null, $db = null, $user = null, $password = null)
     {
         parent::__construct();
         $this->server = ($host === null) ? $this->config['database']['host'] : $host;
         $this->login = ($user === null) ? $this->config['database']['user'] : $user;
-        $this->pass = ($password === null) ? $this->config['database']['password'] : $password;
+        $this->password = ($password === null) ? $this->config['database']['password'] : $password;
         $this->base = ($db === null) ? $this->config['database']['database'] : $db;
         $this->driver = ($driver === null) ? $this->config['database']['sql'] : $driver;
         try {
-            $this->connect = new \PDO($this->driver . ":host=" . $this->server . ";dbname=" . $this->base, $this->login, $this->pass);
+            $this->connect = new \PDO($this->driver . ":host=" . $this->server . ";dbname=" . $this->base, $this->login, $this->password);
         } catch (\PDOException $exception) {
             echo '<pre>';
             print_r($exception);
@@ -83,369 +92,20 @@ class Database extends Config
         }
         $this->connect->exec("set names utf8");
     }
-    /**
-     * Method which create a new query
-     * @param $table string data about load table
-     * @param $choose string select type of query (SELECT, INSERT, DELETE, UPDATE)
-     * @param $data array string. Additional data (default empty array)
-     * @param $modify string degree modify the query "a" - and "o" - or (default null)
-     * @param $sort integer sort score query (default 0)
-     * @return string return generated query
-     */
-    public function createQuery($table, $choose, $data = [], $modify = NULL, $sort = 0)
-    {
-        $choose = strtoupper($choose);
-        switch ($choose) {
-            case "SELECT":
-                return $this->createSelectQuery($table, $modify, $data, $sort);
-            case "INSERT":
-                return $this->createInsertQuery($table, $data);
-            case "DELETE":
-                return $this->createDeleteQuery($table, $modify, $data);
-            case "UPDATE":
-                return $this->createUpdateQuery($table, $modify, $data);
-            case "COUNT":
-                return $this->createCountQuery($table, $data);
-            default:
-                echo 'Bad choose query. Check second param in call method createQuery()';
-        }
-        return NULL;
-    }
 
     /**
-     * Method where create SELECT query
-     * @param $table string. Data about table
-     * @param $modify string degree modify the query "a" - and "o" - or (default null)
-     * @param $data array string. Additional data (default empty array)
-     * @param $sort integer. Data about sort
-     * @return string. Generated query
+     * Method get data from Database class to array
+     * @return array
      * */
-    public function createSelectQuery($table, $modify, $data = [], $sort)
-    {
-        $query = "SELECT * FROM `" . $table . "` ";
-        if ($modify) {
-            $sort != 0 ? $i = 1 : $i = 0;
-            $n = count($data);
-            if ($i < $n) $query = $this->where($query, $i, $n, $modify ,$data);
-            else if ($i > $n) return $this->warning();
-        }
-        if ($sort) $query = $this->sort($query, $data, $sort);
-        return $query;
-    }
-
-    public function from($tables, $alias = [])
-    {
-        $query = " FROM `";
-        for ($i=0; $i<count($tables); $i++){
-            $query .= $tables[$i] . "` ";
-            if (isset($alias[$i]) && $alias[$i] != "")
-                $query .= $this->setAlias($alias[$i]);
-            if ($i<(count($tables)-1))
-                $query .= ", `";
-        }
-        return $query;
-    }
-
-    public function setAlias($alias)
-    {
-        return " as " . $alias. " ";
-    }
-
-    public function createCountQuery($table, $data, $alias = [], $where = null, $modify = null)
-    {
-        $query = "SELECT count(`" . $data ."`)";
-        $query .= $this->from(array($table), $alias);
-        if ($where !=null)
-            $query .= $this->where($query,0, count($data), $modify, $data);
-        return $query;
-    }
-
-    /**
-     * Method which add to query data about sort
-     * @param $query string. It is a query
-     * @param $data array string. Additional data (implicitly empty array)
-     * @param $sort integer. Information how sort request
-     * @return string. Return query
-     * */
-    public function sort($query, $data = [], $sort)
-    {
-        $query .= "ORDER BY `" . $data[0];
-        $sort == 1 ? $query .= "` ASC" : $query .= "` DESC";
-        return $query;
-    }
-
-    /**
-     * Method where create DELETE query
-     * @param $table string. Data about table
-     * @param $modify
-     * @param $data array string. Additional data (implicitly empty array)
-     * @return string. Return query
-     * */
-    public function createDeleteQuery($table, $modify, $data = [])
-    {
-        $query = "DELETE FROM `" . $table . "` ";
-        $i = 0;
-        $n = count($data);
-        if ($i > $n) return $this->warning();
-        $query = $this->where($query, $i, $n, $modify ,$data);
-        return $query;
-    }
-
-    /**
-     * Method where create UPDATE query
-     * @param $table string. Data about table
-     * @param $modify
-     * @param $data array string. Additional data (implicitly empty array)
-     * @return string. Return query
-     * */
-    public function createUpdateQuery($table, $modify, $data = [])
-    {
-        $query = "UPDATE `" . $table . "` SET `" . $data[0] . "` = '" . $data[1] . "' ";
-        $query = $this->where($query, 2, count($data), $modify, $data);
-        return $query;
-    }
-
-    /**
-     * Method which add to query WHERE
-     * @param $query string. It is a query
-     * @param $i integer. It is a control param
-     * @param $n integer. It is a size of array $data
-     * @param $data array string. Is is a data to transfer to query
-     * @param $modify
-     * @return string $query
-     * */
-    public function where($query, $i, $n,  $modify, $data = [])
-    {
-        $query .= "WHERE `";
-        for (; $i < $n; $i++) {
-            if ($i + 1 == $n) return $this->warning();
-            else {
-                $query .= $data[$i] . "` = '" . $data[$n - 1] . "' ";
-                if (($i + 1) < ($n - 1) and $modify == "a") $query .= "AND `";
-                else if (($i + 1) < ($n - 1) and $modify == "o") $query .= "OR `";
-                $n--;
-            }
-        }
-        return $query;
-    }
-
-    /**
-     * Method which manipulate query when was generated
-     * @param $query string. It is a query
-     * @param $data (table string) additional data (implicitly empty array)
-     * @param $modify string. It is data how modify query (implicitly "a")
-     * @return string. Return query
-     */
-    public function modifyWhere($query, $data = [], $modify = "a")
-    {
-        if (count($data) % 2 == 1) return $this->warning();
-        $find = $this->searchWhere($query);
-        if ($find) $query = $this->mainModify($query, 0, $data, $modify);
-        else return $this->warningWhere();
-        return $query;
-    }
-
-    /**
-     * Method which search key word WHERE in query
-     * @param $query string. It is a query
-     * @return bool. Return true if function found key word or false when not found word WHERE
-     * */
-    public function searchWhere($query)
-    {
-        $table = explode(" ", $query);
-        for ($i = 0; $i < (count($table)); $i++) {
-            if ($table[$i] == "WHERE") {
-                $find = true;
-                return $find;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Method recursively modify query
-     * @param $query string. It is a query
-     * @param $i integer. It is a control param
-     * @param $data array string. Additional data
-     * @param $modify string. Data about form of modification
-     * @param $index integer. It is a control param for $data array
-     * @return string. Return modify query
-     * */
-    public function mainModify($query, $i, $data, $modify, $index = 0)
-    {
-        $table = explode(" ", $query);
-        if ((!isset($table[$i + 1])) or $table[$i + 1] == "ORDER") {
-            if ($index < (count($data) - 1)) {
-                if ((isset($table[$i + 1])) and $table[$i + 1] == "ORDER") $query = $this->slide($query, $i);
-                $query = $this->place($query, $modify, $i, $data, $index);
-                $query = $this->mainModify($query, $i + 1, $data, $modify, $index + 2);
-            } else return $query;
-        } else $query = $this->mainModify($query, $i + 1, $data, $modify, $index);
-        return $query;
-    }
-
-    /**
-     * This method slide ORDER BY if exists
-     * @param $query string. It is a query
-     * @param $i integer. It is a control param
-     * @return string. Return slided query
-     * */
-    public function slide($query, $i)
-    {
-        $table = explode(" ", $query);
-        $table[$i + 5] = $table[$i + 1];
-        $table[$i + 6] = $table[$i + 2];
-        $table[$i + 7] = $table[$i + 3];
-        $table[$i + 8] = $table[$i + 4];
-        return implode(" ", $table);
-    }
-
-    /**
-     * Mission this method is a replace data to query
-     * @param $query string. It is a query
-     * @param $modify string. Data about form of modification
-     * @param $i integer. It is a control param
-     * @param $data array string. Additional data
-     * @param $index integer. It is a control param for $data array
-     * @return string. Return modify query
-     * */
-    public function place($query, $modify, $i, $data, $index)
-    {
-        $table = explode(" ", $query);
-        if ($modify == "a") $table[$i + 1] = "AND";
-        else if ($modify == "o") $table[$i + 1] = 'OR';
-        else return $query;
-        $table[$i + 2] = "`" . $data[$index] . "`";
-        $table[$i + 3] = "=";
-        $table[$i + 4] = "'" . $data[$index + 1] . "'";
-        return implode(" ", $table);
-    }
-
-    /**
-     * Method where create UPDATE query
-     * @param $table string. Data about table
-     * @param $data array string. Additional data (implicitly empty array)
-     * @return string. Return query
-     * */
-    public function createInsertQuery($table, $data = [])
-    {
-        $query = "INSERT INTO `" . $table . "` ( ";
-        $n = count($data);
-        if ($n % 2 != 0) return $this->warning();
-        $query = $this->columnsUpdate($query, 0, $n, $data);
-        $query .= ") VALUES (";
-        $query = $this->values($query, ($n / 2), $n, $data);
-        $query .= ");";
-        return $query;
-    }
-
-    /**
-     * Method which add data about columns to UPDATE query
-     * @param $query string. It is a query
-     * @param $i integer
-     * @param $n integer
-     * @param $data (table string) additional data (implicitly empty array)
-     * @return string. Return query
-     * */
-    public function columnsUpdate($query, $i, $n, $data = [])
-    {
-        for (; $i < ($n / 2); $i++) {
-            $query .= "`" . $data[$i] . "`";
-            if (($i) != (($n / 2) - 1)) {
-                $query .= ", ";
-            }
-        }
-        return $query;
-    }
-
-    /**
-     * Method which add data about row to UPDATE query
-     * @param $query string. It is a query
-     * @param $i integer. It is a control param
-     * @param $n integer. It is a size of array $data
-     * @param $data (table string) additional data (implicitly empty array)
-     * @return string. Return query
-     * */
-    public function values($query, $i, $n, $data = [])
-    {
-        for (; $i < $n; $i++) {
-            $query .= "'" . $data[$i] . "'";
-            if (($i) != ($n - 1)) {
-                $query .= ", ";
-            }
-        }
-        return $query;
-    }
-
-    /**
-     * Method which informing about problem whit array
-     * @return null
-     * */
-    public function warning()
-    {
-        echo 'Warning: Too small array in method to create query';
-        return NULL;
-    }
-
-    /**
-     * Method which informing about problem whit sql key word WHERE
-     * @return null
-     * */
-    public function warningWhere()
-    {
-        echo 'Warning: Key word WHERE not found. Please check in called method createQuery() param 3 or call method where()';
-        return NULL;
-    }
-
-    /**
-     * Method which send query to database and get result query
-     * @param $query string
-     * */
-    public function request($query = null)
-    {
-        if ($query === null)
-            $this->data = $this->connect->query($this->query);
-        else
-            $this->data = $this->connect->query($query);
-    }
-
-    /**
-     * Method get data with object mysqli_result to session
-     * */
-    public function saveData()
-    {
-        if ($this->data->rowCount() == 1) {
-            $this->result = $this->getData();
-            Session::writeToSession($this->result);
-        } else
-            Security::addLog("sql");
-    }
-
-    /**
-     * Method get data from result query
-     * */
-    public function getData()
-    {
-        return $this->data->fetch(\PDO::FETCH_ASSOC);
-    }
-
-    /*
-     * New database. TODO
-     * */
-
-    public function execute($query = null)
-    {
-        if ($query === null)
-            $this->data = $this->connect->query($this->query);
-        else
-            $this->data = $this->connect->query($query);
-
-    }
-
     public function loadArray()
     {
         return $this->data->fetch(\PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Method get data from Database class to Queue
+     * @return Queue
+     * */
 
     public function loadQueue()
     {
@@ -462,9 +122,13 @@ class Database extends Config
         return $queue;
     }
 
+    /**
+     * Method get data from Database class to Stack
+     * @return Stack
+     * */
     public function loadStack()
     {
-        $stack  = new Stack();
+        $stack = new Stack();
         $item = $this->data->fetch(\PDO::FETCH_ASSOC);
         $object = new StdObject();
         foreach ($item as $data) {
@@ -477,6 +141,10 @@ class Database extends Config
         return $stack;
     }
 
+    /**
+     * Method get data from Database class to Map
+     * @return Map
+     * */
     public function loadMap()
     {
         $map = new Map();
@@ -492,6 +160,10 @@ class Database extends Config
         return $map;
     }
 
+    /**
+     * Method get data from Database class to List
+     * @return ArrayList
+     * */
     public function loadList()
     {
         $list = new ArrayList();
@@ -514,5 +186,284 @@ class Database extends Config
     public function isEmpty()
     {
         return $this->data->rowCount() == 0;
+    }
+
+    public function execute($query = null)
+    {
+        if ($query === null)
+            $this->data = $this->connect->query($this->renderQuery());
+        else
+            $this->data = $this->connect->query($query);
+    }
+
+    /*
+     * Methods TODO
+     * */
+
+    /**
+     * Method get class properties
+     * @param $object mixed
+     * @throws DatabaseException if is not a object
+     * @return $this
+     * */
+    public function select($object)
+    {
+        if (is_array($object)) {
+
+            foreach ($object as $class) {
+                if (is_object($class)) {
+                    $this->renderSelect(new \ReflectionClass($class));
+                } else throw new DatabaseException("Internal Server Error", 500);
+
+            }
+
+        } else if (is_object($object)) {
+
+            $this->renderSelect(new \ReflectionClass($object));
+
+        } else throw new DatabaseException("Internal Server Error", 500);
+
+        return $this;
+    }
+
+    private function renderSelect(\ReflectionClass $reflect)
+    {
+        $assoc = null;
+        $fields = $reflect->getProperties(
+            \ReflectionProperty::IS_PROTECTED
+            | \ReflectionProperty::IS_PRIVATE
+            | \ReflectionProperty::IS_PUBLIC
+        );
+
+        if (strpos(' ' . $reflect->getName(), 'class@anonymous')) {
+            $assoc = strtolower($reflect->getName());
+        } else {
+            $assoc = strtolower($reflect->getShortName());
+        }
+
+        $this->select[$assoc] = array();
+
+        foreach ($fields as $field)
+            array_push($this->select[$assoc], $field->name);
+    }
+
+    /**
+     * Method get class name to query
+     * @param $object mixed
+     * @throws DatabaseException if is not a object (or array)
+     * @throws \ReflectionException if class not exists
+     * @return $this
+     * */
+    public function from($object)
+    {
+        if (is_array($object)) {
+
+            foreach ($object as $class) {
+
+                if (is_object($class)) {
+                    $this->renderFrom(new \ReflectionClass($class));
+                } else throw new DatabaseException("Internal Server Error", 500);
+            }
+
+        } else if (is_object($object)) {
+
+            $this->renderFrom(new \ReflectionClass($object));
+
+        } else throw new DatabaseException("Internal Server Error", 500);
+
+        return $this;
+    }
+
+    private function renderFrom(\ReflectionClass $class)
+    {
+        $assoc = strtolower($class->getShortName());
+        array_push($this->from, $assoc);
+        if (!isset($this->select[$assoc])) {
+
+            foreach ($this->select as $key => $value) {
+
+                if (strpos(' ' . $key, 'class@anonymous')) {
+                    $this->select[$assoc] = array();
+
+                    foreach ($value as $item) {
+                        array_push($this->select[$assoc], $item);
+                    }
+
+                    unset($this->select[$key]);
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Method add where
+     * @param $callable \Closure
+     * @return $this
+     * @throws DatabaseException if not a function
+     * @throws \ReflectionException if class not exists
+     * */
+    public function where($callable)
+    {
+        if (!is_callable($callable))
+            throw new DatabaseException('Not Implemented', 501);
+
+        $object = new \ReflectionFunction($callable);
+
+        $params = $object->getStaticVariables();
+
+        $body = $this->getFunctionBody($this->parseFunction($object));
+
+        $this->where = $this->renderCondition($body, $params);
+
+        return $this;
+    }
+
+    private function getFunctionBody($function)
+    {
+        preg_match('/return[^;]*/', $function, $matches);
+        return str_replace('return', '', $matches[0]);
+    }
+
+    /**
+     * @param $object \ReflectionFunctionAbstract
+     * @return string
+     * */
+    private function parseFunction(\ReflectionFunctionAbstract $object)
+    {
+        $file = $object->getFileName();
+        $start = $object->getStartLine() - 1;
+        $end = $object->getEndLine();
+        $length = $end - $start;
+        $source = file($file);
+        $body = implode("", array_slice($source, $start, $length));
+        $matches = array();
+        preg_match("/function(?:[^\(]*?)\(\)[^{]*?{[^}]*?}/", $body, $matches);
+        return $matches[0];
+    }
+
+    private function renderCondition($body, $params, $replaced = 1)
+    {
+        $body = str_replace('$', '', $body);
+
+        foreach ($params as $key => $item) {
+
+            if (is_object($item) && strpos(" " . $body, $key)) {
+                $body = $this->prepareCondition($body, $key, $item, $params);
+            } else if (!is_object($item)) {
+                $this->method = $item;
+                $body = preg_replace_callback('/[^>](' . $key . ')/', array($this, 'params'), $body, $replaced);
+            } else throw new DatabaseException("Internal Server Error", 500);
+
+        }
+
+        $body = preg_replace_callback('/[^->]->([A-Za-z]{1,})/', array($this, 'field'), $body);
+
+        return str_replace('==', '= ', $body);
+    }
+
+    private function field($matches)
+    {
+        return '`.`' . $matches[1] . '`';
+    }
+
+    private function params()
+    {
+        return '\'' . $this->method . '\'';
+    }
+
+    private function getClassName()
+    {
+        $class = new \ReflectionClass($this->method);
+        return '`' . strtolower($class->getShortName()) . '`';
+    }
+
+    private function prepareCondition($body, $key, $item, $params, $replaced = 1)
+    {
+        $method = null;
+        $class = new \ReflectionClass($item);
+        preg_match_all('/' . $key . '[^->]*?->([A-Za-z]{1,})\(\)/', $body, $matches);
+
+        if (empty($matches[1])) {
+            $replaced = substr_count($body, $key);
+            $this->method = $item;
+            return preg_replace_callback('/' . $key . '/', array($this, 'getClassName'), $body, $replaced);
+        }
+
+        $matches = $matches[1];
+
+        for ($i = 0; $i < count($matches); $i++) {
+            if ($class->hasMethod($matches[$i]))
+                $method = $class->getMethod($matches[$i]);
+            else if (count($params) >= $i + 1)
+                throw new DatabaseException("Not implemented", 501);
+            else
+                continue;
+
+            $this->class = $class->getShortName();
+            $this->method = $this->getFunctionBody($this->parseFunction($method));
+            $body = preg_replace_callback('/' . $key . '[^->|<|=|>]*?->([A-Za-z]{1,})\(\)/', array($this, 'replace'), $body, $replaced);
+        }
+
+        return $body;
+    }
+
+    private function replace()
+    {
+        preg_match('/[^->]*?$/', $this->method, $item);
+        return '`' . strtolower($this->class) . '`' . '.' . $item[0];
+    }
+
+    public function set()
+    {
+        return $this;
+    }
+
+    public function update()
+    {
+        return $this;
+    }
+
+    public function leftJoin()
+    {
+        return $this;
+    }
+
+    public function innerJoin()
+    {
+        return $this;
+    }
+
+    public function rightJoin()
+    {
+        return $this;
+    }
+
+    public function renderQuery()
+    {
+        $query = '';
+        if (!empty($this->select)) {
+            $query .= 'SELECT';
+            foreach ($this->select as $table => $columns) {
+                foreach ($columns as $column) {
+                    $query .= " `$table`.`$column`,";
+                }
+            }
+            $query = rtrim($query, ',');
+        }
+
+        if (!empty($this->from)) {
+            $query .= " FROM";
+            foreach ($this->from as $from) {
+                $query .= " `$from`,";
+            }
+            $query = rtrim($query, ',');
+        }
+
+        if (!empty($this->where)) {
+            $query .= " WHERE $this->where";
+        }
+
+        return $query;
     }
 }

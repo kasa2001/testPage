@@ -353,7 +353,7 @@ class Database2 extends Config
             } else if (!is_object($item)) {
                 $this->method = $item;
                 $body = preg_replace_callback('/[^>](' . $key . ')/', array($this, 'params'), $body, $replaced);
-            } else throw new DatabaseException("Internal Server Error" , 500);
+            } else throw new DatabaseException("Internal Server Error", 500);
 
         }
 

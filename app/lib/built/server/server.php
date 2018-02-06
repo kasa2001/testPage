@@ -1,7 +1,10 @@
 <?php
 
 namespace Lib\Built\Server;
-
+/**
+ * todo!!!
+ * */
+use Core\Config;
 use Lib\Built\Factory\Factory, Controllers\Home;
 class Server
 {
@@ -64,7 +67,13 @@ class Server
                 $this->_setError($code);
                 $this->_loadErrorPage($message);
             } else {
-                header("Location: /home/index");
+                $config = new Config();
+                $config = $config->getConfig();
+                echo "<pre>";
+                print_r(isset($config["system"]["default-directory"])? '/' .$config["system"]["default-directory"] :'');
+                echo "</pre>";
+//                exit;
+                header("Location: " . isset($config["system"]["default-directory"])? '/' .$config["system"]["default-directory"] :''. "/home/index");
             }
         } else {
             if ($code > 199 && $code < 400) {

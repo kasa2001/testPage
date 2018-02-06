@@ -40,12 +40,16 @@ class Home
         $database
             ->select(new class{
                 private $id;
+                private $nick;
+                private $password;
             })
             ->from ($user)
             ->where(function() use ($user,$login, $password){
                 return $user->nick == $login && $user->password == $password;
-            });
+            })
+            ->execute();
 
+        return $database->loadArray();
     }
 
 }

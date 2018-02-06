@@ -7,10 +7,10 @@ class Action extends Core\Controller
 {
     public function logout(){
         $this->server = Server::getInstance($this->config);
-        if ($this->server->getPreviewWebSite()!==null){
-            Session::destroySession();
-        }
-        $this->server->redirect("home/index");
+
+        Session::destroySession();
+
+        $this->server->redirect(204);
     }
 
     public function checkExists()
