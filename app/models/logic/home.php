@@ -3,7 +3,7 @@
 namespace Models\Logic;
 
 
-use Core\Database2;
+use Core\Database;
 use Models\Tables\Taxonomy;
 use Models\Tables\User;
 
@@ -32,7 +32,7 @@ class Home
 
     public function login($login, $password)
     {
-        $database = new Database2();
+        $database = new Database();
 
         $user = new User();
 
