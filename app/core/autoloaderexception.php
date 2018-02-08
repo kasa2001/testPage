@@ -4,7 +4,7 @@ namespace Core;
 
 use Throwable;
 
-class AutoloaderException extends \Exception
+class AutoLoaderException extends \Exception
 {
     public function __construct($message = "", $code = 0, Throwable $previous = null)
     {

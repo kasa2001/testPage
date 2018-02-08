@@ -19,14 +19,14 @@ class AutoLoader
      *
      * @param $namespace string
      * @param $directory string
-     * @throws AutoloaderException if namespace is registered
+     * @throws AutoLoaderException if namespace is registered
      *
      * @return void
      * */
     public function registerNamespace($namespace, $directory)
     {
         if (isset($this->namespace[$namespace])) {
-            throw new AutoloaderException("Namespace is registered earlier");
+            throw new AutoLoaderException("Namespace is registered earlier");
         }
 
         $this->namespace[$namespace] = $directory;
@@ -36,7 +36,7 @@ class AutoLoader
      * Method load classes by PSR-4 standard
      *
      * @param $class string
-     * @throws AutoloaderException if namespace is not registered
+     * @throws AutoLoaderException if namespace is not registered
      *
      * @return void
      * */

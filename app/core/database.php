@@ -63,6 +63,8 @@ class Database extends Config
 
     private $join = array();
 
+    private $queue;
+
     private $method;
 
     private $class;
@@ -84,13 +86,14 @@ class Database extends Config
         $this->base = ($db === null) ? $this->config['database']['database'] : $db;
         $this->driver = ($driver === null) ? $this->config['database']['sql'] : $driver;
         try {
-            $this->connect = new \PDO($this->driver . ":host=" . $this->server . ";dbname=" . $this->base, $this->login, $this->password);
+            $this->connect = new \PDO($this->driver . ":host=" . $this->server . ";charset=utf8;dbname=" . $this->base, $this->login, $this->password);
         } catch (\PDOException $exception) {
             echo '<pre>';
             print_r($exception);
             echo '</pre>';
         }
-        $this->connect->exec("set names utf8");
+
+        $this->queue = new Queue();
     }
 
     /**
