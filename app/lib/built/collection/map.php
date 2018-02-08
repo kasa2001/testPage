@@ -2,6 +2,13 @@
 
 namespace Lib\Built\Collection;
 
+/**
+ * Standard Map class
+ * @author Paweł Gomółka (kasa2001) <pawelgomolka@interia.pl>
+ * @since 1.0
+ * @version 0.1
+ * @package Lib\Build\Collection
+ * */
 class Map extends Collection implements \Iterator
 {
     const INDEX_BUSY = 5;
@@ -13,6 +20,7 @@ class Map extends Collection implements \Iterator
     public function __construct($data = null, $key = null)
     {
         parent::__construct($data);
+
         if ($key !== null) {
             if (is_array($key)) {
                 foreach ($key as $item) {
@@ -24,7 +32,6 @@ class Map extends Collection implements \Iterator
 
             $this->keys = $key;
         }
-
 
         $this->where = 0;
     }

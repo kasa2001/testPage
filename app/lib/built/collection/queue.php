@@ -1,6 +1,14 @@
 <?php
 
 namespace Lib\Built\Collection;
+
+/**
+ * Standard Queue class
+ * @author Paweł Gomółka (kasa2001) <pawelgomolka@interia.pl>
+ * @since 1.0
+ * @version 0.1
+ * @package Lib\Build\Collection
+ * */
 class Queue extends Collection
 {
     const EMPTY_QUEUE = 7;

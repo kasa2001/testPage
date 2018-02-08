@@ -2,6 +2,13 @@
 
 namespace Core;
 
+/**
+ * Standard core class for Auto loading all classes
+ * @author Paweł Gomółka (kasa2001) <pawelgomolka@interia.pl>
+ * @since 1.0
+ * @version 1.0
+ * @package Core
+ * */
 class AutoLoader
 {
     use \GetInstance;
@@ -21,7 +28,7 @@ class AutoLoader
      * @param $directory string
      * @throws AutoLoaderException if namespace is registered
      *
-     * @return void
+     * @return boolean
      * */
     public function registerNamespace($namespace, $directory)
     {
@@ -30,6 +37,8 @@ class AutoLoader
         }
 
         $this->namespace[$namespace] = $directory;
+
+        return true;
     }
 
     /**
@@ -38,18 +47,17 @@ class AutoLoader
      * @param $class string
      * @throws AutoLoaderException if namespace is not registered
      *
-     * @return void
+     * @return boolean
      * */
     public function loadPSR4($class)
     {
-
         $class = explode('\\', $class);
         if (!isset($this->namespace[$class[0]])) {
-            throw new AutoloaderException("Namespace is not registered. Please register namespace");
+            throw new AutoLoaderException("Namespace is not registered. Please register namespace");
         }
         $item = $class[0];
         unset($class[0]);
 
-        spl_autoload($this->namespace[$item] . '/' . implode('/', $class));
+        return spl_autoload($this->namespace[$item] . '/' . implode('/', $class));
     }
 }

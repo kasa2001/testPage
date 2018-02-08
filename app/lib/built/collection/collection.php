@@ -2,6 +2,15 @@
 
 namespace Lib\Built\Collection;
 
+/**
+ * Abstract collection class
+ *
+ * @author Paweł Gomółka (kasa2001) <pawelgomolka@interia.pl>
+ * @version 0.1
+ * @since 1.0
+ * @todo change _getError method
+ * @package Lib\Build\Collection
+ * */
 abstract class Collection implements \JsonSerializable, \Countable
 {
     const WRONG_INDEX = 1;
@@ -17,10 +26,6 @@ abstract class Collection implements \JsonSerializable, \Countable
      * @var $_count int
      * */
     protected $_count = 0;
-
-    /*
-     * Public methods
-     * */
 
     /**
      * Construct create new Collection object
@@ -90,10 +95,6 @@ abstract class Collection implements \JsonSerializable, \Countable
         $this->collection = array_merge($this->collection, $array);
         $collection->clear();
     }
-
-    /*
-     * Protected methods
-     * */
 
     /**
      * Method get Collection Exception data

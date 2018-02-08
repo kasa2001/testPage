@@ -9,65 +9,87 @@ use Lib\Built\Collection\Queue;
 use Lib\Built\Collection\Stack;
 use Lib\Built\StdObject\StdObject;
 
+/**
+ * Standard core class for connecting and execute all queries</br>
+ *
+ * @author Paweł Gomółka (kasa2001) <pawelgomolka@interia.pl>
+ * @uses ArrayList, Map, Queue, Stack, StdObject
+ * @since 1.0
+ * @version 0.1
+ * @package Core
+ * @todo  Prepare unit test
+ * @todo  Prepare update
+ * @todo  Prepare delete
+ * @todo  Prepare join
+ * */
 class Database extends Config
 {
     /**
      * @var \PDOStatement
      * */
-    private $data;
+    protected $data;
 
     /**
      * @var \PDO
      * */
-    private $connect;
+    protected $connect;
 
     /**
      * @var string
      * */
-    private $driver;
+    protected $driver;
 
     /**
      * @var string
      * */
-    private $server;
+    protected $server;
 
     /**
      * @var string
      * */
-    private $login;
+    protected $login;
 
     /**
      * @var string
      * */
-    private $password;
+    protected $password;
 
     /**
      * @var string
      * */
-    private $base;
+    protected $base;
 
     /**
      * @var array
      * */
-    private $select = array();
+    protected $select = array();
 
     /**
      * @var array
      * */
-    private $from = array();
+    protected $from = array();
 
     /**
      * @var array
      * */
-    private $where = array();
+    protected $where = array();
 
-    private $join = array();
+    /**
+     * @var array
+     * */
+    protected $join = array();
+
+    /**
+     * @var string
+     * */
+    protected $method;
 
     private $queue;
 
-    private $method;
-
-    private $class;
+    /**
+     * @var string
+     * */
+    protected $class;
 
     /**
      * Connect with database
@@ -109,7 +131,6 @@ class Database extends Config
      * Method get data from Database class to Queue
      * @return Queue
      * */
-
     public function loadQueue()
     {
         $queue = new Queue();
@@ -191,6 +212,10 @@ class Database extends Config
         return $this->data->rowCount() == 0;
     }
 
+    /**
+     * Method execute query
+     * @param $query string
+     */
     public function execute($query = null)
     {
         if ($query === null)
@@ -207,6 +232,7 @@ class Database extends Config
      * Method get class properties
      * @param $object mixed
      * @throws DatabaseException if is not a object
+     * @throws \ReflectionException if class not exists
      * @return $this
      * */
     public function select($object)
@@ -229,7 +255,7 @@ class Database extends Config
         return $this;
     }
 
-    private function renderSelect(\ReflectionClass $reflect)
+    protected function renderSelect(\ReflectionClass $reflect)
     {
         $assoc = null;
         $fields = $reflect->getProperties(
@@ -277,7 +303,7 @@ class Database extends Config
         return $this;
     }
 
-    private function renderFrom(\ReflectionClass $class)
+    protected function renderFrom(\ReflectionClass $class)
     {
         $assoc = strtolower($class->getShortName());
         array_push($this->from, $assoc);
@@ -322,7 +348,7 @@ class Database extends Config
         return $this;
     }
 
-    private function getFunctionBody($function)
+    protected function getFunctionBody($function)
     {
         preg_match('/return[^;]*/', $function, $matches);
         return str_replace('return', '', $matches[0]);
@@ -332,7 +358,7 @@ class Database extends Config
      * @param $object \ReflectionFunctionAbstract
      * @return string
      * */
-    private function parseFunction(\ReflectionFunctionAbstract $object)
+    protected function parseFunction(\ReflectionFunctionAbstract $object)
     {
         $file = $object->getFileName();
         $start = $object->getStartLine() - 1;
@@ -345,7 +371,14 @@ class Database extends Config
         return $matches[0];
     }
 
-    private function renderCondition($body, $params, $replaced = 1)
+    /**
+     * @param $body
+     * @param $params
+     * @param $replaced
+     * @throws DatabaseException
+     * @return string
+     */
+    protected function renderCondition($body, $params, $replaced = 1)
     {
         $body = str_replace('$', '', $body);
 
@@ -356,7 +389,7 @@ class Database extends Config
             } else if (!is_object($item)) {
                 $this->method = $item;
                 $body = preg_replace_callback('/[^>](' . $key . ')/', array($this, 'params'), $body, $replaced);
-            } else throw new DatabaseException("Internal Server Error", 500);
+            } else throw new DatabaseException("Internal Server Error" , 500);
 
         }
 
@@ -365,23 +398,37 @@ class Database extends Config
         return str_replace('==', '= ', $body);
     }
 
-    private function field($matches)
+    protected function field($matches)
     {
         return '`.`' . $matches[1] . '`';
     }
 
-    private function params()
+    protected function params()
     {
         return '\'' . $this->method . '\'';
     }
 
-    private function getClassName()
+    /**
+     * @throws \ReflectionException
+     * @return string
+     * */
+    protected function getClassName()
     {
         $class = new \ReflectionClass($this->method);
         return '`' . strtolower($class->getShortName()) . '`';
     }
 
-    private function prepareCondition($body, $key, $item, $params, $replaced = 1)
+    /**
+     * @param $body
+     * @param $key
+     * @param $item
+     * @param $params
+     * @param $replaced
+     * @throws \ReflectionException
+     * @throws DatabaseException
+     * @return string
+     * */
+    protected function prepareCondition($body, $key, $item, $params, $replaced = 1)
     {
         $method = null;
         $class = new \ReflectionClass($item);
@@ -411,7 +458,10 @@ class Database extends Config
         return $body;
     }
 
-    private function replace()
+    /**
+     * @return string
+     * */
+    protected function replace()
     {
         preg_match('/[^->]*?$/', $this->method, $item);
         return '`' . strtolower($this->class) . '`' . '.' . $item[0];
