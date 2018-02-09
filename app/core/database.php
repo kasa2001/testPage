@@ -2,7 +2,6 @@
 
 namespace Core;
 
-
 use Lib\Built\Collection\ArrayList;
 use Lib\Built\Collection\Map;
 use Lib\Built\Collection\Queue;
@@ -218,10 +217,11 @@ class Database extends Config
      */
     public function execute($query = null)
     {
-        if ($query === null)
+        if ($query === null) {
             $this->data = $this->connect->query($this->renderQuery());
-        else
+        } else {
             $this->data = $this->connect->query($query);
+        }
     }
 
     /*
@@ -242,15 +242,19 @@ class Database extends Config
             foreach ($object as $class) {
                 if (is_object($class)) {
                     $this->renderSelect(new \ReflectionClass($class));
-                } else throw new DatabaseException("Internal Server Error", 500);
+                } else {
+                    throw new DatabaseException("Internal Server Error", 500);
+                }
 
             }
 
-        } else if (is_object($object)) {
+        } elseif (is_object($object)) {
 
             $this->renderSelect(new \ReflectionClass($object));
 
-        } else throw new DatabaseException("Internal Server Error", 500);
+        } else {
+            throw new DatabaseException("Internal Server Error", 500);
+        }
 
         return $this;
     }
@@ -272,8 +276,9 @@ class Database extends Config
 
         $this->select[$assoc] = array();
 
-        foreach ($fields as $field)
+        foreach ($fields as $field) {
             array_push($this->select[$assoc], $field->name);
+        }
     }
 
     /**
@@ -291,14 +296,18 @@ class Database extends Config
 
                 if (is_object($class)) {
                     $this->renderFrom(new \ReflectionClass($class));
-                } else throw new DatabaseException("Internal Server Error", 500);
+                } else {
+                    throw new DatabaseException("Internal Server Error", 500);
+                }
             }
 
-        } else if (is_object($object)) {
+        } elseif (is_object($object)) {
 
             $this->renderFrom(new \ReflectionClass($object));
 
-        } else throw new DatabaseException("Internal Server Error", 500);
+        } else {
+            throw new DatabaseException("Internal Server Error", 500);
+        }
 
         return $this;
     }
@@ -334,8 +343,9 @@ class Database extends Config
      * */
     public function where($callable)
     {
-        if (!is_callable($callable))
+        if (!is_callable($callable)) {
             throw new DatabaseException('Not Implemented', 501);
+        }
 
         $object = new \ReflectionFunction($callable);
 
@@ -386,10 +396,12 @@ class Database extends Config
 
             if (is_object($item) && strpos(" " . $body, $key)) {
                 $body = $this->prepareCondition($body, $key, $item, $params);
-            } else if (!is_object($item)) {
+            } elseif (!is_object($item)) {
                 $this->method = $item;
                 $body = preg_replace_callback('/[^>](' . $key . ')/', array($this, 'params'), $body, $replaced);
-            } else throw new DatabaseException("Internal Server Error" , 500);
+            } else {
+                throw new DatabaseException("Internal Server Error", 500);
+            }
 
         }
 
@@ -443,12 +455,13 @@ class Database extends Config
         $matches = $matches[1];
 
         for ($i = 0; $i < count($matches); $i++) {
-            if ($class->hasMethod($matches[$i]))
+            if ($class->hasMethod($matches[$i])) {
                 $method = $class->getMethod($matches[$i]);
-            else if (count($params) >= $i + 1)
+            } elseif (count($params) >= $i + 1) {
                 throw new DatabaseException("Not implemented", 501);
-            else
+            } else {
                 continue;
+            }
 
             $this->class = $class->getShortName();
             $this->method = $this->getFunctionBody($this->parseFunction($method));

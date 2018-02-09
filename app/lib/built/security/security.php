@@ -21,8 +21,9 @@ class Security
      * */
     public static function slashSQLForm($data)
     {
-        foreach ($data as $key => $datum)
+        foreach ($data as $key => $datum) {
             $data[$key] = addslashes($datum);
+        }
         return $data;
     }
 
@@ -33,8 +34,11 @@ class Security
      * */
     public static function checkNumber($data)
     {
-        foreach ($data as $datum)
-            if (!is_numeric($datum)) return false;
+        foreach ($data as $datum) {
+            if (!is_numeric($datum)) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -57,8 +61,9 @@ class Security
      * */
     public static function analyzeXSS($data)
     {
-        foreach ($data as $key => $datum)
+        foreach ($data as $key => $datum) {
             $data[$key] = htmlspecialchars($datum);
+        }
         return $data;
     }
 }

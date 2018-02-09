@@ -2,10 +2,15 @@
 
 namespace Controllers;
 
-use \Core, Lib\Built\Server\Server, Lib\Built\Mail\Mail, Lib\Built\Session\Session;
+use \Core;
+use Lib\Built\Server\Server;
+use Lib\Built\Mail\Mail;
+use Lib\Built\Session\Session;
+
 class Action extends Core\Controller
 {
-    public function logout(){
+    public function logout()
+    {
         $this->server = Server::getInstance($this->config);
 
         Session::destroySession();
@@ -17,13 +22,13 @@ class Action extends Core\Controller
     {
         $this->server = Server::getInstance($this->config);
         $model = $this->loadModel("User");
-        $query = $model->createQuery($model->table(),"select",[$model->checkRegistry(), $_POST["nick"]]);
+        $query = $model->createQuery($model->table(), "select", [$model->checkRegistry(), $_POST["nick"]]);
         $model->request($query);
-        if ($model->isEmpty()){
-            $query = $model->createQuery($model->table(),"INSERT",array_merge($model->registration(), $this->indexedData($_POST)));
+        if ($model->isEmpty()) {
+            $query = $model->createQuery($model->table(), "INSERT", array_merge($model->registration(), $this->indexedData($_POST)));
             $model->insert($query);
             $this->server->redirect("home/index");
-        }else{
+        } else {
             $this->server->redirect("user/registry");
         }
     }
@@ -35,7 +40,7 @@ class Action extends Core\Controller
         if ($mail->sendMail($_POST["to"], $_POST["subject"], $_POST["content"])) {
             echo "success";
             $this->server->redirect('home/index');
-        }else {
+        } else {
             echo "Dramat... nie pykło coś";
         }
 

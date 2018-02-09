@@ -6,7 +6,6 @@ use Lib\Built\Factory\Factory;
 use Lib\Built\SEO\SEO;
 use Lib\Built\URI\URI;
 
-
 class View
 {
     use \GetInstance;
@@ -28,7 +27,7 @@ class View
     {
         $this->config = $config;
         $this->seo = Factory::getInstance("\Lib\Built\SEO\SEO", $config);
-        $this->uri = Factory::getInstance("\Lib\Built\URI\URI","");
+        $this->uri = Factory::getInstance("\Lib\Built\URI\URI", "");
     }
 
     /**
@@ -77,8 +76,9 @@ class View
         if ($css != "" or $css != null) {
             $table = explode(' ', $css);
 
-            for ($i = 0; $i < (count($table)); $i++)
+            for ($i = 0; $i < (count($table)); $i++) {
                 $html .= '<link rel="stylesheet" href="' . $this->config["system"]["default-directory"] . '/public/css/' . $table[$i] . '.css"  type="text/css">';
+            }
         }
         return $html;
     }
@@ -96,8 +96,9 @@ class View
             $table = explode(' ', $js);
             $html .= '<script src="' . (!empty($this->config["system"]["default-directory"])?$this->config["system"]["default-directory"]: '') . '/public/js/jquery-3.2.1.min.js" type="text/JavaScript"></script>';
 
-            for ($i = 0; $i < (count($table)); $i++)
+            for ($i = 0; $i < (count($table)); $i++) {
                 $html .= '<script src="' . (!empty($this->config["system"]["default-directory"])?$this->config["system"]["default-directory"]: '') . '/public/js/' . $table[$i] . '.js" type="text/JavaScript"></script>';
+            }
         }
         return $html;
     }
@@ -150,16 +151,19 @@ class View
         if (!empty($class)) {
             $html .= 'class="';
 
-            for ($i = 0; $i < count($class); $i++)
+            for ($i = 0; $i < count($class); $i++) {
                 $html .= $class[$i] . " ";
+            }
 
             $html .= '"';
         }
 
-        if ($target != null)
+        if ($target != null) {
             $html .= ' target=" '. $target . '"';
-        if ($relation != null)
+        }
+        if ($relation != null) {
             $html .= ' relation=" '. $relation . '"';
+        }
         $html .= '>' . $name . '</a>';
 
         return $html;
@@ -174,8 +178,11 @@ class View
     public function startForm($action = null, $method = 'post')
     {
         $html = '<form method="' . $method . '"';
-        if ($action == null) $html .= '>';
-        else $html .= ' action="' . $this->uri->getBase() . (!empty($this->config["system"]["default-directory"])? '/' . $this->config["system"]["default-directory"] . '/':'') . $action . '">';
+        if ($action == null) {
+            $html .= '>';
+        } else {
+            $html .= ' action="' . $this->uri->getBase() . (!empty($this->config["system"]["default-directory"])? '/' . $this->config["system"]["default-directory"] . '/':'') . $action . '">';
+        }
         return $html;
     }
 
@@ -198,7 +205,10 @@ class View
         $html = '<button ';
         if ($class != null) {
             $html .= 'class="';
-            for ($i = 0; $i < count($class); $i++) $html .= $class[$i] . " ";
+            for ($i = 0; $i < count($class);
+            $i++) {
+                $html .= $class[$i] . " ";
+            }
         }
 
         $html .= '>' . $text . "</button>";
@@ -211,10 +221,11 @@ class View
      */
     public function checkAddress()
     {
-        if ($_GET == null)
+        if ($_GET == null) {
             return null;
-        else
+        } else {
             return $_GET["url"];
+        }
     }
 
     /**
@@ -239,15 +250,22 @@ class View
     {
         $html = '';
         while ($result = $model->getData()) {
-            if (count($element) != 1)
+            if (count($element) != 1) {
                 $html .= "<" . $element[0] . ">";
-            foreach ($result as $r) {
-                if (count($element) == 1) $html .= "<" . $element . ">" . $r . "</" . $element . ">";
-                else $html .= "<" . $element[1] . ">" . $r . "</" . $element[1] . ">";
             }
-            if ($button) $html .= "<" . $element[1] . "><button data-id = '" . $result["id"] . "'>" . $name . "</button></" . $element[1] . ">";
-            if (count($element) != 1)
+            foreach ($result as $r) {
+                if (count($element) == 1) {
+                    $html .= "<" . $element . ">" . $r . "</" . $element . ">";
+                } else {
+                    $html .= "<" . $element[1] . ">" . $r . "</" . $element[1] . ">";
+                }
+            }
+            if ($button) {
+                $html .= "<" . $element[1] . "><button data-id = '" . $result["id"] . "'>" . $name . "</button></" . $element[1] . ">";
+            }
+            if (count($element) != 1) {
                 $html .= "</" . $element[0] . ">";
+            }
         }
         return $html;
     }

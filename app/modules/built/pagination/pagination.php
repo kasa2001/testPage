@@ -2,7 +2,6 @@
 
 namespace Modules\Built\Pagination;
 
-
 use Lib\Built\Error\Error;
 use Lib\Built\URI\URI;
 
@@ -63,8 +62,9 @@ class Pagination
 
     protected function _checkActive($link, $title)
     {
-        if ('/'.$link != $this->uri->getRequestURI() && (($this->start) != 0 || $this->current != 0))
+        if ('/'.$link != $this->uri->getRequestURI() && (($this->start) != 0 || $this->current != 0)) {
             return $this->_active($link, $title, false);
+        }
 
         return $this->_inactive($title);
     }
@@ -74,8 +74,9 @@ class Pagination
         $link = $this->uri->toPagination();
         $html = '<nav class="pagination">';
 
-        if (($this->start - $this->limit) > 0)
+        if (($this->start - $this->limit) > 0) {
             $html .= $this->_active($link, 1, true);
+        }
 
         for ($i = 0; $i < $this->display; $i++) {
 
@@ -83,12 +84,14 @@ class Pagination
 
             $this->start += $this->limit;
 
-            if ($this->start >= $this->total)
+            if ($this->start >= $this->total) {
                 break;
+            }
         }
 
-        if ($this->start + $this->limit < $this->total)
+        if ($this->start + $this->limit < $this->total) {
             $html .= $this->_active($link . (floor($this->total / $this->limit) * $this->limit), ceil($this->total / $this->limit), true);
+        }
 
         $html .= '</nav>';
 

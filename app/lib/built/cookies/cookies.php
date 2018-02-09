@@ -14,7 +14,7 @@ class Cookies
 
     public function setCookie($name, $value, $expire)
     {
-        setcookie($name,$value,$expire);
+        setcookie($name, $value, $expire);
     }
 
     public function getCookie($name)
@@ -24,10 +24,11 @@ class Cookies
 
     public function changeCookie($name, $value, $expire = null)
     {
-        if ($expire == null)
+        if ($expire == null) {
             setcookie($name, $value);
-        else
+        } else {
             setcookie($name, $value, $expire);
+        }
 
     }
 

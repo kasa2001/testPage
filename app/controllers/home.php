@@ -34,7 +34,7 @@ class Home extends Controller
         }
         $css = "main home";
         $this->view = View::getInstance($this->config);
-        $pagination = new Pagination(5,5, 2201);
+        $pagination = new Pagination(5, 5, 2201);
         $this->view->display("home/index", null, $css, null);
 //        echo $pagination;
 
@@ -60,10 +60,10 @@ class Home extends Controller
         $queue = new Collection\Queue();
         $stack = new Collection\Stack();
 
-        $map->add(new Core\Database(),'database');
-        $map->add(new Core\Database(),'connect');
-        $map->add(new Core\Database(),'connection');
-        $map->add(new Core\Database(),'second');
+        $map->add(new Core\Database(), 'database');
+        $map->add(new Core\Database(), 'connect');
+        $map->add(new Core\Database(), 'connection');
+        $map->add(new Core\Database(), 'second');
 
         $list->add(new Core\Database());
         $list->add(new Core\Database());
@@ -81,7 +81,7 @@ class Home extends Controller
         $stack->push(new Core\Database());
 
         $this->view = View::getInstance($this->config);
-        $this->view->display('home/collection',array($map,$list,$queue,$stack),'main home');
+        $this->view->display('home/collection', array($map,$list,$queue,$stack), 'main home');
     }
 
     public function taxonomy()

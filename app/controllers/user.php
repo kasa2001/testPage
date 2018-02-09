@@ -2,7 +2,10 @@
 
 namespace Controllers;
 
-use \Core\Controller, Lib\Built\Server\Server, Lib\Built\Session\Session, Lib\Built\View\View;
+use \Core\Controller;
+use Lib\Built\Server\Server;
+use Lib\Built\Session\Session;
+use Lib\Built\View\View;
 
 class User extends Controller
 {
@@ -18,11 +21,11 @@ class User extends Controller
     public function login()
     {
         $this->server = Server::getInstance($this->config);
-        if (Session::getDataWithSession("Id") !== null) {
+        if (Session::getDataWithSession("id") !== null) {
             $this->server->redirect("home/index");
         } else {
             $this->view = View::getInstance($this->config);
-            $this->view->display('user/login', NULL, $this->css, $this->js);
+            $this->view->display('user/login', null, $this->css, $this->js);
         }
     }
 
@@ -30,7 +33,7 @@ class User extends Controller
     {
         $this->server = Server::getInstance($this->config);
         $this->js = "form";
-        if (Session::getDataWithSession("Id") !== null) {
+        if (Session::getDataWithSession("id") !== null) {
             $this->server->redirect("home/index");
         } else {
             $this->view = View::getInstance($this->config);
@@ -41,10 +44,10 @@ class User extends Controller
     public function add()
     {
         $this->server = Server::getInstance($this->config);
-        if (Session::getDataWithSession("Id") !== null) {
+        if (Session::getDataWithSession("id") !== null) {
             $this->js = "ajax";
             $this->view = View::getInstance($this->config);
-            $this->view->display('user/add', NULL, $this->css, $this->js);
+            $this->view->display('user/add', null, $this->css, $this->js);
         } else {
             $this->server->redirect("home/index");
         }
@@ -54,7 +57,7 @@ class User extends Controller
     public function delete()
     {
         $this->server = Server::getInstance($this->config);
-        if (Session::getDataWithSession("Id") !== null) {
+        if (Session::getDataWithSession("id") !== null) {
             $user = $this->loadModel('Models\TestData');
             $user->request($user->createQuery($user->table(), "SELECT"));
             $this->js = "ajax";
@@ -68,7 +71,7 @@ class User extends Controller
     public function modify()
     {
         $this->server = Server::getInstance($this->config);
-        if (Session::getDataWithSession("Id") !== null) {
+        if (Session::getDataWithSession("id") !== null) {
             $user = $this->loadModel('Models\TestData');
             $user->request($user->createQuery($user->table(), "SELECT"));
             $this->js = "ajax";
@@ -82,7 +85,7 @@ class User extends Controller
     public function select()
     {
         $this->server = Server::getInstance($this->config);
-        if (Session::getDataWithSession("Id") !== null) {
+        if (Session::getDataWithSession("id") !== null) {
             $user = $this->loadModel("Models\TestData");
             $user->request($user->createQuery($user->table(), "SELECT"));
             $this->view = View::getInstance($this->config);

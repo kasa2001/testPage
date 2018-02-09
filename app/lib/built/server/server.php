@@ -1,11 +1,14 @@
 <?php
 
 namespace Lib\Built\Server;
+
 /**
  * todo!!!
  * */
 use Core\Config;
-use Lib\Built\Factory\Factory, Controllers\Home;
+use Lib\Built\Factory\Factory;
+use Controllers\Home;
+
 class Server
 {
     const ERROR400 = "Bad Request";
@@ -31,10 +34,11 @@ class Server
     public function checkIsJS()
     {
         if (!isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
-            if (!isset($_SERVER['HTTP_REFERER']))
+            if (!isset($_SERVER['HTTP_REFERER'])) {
                 $this->redirect(null, 403);
-            else
+            } else {
                 $this->redirect($_SERVER['HTTP_REFERER']);
+            }
         }
     }
 
@@ -77,7 +81,7 @@ class Server
             }
         } else {
             if ($code > 199 && $code < 400) {
-                header("Location: " . $where, TRUE, $code);
+                header("Location: " . $where, true, $code);
             } else {
                 header("Location: " . $where);
             }
@@ -127,6 +131,6 @@ class Server
 
     protected function _loadErrorPage($message)
     {
-        call_user_func_array(array(new Home(), "error"),array($message));
+        call_user_func_array(array(new Home(), "error"), array($message));
     }
 }

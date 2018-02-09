@@ -3,7 +3,6 @@
 
 namespace Models\Tables;
 
-
 class TestData
 {
     public $id;

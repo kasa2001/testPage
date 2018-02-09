@@ -1,6 +1,7 @@
 <?php
 
 namespace Lib\Built\Chat;
+
 // TODO!!!
 class Chat
 {

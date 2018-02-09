@@ -42,7 +42,7 @@ class Mail
             'verify_peer_name' => false,
             'allow_self_signed' => true
         )
-    );
+        );
         echo "<pre>";
         print_r($this);
         if ($this->mail->send()) {

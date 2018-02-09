@@ -3,7 +3,6 @@
 
 namespace Models\Tables;
 
-
 class User
 {
     public $id;

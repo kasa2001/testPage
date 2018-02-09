@@ -49,7 +49,7 @@ class Stack extends Collection
         }
         $object = $this->collection[($this->_count - 1)];
 
-        unset ($this->collection[$this->_count - 1]);
+        unset($this->collection[$this->_count - 1]);
 
         --$this->_count;
         return $object;

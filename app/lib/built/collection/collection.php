@@ -38,8 +38,9 @@ abstract class Collection implements \JsonSerializable, \Countable
             $this->_check($data);
             $this->_count = count($data);
 
-        } else
+        } else {
             $this->_count = 0;
+        }
     }
 
     /**
@@ -55,7 +56,7 @@ abstract class Collection implements \JsonSerializable, \Countable
      * Method copy Collection
      * @return Collection
      * */
-    public abstract function copy();
+    abstract public function copy();
 
     /**
      * Method return array of object
@@ -121,7 +122,7 @@ abstract class Collection implements \JsonSerializable, \Countable
     {
         if ($this->_count != 0) {
             $this->_type($data);
-        } else if (is_array($data)) {
+        } elseif (is_array($data)) {
             $this->_type($data);
         }
     }
@@ -131,15 +132,16 @@ abstract class Collection implements \JsonSerializable, \Countable
      * @param $data array
      * @param $get mixed
      * */
-    protected function _type($data, $get=null)
+    protected function _type($data, $get = null)
     {
-        if (is_array($data)){
+        if (is_array($data)) {
             $type = null;
-            foreach ($data as $datum)
+            foreach ($data as $datum) {
                 $get = gettype($datum);
+            }
             if ($get == "object") {
                 $type = null;
-                foreach($this->collection as $collection){
+                foreach ($this->collection as $collection) {
                     $type = get_class($collection);
                     break;
                 }
@@ -151,7 +153,7 @@ abstract class Collection implements \JsonSerializable, \Countable
         } else {
             if (gettype($data) == "object") {
                 $type = null;
-                foreach($this->collection as $collection){
+                foreach ($this->collection as $collection) {
                     $type = get_class($collection);
                     break;
                 }
@@ -175,7 +177,7 @@ abstract class Collection implements \JsonSerializable, \Countable
                 if (get_class($data) != $type) {
                     throw new CollectionException("Wrong object added to collection", self::WRONG_OBJECT);
                 }
-            }else {
+            } else {
                 foreach ($data as $item) {
                     if (get_class($item) != $type) {
                         throw new CollectionException("Wrong object added to collection", self::WRONG_OBJECT);
@@ -210,5 +212,4 @@ abstract class Collection implements \JsonSerializable, \Countable
             $this->_getError($e);
         }
     }
-
 }

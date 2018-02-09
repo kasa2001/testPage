@@ -69,17 +69,18 @@ class ArrayList extends Collection implements \Iterator
     public function remove($key = null)
     {
         try {
-            if ($key != null && !isset($this->collection[$key])){
+            if ($key != null && !isset($this->collection[$key])) {
                 throw new CollectionException('Wrong Index', self::WRONG_INDEX);
             }
-        }catch (CollectionException $e){
+        } catch (CollectionException $e) {
             $this->_getError($e);
         }
 
-        if ($key == null)
+        if ($key == null) {
             $this->rewind();
-        else
+        } else {
             $this->key = $key;
+        }
 
         unset($this->collection[$this->key]);
         $this->collection = array_values($this->collection);
@@ -89,10 +90,10 @@ class ArrayList extends Collection implements \Iterator
     public function get($index)
     {
         try {
-            if (!isset($this->collection[$index])){
+            if (!isset($this->collection[$index])) {
                 throw new CollectionException("Wrong index", self::WRONG_INDEX);
             }
-        }catch (CollectionException $e) {
+        } catch (CollectionException $e) {
             $this->_getError($e);
         }
         return $this->collection[$index];

@@ -3,7 +3,6 @@
 
 namespace Core;
 
-
 use Throwable;
 
 class DatabaseException extends \Exception

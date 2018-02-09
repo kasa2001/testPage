@@ -2,7 +2,6 @@
 
 namespace Modules\Built\SearchBox;
 
-
 use Core\Controller;
 
 class SearchBox implements \Countable

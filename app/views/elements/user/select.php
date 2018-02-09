@@ -1,13 +1,13 @@
 <section>
     <article>
         <?php
-        if ($data->isEmpty()):
+        if ($data->isEmpty()) :
             ?>
             <p>
                 No data
             </p>
             <?php
-        else:
+        else :
             ?>
             <table>
                 <thead>
@@ -34,7 +34,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?= $this->generateDynamic($data,["tr", "td"]) ?>
+                <?= $this->generateDynamic($data, ["tr", "td"]) ?>
                 </tbody>
             </table>
             <?php

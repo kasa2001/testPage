@@ -10,8 +10,9 @@ class Session
      * */
     public function __construct()
     {
-        if (!isset($_SESSION))
+        if (!isset($_SESSION)) {
             session_start();
+        }
     }
 
     /**
@@ -20,9 +21,10 @@ class Session
      * */
     public static function writeToSession($data)
     {
-        foreach ($data as $key=>$datum){
-            if (!isset($_SESSION[$key]))
+        foreach ($data as $key => $datum) {
+            if (!isset($_SESSION[$key])) {
                 $_SESSION[$key]=$datum;
+            }
         }
     }
 
@@ -33,9 +35,11 @@ class Session
      * */
     public static function getDataWithSession($data)
     {
-        if (isset($_SESSION[$data]))
+        if (isset($_SESSION[$data])) {
             return $_SESSION[$data];
-        else return null;
+        } else {
+            return null;
+        }
     }
 
     /**

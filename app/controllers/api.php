@@ -2,7 +2,10 @@
 
 namespace Controllers;
 
-use \Core, Lib\Built\Server\Server, Lib\Built\Security\Security, Lib\Built\View\View;
+use \Core;
+use Lib\Built\Server\Server;
+use Lib\Built\Security\Security;
+use Lib\Built\View\View;
 
 class API extends Core\Controller
 {

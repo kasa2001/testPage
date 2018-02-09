@@ -107,9 +107,11 @@ class URI
     {
         $data = explode("/", $this->requestURI);
         $how = count($data);
-        for ($i = 0; $i < $how; $i++)
-            if (is_numeric($data[$i]) || $data[$i]=='all' || strlen($data[$i]) == 0)
+        for ($i = 0; $i < $how; $i++) {
+            if (is_numeric($data[$i]) || $data[$i]=='all' || strlen($data[$i]) == 0) {
                 unset($data[$i]);
+            }
+        }
 
         if ((isset($this->config["system"]["default-directory"]) && $how < 5)
             || (!isset($this->config["system"]["default-directory"]) && $how < 4)) {
@@ -122,11 +124,11 @@ class URI
 
     public function getCurrentPage()
     {
-        $data = explode ("/" ,$this->requestURI);
-        if (is_numeric($data[(count($data)-1)]))
+        $data = explode("/", $this->requestURI);
+        if (is_numeric($data[(count($data)-1)])) {
             return $data[(count($data)-1)];
-        else
+        } else {
             return 0;
+        }
     }
-
 }

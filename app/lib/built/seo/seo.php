@@ -1,7 +1,9 @@
 <?php
 
 namespace Lib\Built\SEO;
+
 use Lib\Built\Factory\Factory;
+
 class SEO
 {
     private static $object;
@@ -12,7 +14,7 @@ class SEO
 
     private function __construct($config)
     {
-        $this->uri = Factory::getInstance("\Lib\Built\URI\URI",$config);
+        $this->uri = Factory::getInstance("\Lib\Built\URI\URI", $config);
     }
 
     /**
@@ -63,8 +65,9 @@ class SEO
      */
     public function addLanguageLink($lang)
     {
-        foreach ($lang as $l)
+        foreach ($lang as $l) {
             echo "<link rel=\"alternate\" hreflang=\"" . $l ."\" href=\"" . $this->uri->getAddress() ."\">";
+        }
     }
 
     /**
@@ -73,10 +76,11 @@ class SEO
      * */
     public function addRobotsFollow($agree)
     {
-        if ($agree)
+        if ($agree) {
             echo "<meta name=\"robots\" content=\"index,follow\">";
-        else
+        } else {
             echo "<meta name=\"robots\" content=\"none\">";
+        }
     }
 
     /**
@@ -84,7 +88,7 @@ class SEO
      * @param $words string
      * @param $class array default null
      * */
-    public function addKeyWords($words, $class=null)
+    public function addKeyWords($words, $class = null)
     {
         try {
             if ($this->h1) {
@@ -94,10 +98,11 @@ class SEO
 
         }
         echo "<h1";
-        if ($class!==null){
+        if ($class!==null) {
             echo" class = \"";
-            foreach ($class as $item)
+            foreach ($class as $item) {
                 echo $item . " ";
+            }
             echo "\"";
         }
         echo ">" . $words ."</h1>";
