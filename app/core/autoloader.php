@@ -53,7 +53,7 @@ class AutoLoader
     {
         $class = explode('\\', $class);
         if (!isset($this->namespace[$class[0]])) {
-            throw new AutoLoaderException("Namespace is not registered. Please register namespace");
+            throw new AutoLoaderException("Page not found",404);
         }
         $item = $class[0];
         unset($class[0]);

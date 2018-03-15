@@ -8,6 +8,7 @@ namespace Controllers;
 use \Core\Controller;
 use \Lib\Built\Collection;
 use Lib\Built\Session\Session;
+use Lib\Built\URI\URI;
 use \Lib\Built\View\View;
 use Lib\Built\Security\Security;
 use \Core;
@@ -39,15 +40,11 @@ class Home extends Controller
 //        echo $pagination;
 
         $home = new \Models\Logic\Home();
-        try {
 
-            $home->getItems();
-
-            $home->login('ala', 'makota');
-
-        } catch (\Exception $e) {
-            print_r($e->getMessage());
-        }
+        $uri = URI::getInstance();
+        echo '<pre>';
+        print_r($uri);
+        echo '</pre>';
     }
 
     /**

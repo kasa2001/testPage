@@ -386,6 +386,7 @@ class Database extends Config
      * @param $params
      * @param $replaced
      * @throws DatabaseException
+     * @throws \ReflectionException
      * @return string
      */
     protected function renderCondition($body, $params, $replaced = 1)

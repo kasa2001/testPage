@@ -40,16 +40,20 @@ class URI
 
 
     private $config;
+
     /**
      * Construct create URI object
      * @param $config array
      * */
-    private function __construct($config)
+    public function __construct($config)
     {
         $this->scheme = $_SERVER["REQUEST_SCHEME"] . "://";
         $this->host = $_SERVER["HTTP_HOST"];
-        $this->requestURI = $_SERVER["REQUEST_URI"];
+        $this->requestURI = '/' . $_GET['url'];
         $this->base = $this->scheme . $this->host;
+        if (isset($config['system']['default-directory'])) {
+            $this->base .= '/' . $config['system']['default-directory'];
+        }
         $this->address = $this->base . $this->requestURI;
         $this->config = $config;
     }
