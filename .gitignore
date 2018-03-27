@@ -3,3 +3,6 @@
 .htaccess
 .idea/
 app/config/
+app/composer.json
+app/composer.lock
+app/vendor/

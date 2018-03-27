@@ -38,24 +38,60 @@ class URI
      * */
     private $address;
 
+    /**
+     *@var $get array
+     */
+    private $get;
 
-    private $config;
+    private $controller;
+
+    private $method;
+
+    private $params = [];
 
     /**
      * Construct create URI object
-     * @param $config array
      * */
-    public function __construct($config)
+    public function __construct()
     {
+        $matches = $get = [];
+
+        preg_match_all("/[^=|\/|?|&]*?[=|\/]([a-zA-Z]+)/A", $_SERVER['QUERY_STRING'], $matches);
+        preg_match_all("/[^&]*?&([a-zA-Z]+)=([a-zA-Z0-9]+)/", $_SERVER['QUERY_STRING'], $get);
+
+        for ($i = 0; $i < count($get[1]); $i++) {
+            $this->get[$get[1][$i]] = $get[2][$i];
+        }
+
+        $this->controller = isset($matches[1][0]) ? $matches[1][0] : 'home';
+        $this->method = isset($matches[1][1]) ? $matches[1][1] : 'index';
+        unset($matches[1][0], $matches[1][1]);
+
+        $this->params = !empty($matches[1]) ? $matches[1] : [];
+
         $this->scheme = $_SERVER["REQUEST_SCHEME"] . "://";
         $this->host = $_SERVER["HTTP_HOST"];
-        $this->requestURI = '/' . $_GET['url'];
-        $this->base = $this->scheme . $this->host;
-        if (isset($config['system']['default-directory'])) {
-            $this->base .= '/' . $config['system']['default-directory'];
+
+        // REQUEST URI TODO
+        $this->requestURI = '/' . $this->controller . '/' . $this->method;
+
+        if (!empty($this->params)) {
+            $this->requestURI .= '/' . implode('/', $this->params);
         }
+
+        $this->base = $this->scheme . $this->host;
         $this->address = $this->base . $this->requestURI;
-        $this->config = $config;
+
+        self::$object = $this;
+        unset($_GET);
+        echo '<pre>';
+        echo "Sparsowany URL</br>";
+        echo "Linkowanie pod kontroller </br>";
+        print_r($this);
+        echo "Dane z get-a</br>";
+        print_r($this->get);
+        echo '</pre>';
+        //exit;
     }
 
     /**
@@ -103,6 +139,34 @@ class URI
         return $this->requestURI;
     }
 
+    public function getController()
+    {
+        return $this->controller;
+    }
+
+    public function getMethod()
+    {
+        return $this->method;
+    }
+
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    public function checkVars()
+    {
+        return !empty($this->get);
+    }
+
+    public function getVar($key)
+    {
+        return $this->get[$key];
+    }
+
+
+
+
     /**
      * Method prepare link to pagination
      * @return string
@@ -119,7 +183,7 @@ class URI
 
         if ((isset($this->config["system"]["default-directory"]) && $how < 5)
             || (!isset($this->config["system"]["default-directory"]) && $how < 4)) {
-            $router = Router::getInstance($this->config);
+            $router = Router::getInstance(null);
             $data = array_merge($data, explode('/', $router->checkRoute('home/index')));
         }
 

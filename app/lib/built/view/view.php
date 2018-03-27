@@ -221,10 +221,11 @@ class View
      */
     public function checkAddress()
     {
-        if ($_GET == null) {
+        $uri = URI::getInstance();
+        if ($uri->checkVars()) {
             return null;
         } else {
-            return $_GET["url"];
+            return $uri->getRequestURI();
         }
     }
 

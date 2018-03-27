@@ -3,12 +3,11 @@
 namespace Core;
 
 use \Lib\Built\Server\Server;
+use Lib\Built\URI\URI;
 
 class App
 {
-    protected $controller = '\Controllers\Home';
-    protected $method = 'index';
-    protected $params = [];
+    protected $uri;
 
     /**
      * @var Router
@@ -17,20 +16,16 @@ class App
 
     public function __construct()
     {
-        $url = $this->parseUrl();
-
-        $this->controller = ($url[0] ? $url[0] : $this->controller);
-        $this->method = ($url[1] ? $url[1] : $this->method);
-        $this->params = $url ? array_values($url) : [];
+        $this->uri = new URI();
     }
 
 
     public function render()
     {
         $router = new \Lib\Built\Router\Router(
-            $this->controller,
-            $this->method,
-            $this->params
+            $this->uri->getController(),
+            $this->uri->getMethod(),
+            $this->uri->getParams()
         );
 
         $router->execute();
