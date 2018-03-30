@@ -39,9 +39,15 @@ class URI
     private $address;
 
     /**
-     *@var $get array
+     * @var $get array
      */
     private $get;
+
+    /**
+     * @var $helpPath string
+     */
+
+    private $helpPath;
 
     private $controller;
 
@@ -54,10 +60,20 @@ class URI
      * */
     public function __construct()
     {
-        $matches = $get = [];
+        $matches = $get = $helpPath = [];
+
+        /**
+         * Przetestować!!!
+         * parse_url();
+         * parse_str();
+         *
+         * */
+        parse_str($_SERVER['QUERY_STRING'], $get);
+        print_r(dirname($_SERVER['SCRIPT_NAME']));
 
         preg_match_all("/[^=|\/|?|&]*?[=|\/]([a-zA-Z]+)/A", $_SERVER['QUERY_STRING'], $matches);
         preg_match_all("/[^&]*?&([a-zA-Z]+)=([a-zA-Z0-9]+)/", $_SERVER['QUERY_STRING'], $get);
+        preg_match_all("/\/([a-zA-Z]+)\//", $_SERVER['SCRIPT_NAME'], $helpPath);
 
         for ($i = 0; $i < count($get[1]); $i++) {
             $this->get[$get[1][$i]] = $get[2][$i];
@@ -72,8 +88,9 @@ class URI
         $this->scheme = $_SERVER["REQUEST_SCHEME"] . "://";
         $this->host = $_SERVER["HTTP_HOST"];
 
+        $this->helpPath = isset($helpPath[1]) ? '/' . implode('/', $helpPath[1]) : null;
         // REQUEST URI TODO
-        $this->requestURI = '/' . $this->controller . '/' . $this->method;
+        $this->requestURI = $this->helpPath . '/' . $this->controller . '/' . $this->method;
 
         if (!empty($this->params)) {
             $this->requestURI .= '/' . implode('/', $this->params);
@@ -88,8 +105,8 @@ class URI
         echo "Sparsowany URL</br>";
         echo "Linkowanie pod kontroller </br>";
         print_r($this);
-        echo "Dane z get-a</br>";
-        print_r($this->get);
+        echo "SERVER</br>";
+        print_r($_SERVER);
         echo '</pre>';
         //exit;
     }
@@ -165,8 +182,6 @@ class URI
     }
 
 
-
-
     /**
      * Method prepare link to pagination
      * @return string
@@ -176,7 +191,7 @@ class URI
         $data = explode("/", $this->requestURI);
         $how = count($data);
         for ($i = 0; $i < $how; $i++) {
-            if (is_numeric($data[$i]) || $data[$i]=='all' || strlen($data[$i]) == 0) {
+            if (is_numeric($data[$i]) || $data[$i] == 'all' || strlen($data[$i]) == 0) {
                 unset($data[$i]);
             }
         }
@@ -193,8 +208,8 @@ class URI
     public function getCurrentPage()
     {
         $data = explode("/", $this->requestURI);
-        if (is_numeric($data[(count($data)-1)])) {
-            return $data[(count($data)-1)];
+        if (is_numeric($data[(count($data) - 1)])) {
+            return $data[(count($data) - 1)];
         } else {
             return 0;
         }

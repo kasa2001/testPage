@@ -21,7 +21,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 
 #Rewrite url
-RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+RewriteRule ^.+$ index.php [QSA,L]
 
 
 #Adding error document
